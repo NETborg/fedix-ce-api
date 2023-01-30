@@ -1,6 +1,15 @@
 {
+    "name": "netborg/fedix-ce-api",
+    "description": "Backend application for FediX Community Edition.",
     "type": "project",
     "license": "proprietary",
+    "authors": [
+        {
+            "name": "Roland Kolodziej",
+            "homepage": "https://www.rolandkolodziej.com",
+            "email": "mail@rolandkolodziej.com"
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
