@@ -1,0 +1,21 @@
+version: '2.4'
+
+networks:
+  default:
+    driver: bridge
+
+services:
+  myapp:
+    build:
+      context: ./.docker/images/myapp
+      dockerfile: Dockerfile
+    container_name: myapp
+    hostname: myapp
+    ports:
+      - 8080:80
+      - 8443:443
+    volumes:
+      - ./.docker/volumes/apache/sites-enabled:/etc/apache2/sites-enabled
+      - ./:/app
+    networks:
+      - default
