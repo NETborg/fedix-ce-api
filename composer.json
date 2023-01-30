@@ -30,12 +30,12 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "Netborg\\Fediverse\\Api\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "Netborg\\Fediverse\\Api\\Tests\\": "tests/"
         }
     },
     "replace": {
