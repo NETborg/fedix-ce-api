@@ -11,11 +11,42 @@ services:
       dockerfile: Dockerfile
     container_name: myapp
     hostname: myapp
+    depends_on:
+      - postgres
     ports:
       - 8080:80
       - 8443:443
     volumes:
       - ./.docker/volumes/apache/sites-enabled:/etc/apache2/sites-enabled
       - ./:/app
+    networks:
+      - default
+
+  postgres:
+    image: postgres:14.6-alpine
+    container_name: postgres
+    hostname: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: fedix-ce
+      POSTGRES_USER: fedix
+      POSTGRES_PASSWORD: fedix123
+    volumes:
+      - ./.docker/volumes/postgres/data:/var/lib/postgresql/data:rw
+    networks:
+      - default
+
+  pgadmin:
+    image: dpage/pgadmin4:6
+    container_name: pgadmin
+    hostname: pgadmin
+    depends_on:
+      - postgres
+    ports:
+      - 8081:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@fedix.com
+      PGADMIN_DEFAULT_PASSWORD: fedix123
     networks:
       - default

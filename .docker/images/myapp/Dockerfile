@@ -3,7 +3,11 @@ FROM php:8.2-apache
 ENV APACHE_DOCUMENT_ROOT /app
 
 RUN apt update && apt install -y \
-    unzip
+    unzip \
+    libpq-dev
+
+RUN docker-php-ext-configure pgsql \
+    && docker-php-ext-install pdo pdo_pgsql pgsql
 
 RUN a2enmod rewrite
 
