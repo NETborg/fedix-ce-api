@@ -50,3 +50,10 @@ services:
       PGADMIN_DEFAULT_PASSWORD: fedix123
     networks:
       - default
+
+  mbank:
+    image: bbyars/mountebank:2.8.2
+    container_name: mbank
+    hostname: mbank
+    ports:
+      - 2525:2525

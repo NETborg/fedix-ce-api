@@ -18,6 +18,10 @@ framework:
     php_errors:
         log: true
 
+    serializer:
+        default_context:
+            skip_null_values: true
+
 when@test:
     framework:
         test: true
