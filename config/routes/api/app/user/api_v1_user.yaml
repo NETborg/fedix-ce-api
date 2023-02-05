@@ -1,0 +1,13 @@
+api_v1_user_get:
+  path: '/{identifier}'
+  controller: Netborg\Fediverse\Api\Controller\Api\App\User\UserController::getAction
+  methods: GET
+  requirements:
+    identifier: '^[%username_pattern%]+'
+
+api_v1_user_pub_key_get:
+  path: '/{identifier}/pub-key'
+  controller: Netborg\Fediverse\Api\Controller\Api\App\User\UserPubKeyController::getAction
+  methods: GET
+  requirements:
+    identifier: '^[%username_pattern%]+'

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netborg\Fediverse\Api\Controller\Api;
+namespace Netborg\Fediverse\Api\Controller\Api\App\User;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

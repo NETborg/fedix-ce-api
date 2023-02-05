@@ -1,3 +1,7 @@
-api_v1:
-  resource: api/api_v1.yaml
-  prefix: /v1
+api_app_v1:
+  resource: api/app/api_v1.yaml
+  prefix: /app/v1
+
+api_ap_v1:
+  resource: api/activity_pub/api_ap_v1.yaml
+  prefix: /activity_pub/v1

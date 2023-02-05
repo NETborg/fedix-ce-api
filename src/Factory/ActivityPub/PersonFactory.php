@@ -7,6 +7,7 @@ namespace Netborg\Fediverse\Api\Factory\ActivityPub;
 use Netborg\Fediverse\Api\Entity\User;
 use Netborg\Fediverse\Api\Interfaces\ActivityPub\PersonFactoryInterface;
 use Netborg\Fediverse\Api\Interfaces\ActivityPub\PublicKeyFactoryInterface;
+use Netborg\Fediverse\Api\Interfaces\Sanitiser\UsernameSanitiserInterface;
 use Netborg\Fediverse\Api\Model\ActivityPub\Actor\Person;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -17,6 +18,7 @@ class PersonFactory implements PersonFactoryInterface
         private readonly SerializerInterface $serializer,
         private readonly RouterInterface $router,
         private readonly PublicKeyFactoryInterface $publicKeyFactory,
+        private readonly UsernameSanitiserInterface $sanitiser,
     ) {
     }
 
@@ -41,12 +43,16 @@ class PersonFactory implements PersonFactoryInterface
 
     public function fromUserEntity(User $entity, Person $subject = null): Person
     {
-        $id = $this->router->generate('api_v1_user_get', ['identifier' => $entity->getUsername()]);
-        $inbox = $this->router->generate('api_v1_user_inbox_get', ['identifier' => $entity->getUsername()]);
-        $outbox = $this->router->generate('api_v1_user_outbox_get', ['identifier' => $entity->getUsername()]);
+        $options = [
+            'identifier' => $this->sanitiser->prefixise($entity->getUsername()),
+        ];
+
+        $id = $this->router->generate('api_ap_v1_person_get', $options);
+        $inbox = $this->router->generate('api_ap_v1_person_inbox_get', $options);
+        $outbox = $this->router->generate('api_ap_v1_person_outbox_get', $options);
         $publicKey = $entity->getPublicKey()
             ? $this->publicKeyFactory->create(
-                $this->router->generate('api_v1_user_pub_key_get', ['identifier' => $entity->getUsername()]),
+                $this->router->generate('api_ap_v1_person_pub_key_get', $options),
                 $id,
                 $entity->getPublicKey()
             )
