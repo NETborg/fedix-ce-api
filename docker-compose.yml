@@ -16,6 +16,8 @@ services:
     ports:
       - 8080:80
       - 8443:443
+    environment:
+      PHP_CS_FIXER_IGNORE_ENV: 1
     volumes:
       - ./.docker/volumes/apache/sites-enabled:/etc/apache2/sites-enabled
       - ./:/app

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\Model\ActivityPub;
 
-use DateTimeInterface;
 use Netborg\Fediverse\Api\Model\ActivityPub\Subject\Image;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -15,7 +14,7 @@ abstract class ObjectType
 
     /** @var string[] */
     private array $baseContext = [
-        'https://www.w3.org/ns/activitystreams'
+        'https://www.w3.org/ns/activitystreams',
     ];
 
     /** @var string[] */
@@ -27,10 +26,10 @@ abstract class ObjectType
     ])]
     protected string|null $id = null;
 
-    /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null  */
+    /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
     protected string|LinkType|ObjectType|array|null $attachment = null;
 
-    /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null  */
+    /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
     protected string|LinkType|ObjectType|array|null $attributedTo = null;
 
     /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
@@ -49,24 +48,24 @@ abstract class ObjectType
     protected string|LinkType|ObjectType|array|null $cc = null;
     protected string|null $content = null;
 
-    /** @var array<string, string>|null  */
+    /** @var array<string, string>|null */
     protected array|null $contentMap = null;
     protected string|LinkType|ObjectType|null $context = null;
-    protected string|DateTimeInterface|null $duration = null;
-    protected string|DateTimeInterface|null $startTime = null;
-    protected string|DateTimeInterface|null $endTime = null;
+    protected string|\DateTimeInterface|null $duration = null;
+    protected string|\DateTimeInterface|null $startTime = null;
+    protected string|\DateTimeInterface|null $endTime = null;
     protected string|LinkType|ObjectType|null $generator = null;
 
-    /** @var string|Image|LinkType|array<Image|LinkType|string>|null  */
+    /** @var string|Image|LinkType|array<Image|LinkType|string>|null */
     protected string|Image|LinkType|array|null $icon = null;
 
-    /** @var string|Image|LinkType|array<Image|LinkType|string>|null  */
+    /** @var string|Image|LinkType|array<Image|LinkType|string>|null */
     protected string|Image|LinkType|array|null $image = null;
 
-    /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null  */
+    /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
     protected string|LinkType|ObjectType|array|null $inReplyTo = null;
 
-    /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null  */
+    /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
     protected string|LinkType|ObjectType|array|null $location;
 
     #[
@@ -78,22 +77,22 @@ abstract class ObjectType
     protected string|null $mediaType = null;
     protected string|null $name = null;
 
-    /** @var array<string,string>|null  */
+    /** @var array<string,string>|null */
     protected array|null $nameMap = null;
     protected string|LinkType|ObjectType|null $preview = null;
-    protected string|DateTimeInterface|null $published = null;
+    protected string|\DateTimeInterface|null $published = null;
     protected string|Collection|null $replies = null;
     protected string|null $summary = null;
 
-    /** @var array<string,string>|null  */
+    /** @var array<string,string>|null */
     protected array|null $summaryMap = null;
 
-    /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null  */
+    /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
     protected string|LinkType|ObjectType|array|null $tag;
 
-    protected string|DateTimeInterface|null $updated = null;
+    protected string|\DateTimeInterface|null $updated = null;
 
-    /** @var string|LinkType|LinkType[]|null  */
+    /** @var string|LinkType|LinkType[]|null */
     protected string|LinkType|array|null $url = null;
 
     #[SerializedName('@context')]
@@ -287,36 +286,36 @@ abstract class ObjectType
         return $this;
     }
 
-    public function getDuration(): string|DateTimeInterface|null
+    public function getDuration(): string|\DateTimeInterface|null
     {
         return $this->duration;
     }
 
-    public function setDuration(string|DateTimeInterface|null $duration): ObjectType
+    public function setDuration(string|\DateTimeInterface|null $duration): ObjectType
     {
         $this->duration = $duration;
 
         return $this;
     }
 
-    public function getStartTime(): string|DateTimeInterface|null
+    public function getStartTime(): string|\DateTimeInterface|null
     {
         return $this->startTime;
     }
 
-    public function setStartTime(string|DateTimeInterface|null $startTime): ObjectType
+    public function setStartTime(string|\DateTimeInterface|null $startTime): ObjectType
     {
         $this->startTime = $startTime;
 
         return $this;
     }
 
-    public function getEndTime(): string|DateTimeInterface|null
+    public function getEndTime(): string|\DateTimeInterface|null
     {
         return $this->endTime;
     }
 
-    public function setEndTime(string|DateTimeInterface|null $endTime): ObjectType
+    public function setEndTime(string|\DateTimeInterface|null $endTime): ObjectType
     {
         $this->endTime = $endTime;
 
@@ -461,12 +460,12 @@ abstract class ObjectType
         return $this;
     }
 
-    public function getPublished(): DateTimeInterface|string|null
+    public function getPublished(): \DateTimeInterface|string|null
     {
         return $this->published;
     }
 
-    public function setPublished(DateTimeInterface|string|null $published): ObjectType
+    public function setPublished(\DateTimeInterface|string|null $published): ObjectType
     {
         $this->published = $published;
 
@@ -533,12 +532,12 @@ abstract class ObjectType
         return $this;
     }
 
-    public function getUpdated(): DateTimeInterface|string|null
+    public function getUpdated(): \DateTimeInterface|string|null
     {
         return $this->updated;
     }
 
-    public function setUpdated(DateTimeInterface|string|null $updated): ObjectType
+    public function setUpdated(\DateTimeInterface|string|null $updated): ObjectType
     {
         $this->updated = $updated;
 

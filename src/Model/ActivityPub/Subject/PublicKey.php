@@ -10,13 +10,13 @@ class PublicKey
 {
     #[Assert\All([
         new Assert\NotBlank(groups: ['Default', 'Create', 'Update']),
-        new Assert\Url(groups: ['Default', 'Create', 'Update'])
+        new Assert\Url(groups: ['Default', 'Create', 'Update']),
     ])]
     protected string|null $id = null;
 
     #[Assert\All([
         new Assert\NotBlank(groups: ['Default', 'Create', 'Update']),
-        new Assert\Url(groups: ['Default', 'Create', 'Update'])
+        new Assert\Url(groups: ['Default', 'Create', 'Update']),
     ])]
     protected string|null $owner = null;
 

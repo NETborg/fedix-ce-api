@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\Model\ActivityPub\Activity;
 
-use DateTimeInterface;
 use Netborg\Fediverse\Api\Model\ActivityPub\IntransitiveActivity;
 use Netborg\Fediverse\Api\Model\ActivityPub\LinkType;
 use Netborg\Fediverse\Api\Model\ActivityPub\ObjectType;
@@ -20,7 +19,7 @@ class Question extends IntransitiveActivity
 
     /** @var array<LinkType|ObjectType|string>|null */
     protected array|null $anyOf = null;
-    protected LinkType|ObjectType|DateTimeInterface|string|bool|null $closed = null;
+    protected LinkType|ObjectType|\DateTimeInterface|string|bool|null $closed = null;
 
     /**
      * @return array<LinkType|ObjectType|string>|null
@@ -58,12 +57,12 @@ class Question extends IntransitiveActivity
         return $this;
     }
 
-    public function getClosed(): LinkType|ObjectType|DateTimeInterface|string|bool|null
+    public function getClosed(): LinkType|ObjectType|\DateTimeInterface|string|bool|null
     {
         return $this->closed;
     }
 
-    public function setClosed(LinkType|ObjectType|DateTimeInterface|string|bool|null $closed): Question
+    public function setClosed(LinkType|ObjectType|\DateTimeInterface|string|bool|null $closed): Question
     {
         $this->closed = $closed;
 

@@ -30,7 +30,7 @@ class ExceptionHandler
 
         $exceptionEvent->setResponse(new JsonResponse([
             'error' => $throwable->getMessage(),
-            'code' => $throwable->getCode()
+            'code' => $throwable->getCode(),
         ], $httpStatus));
     }
 }

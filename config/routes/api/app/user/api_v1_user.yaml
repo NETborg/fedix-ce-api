@@ -5,6 +5,13 @@ api_v1_user_get:
   requirements:
     identifier: '^[%username_pattern%]+'
 
+api_v1_user_create:
+  path: '/'
+  controller: Netborg\Fediverse\Api\Controller\Api\App\User\UserController::createAction
+  methods: POST
+  requirements:
+    identifier: '^[%username_pattern%]+'
+
 api_v1_user_pub_key_get:
   path: '/{identifier}/pub-key'
   controller: Netborg\Fediverse\Api\Controller\Api\App\User\UserPubKeyController::getAction

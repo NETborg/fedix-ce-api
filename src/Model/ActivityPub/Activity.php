@@ -10,16 +10,16 @@ abstract class Activity extends ObjectType
 
     protected static string $type = self::TYPE;
 
-    /** @var string|ObjectType|array<ObjectType>|null  */
+    /** @var string|ObjectType|array<ObjectType>|null */
     protected string|ObjectType|array|null $actor = null;
     protected string|ObjectType|null $object = null;
     protected string|ObjectType|LinkType|null $origin = null;
     protected string|ObjectType|LinkType|null $result = null;
 
-    /** @var string|ObjectType|LinkType|array<ObjectType|LinkType|string>|null  */
+    /** @var string|ObjectType|LinkType|array<ObjectType|LinkType|string>|null */
     protected string|ObjectType|LinkType|array|null $target;
 
-    /** @var string|ObjectType|LinkType|array<LinkType|ObjectType|string>|null  */
+    /** @var string|ObjectType|LinkType|array<LinkType|ObjectType|string>|null */
     protected string|ObjectType|LinkType|array|null $instrument;
 
     public function getActor(): array|string|ObjectType|null

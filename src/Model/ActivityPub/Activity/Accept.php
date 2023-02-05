@@ -13,6 +13,6 @@ class Accept extends Activity
     protected static string $type = self::TYPE;
 
     protected array $schemaContext = [
-        'https://fedix.com/context'
+        'https://fedix.com/context',
     ];
 }

@@ -74,7 +74,7 @@ class PersonFactory implements PersonFactoryInterface
     {
         $reflection = new \ReflectionClass(Person::class);
         $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
-        $setters = array_filter($methods, fn(\ReflectionMethod $reflectionMethod) => str_starts_with($reflectionMethod->getName(), 'set'));
+        $setters = array_filter($methods, fn (\ReflectionMethod $reflectionMethod) => str_starts_with($reflectionMethod->getName(), 'set'));
 
         foreach ($setters as $reflectionMethod) {
             $getter = str_replace('set', 'get', $reflectionMethod->getName());

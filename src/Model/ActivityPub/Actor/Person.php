@@ -16,7 +16,7 @@ class Person extends ObjectType
     protected static string $type = self::TYPE;
 
     protected array $schemaContext = [
-        'https://w3id.org/security/v1'
+        'https://w3id.org/security/v1',
     ];
 
     protected string|null $preferredUsername = null;

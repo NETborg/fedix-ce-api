@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\Model\ActivityPub\Subject;
 
-use DateTimeInterface;
 use Netborg\Fediverse\Api\Model\ActivityPub\ObjectType;
 
 class Tombstone extends ObjectType
@@ -14,7 +13,7 @@ class Tombstone extends ObjectType
     protected static string $type = self::TYPE;
 
     protected string|null $formerType = null;
-    protected string|DateTimeInterface|null $deleted = null;
+    protected string|\DateTimeInterface|null $deleted = null;
 
     public function getFormerType(): ?string
     {
@@ -28,12 +27,12 @@ class Tombstone extends ObjectType
         return $this;
     }
 
-    public function getDeleted(): DateTimeInterface|string|null
+    public function getDeleted(): \DateTimeInterface|string|null
     {
         return $this->deleted;
     }
 
-    public function setDeleted(DateTimeInterface|string|null $deleted): Tombstone
+    public function setDeleted(\DateTimeInterface|string|null $deleted): Tombstone
     {
         $this->deleted = $deleted;
 
