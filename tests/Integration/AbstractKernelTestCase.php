@@ -11,8 +11,10 @@ abstract class AbstractKernelTestCase extends KernelTestCase
 {
     private ?EntityManagerInterface $entityManager;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
+        parent::setUp();
+
         self::bootKernel();
 
         $this->entityManager = self::getContainer()

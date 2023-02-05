@@ -6,11 +6,20 @@ namespace Netborg\Fediverse\Api\Model\ActivityPub;
 
 use DateTimeInterface;
 use Netborg\Fediverse\Api\Model\ActivityPub\Subject\Image;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class ObjectType
 {
     protected static string $type = 'ObjectType';
+
+    /** @var string[] */
+    private array $baseContext = [
+        'https://www.w3.org/ns/activitystreams'
+    ];
+
+    /** @var string[] */
+    protected array $schemaContext = [];
 
     #[Assert\AtLeastOneOf([
         new Assert\Url(),
@@ -86,6 +95,12 @@ abstract class ObjectType
 
     /** @var string|LinkType|LinkType[]|null  */
     protected string|LinkType|array|null $url = null;
+
+    #[SerializedName('@context')]
+    public function getSchemaContext(): array
+    {
+        return array_merge($this->baseContext, $this->schemaContext);
+    }
 
     public function getType(): string
     {

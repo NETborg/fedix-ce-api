@@ -11,4 +11,8 @@ class Accept extends Activity
     public const TYPE = 'Accept';
 
     protected static string $type = self::TYPE;
+
+    protected array $schemaContext = [
+        'https://fedix.com/context'
+    ];
 }

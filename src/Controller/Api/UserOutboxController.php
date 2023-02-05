@@ -6,12 +6,11 @@ namespace Netborg\Fediverse\Api\Controller\Api;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
 
-class MainController extends AbstractController
+class UserOutboxController extends AbstractController
 {
-    public function main(): JsonResponse
+    public function getAction(string $identifier): JsonResponse
     {
-        return new JsonResponse(['test' => 'OK']);
+        return new JsonResponse(['user_outbox' => $identifier]);
     }
 }

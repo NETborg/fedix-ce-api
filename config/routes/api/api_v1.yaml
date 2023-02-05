@@ -1,0 +1,10 @@
+api_v1_main:
+  path: /
+  controller: Netborg\Fediverse\Api\Controller\Api\MainController::main
+  methods: GET
+
+api_v1_user:
+  prefix: /user
+  resource: user/api_v1_user.yaml
+#  schemes: https
+
