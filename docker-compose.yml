@@ -9,7 +9,6 @@ services:
     build:
       context: ./.docker/images/myapp
       dockerfile: Dockerfile
-    container_name: myapp
     hostname: myapp
     depends_on:
       - postgres
@@ -26,7 +25,6 @@ services:
 
   postgres:
     image: postgres:14.6-alpine
-    container_name: postgres
     hostname: postgres
     ports:
       - 5432:5432
@@ -41,7 +39,6 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:6
-    container_name: pgadmin
     hostname: pgadmin
     depends_on:
       - postgres
@@ -53,9 +50,29 @@ services:
     networks:
       - default
 
+  redis:
+    image: redis:7-alpine
+    hostname: redis
+    command: redis-server /etc/redis/redis.conf
+    volumes:
+      - ./.docker/volumes/redis/config:/etc/redis
+    ports:
+      - 6379:6379
+    environment:
+      REDIS_AUTH: foobar
+    networks:
+      - default
+
   mbank:
     image: bbyars/mountebank:2.8.2
-    container_name: mbank
     hostname: mbank
     ports:
       - 2525:2525
+    networks:
+      - default
+
+  mailer:
+    image: schickling/mailcatcher
+    ports: [ "1025", "1080" ]
+    networks:
+      - default
