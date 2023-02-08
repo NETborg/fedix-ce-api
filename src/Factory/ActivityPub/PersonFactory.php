@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\Factory\ActivityPub;
 
-use Netborg\Fediverse\Api\Entity\User;
+use Netborg\Fediverse\Api\Entity\Actor;
 use Netborg\Fediverse\Api\Interfaces\ActivityPub\PersonFactoryInterface;
 use Netborg\Fediverse\Api\Interfaces\ActivityPub\PublicKeyFactoryInterface;
 use Netborg\Fediverse\Api\Interfaces\Sanitiser\UsernameSanitiserInterface;
@@ -41,18 +41,34 @@ class PersonFactory implements PersonFactoryInterface
         return $person;
     }
 
-    public function fromUserEntity(User $entity, Person $subject = null): Person
+    public function fromPersonEntity(Actor $entity, Person $subject = null): Person
     {
         $options = [
-            'identifier' => $this->sanitiser->prefixise($entity->getUsername()),
+            'identifier' => $this->sanitiser->prefixise($entity->getPreferredUsername()),
         ];
 
-        $id = $this->router->generate('api_ap_v1_person_get', $options);
-        $inbox = $this->router->generate('api_ap_v1_person_inbox_get', $options);
-        $outbox = $this->router->generate('api_ap_v1_person_outbox_get', $options);
+        $id = $this->router->generate(
+            'api_ap_v1_person_get',
+            $options,
+            RouterInterface::ABSOLUTE_URL
+        );
+        $inbox = $this->router->generate(
+            'api_ap_v1_person_inbox_get',
+            $options,
+            RouterInterface::ABSOLUTE_URL
+        );
+        $outbox = $this->router->generate(
+            'api_ap_v1_person_outbox_get',
+            $options,
+            RouterInterface::ABSOLUTE_URL
+        );
         $publicKey = $entity->getPublicKey()
             ? $this->publicKeyFactory->create(
-                $this->router->generate('api_ap_v1_person_pub_key_get', $options),
+                $this->router->generate(
+                    'api_ap_v1_person_pub_key_get',
+                    $options,
+                    RouterInterface::ABSOLUTE_URL
+                ),
                 $id,
                 $entity->getPublicKey()
             )
@@ -63,7 +79,7 @@ class PersonFactory implements PersonFactoryInterface
         return $person
             ->setId($id)
             ->setName($entity->getName())
-            ->setPreferredUsername(str_replace('~', '', $entity->getUsername()))
+            ->setPreferredUsername($entity->getPreferredUsername())
             ->setInbox($inbox)
             ->setOutbox($outbox)
             ->setPublicKey($publicKey)

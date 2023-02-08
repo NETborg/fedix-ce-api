@@ -50,6 +50,7 @@ abstract class ObjectType
 
     /** @var array<string, string>|null */
     protected array|null $contentMap = null;
+    protected SourceProperty|null $source = null;
     protected string|LinkType|ObjectType|null $context = null;
     protected string|\DateTimeInterface|null $duration = null;
     protected string|\DateTimeInterface|null $startTime = null;
@@ -270,6 +271,18 @@ abstract class ObjectType
     public function setContentMap(?array $contentMap): ObjectType
     {
         $this->contentMap = $contentMap;
+
+        return $this;
+    }
+
+    public function getSource(): ?SourceProperty
+    {
+        return $this->source;
+    }
+
+    public function setSource(?SourceProperty $source): ObjectType
+    {
+        $this->source = $source;
 
         return $this;
     }

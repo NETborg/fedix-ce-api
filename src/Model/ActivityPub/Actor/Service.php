@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\Model\ActivityPub\Actor;
 
-use Netborg\Fediverse\Api\Model\ActivityPub\ObjectType;
-
-class Service extends ObjectType
+class Service extends AbstractActor
 {
     public const TYPE = 'Service';
 

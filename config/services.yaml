@@ -7,12 +7,17 @@ parameters:
     username_prefix: '~'
     username_pattern: 'a-zA-Z0-9_\.\-'
     redis_dsn: '%env(REDIS_DSN)%'
+    domain: localhost
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    _instanceof:
+        Netborg\Fediverse\Api\WebFinger\ResourceResolverInterface:
+            tags: [ !php/const Netborg\Fediverse\Api\DependencyInjection\CompilerPass\WebFingerResourceResolverPass::TAG ]
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -21,7 +26,9 @@ services:
         exclude:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
+            - '../src/Exception/'
             - '../src/Model/'
+            - '../src/WebFinger/Model/'
             - '../src/Kernel.php'
 
     # add more service definitions when explicit configuration is needed
@@ -31,3 +38,7 @@ services:
         arguments:
             $usernamePrefix: '%username_prefix%'
             $usernameRegexPattern: '%username_pattern%'
+
+    Netborg\Fediverse\Api\WebFinger\ResourceResolver\ActorResolver:
+        arguments:
+            $myDomain: '%domain%'

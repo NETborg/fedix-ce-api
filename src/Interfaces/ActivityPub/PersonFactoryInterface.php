@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\Interfaces\ActivityPub;
 
-use Netborg\Fediverse\Api\Entity\User;
+use Netborg\Fediverse\Api\Entity\Actor;
 use Netborg\Fediverse\Api\Model\ActivityPub\Actor\Person;
 
 interface PersonFactoryInterface
@@ -13,5 +13,5 @@ interface PersonFactoryInterface
 
     public function fromArray(array $data, Person $subject = null, array $context = []): Person;
 
-    public function fromUserEntity(User $entity, Person $subject = null): Person;
+    public function fromPersonEntity(Actor $entity, Person $subject = null): Person;
 }

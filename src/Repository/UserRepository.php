@@ -3,7 +3,6 @@
 namespace Netborg\Fediverse\Api\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Netborg\Fediverse\Api\Entity\User;
 use Netborg\Fediverse\Api\Interfaces\Repository\UserRepositoryInterface;
@@ -41,40 +40,28 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         }
     }
 
-    public function findByUsername(string $username): ?User
+    public function findOneByUsername(string $username): ?User
     {
-        try {
-            return $this->createQueryBuilder('u')
-                ->where('u.username = :username')->setParameter('username', $username)
-                ->getQuery()
-                ->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $this->createQueryBuilder('u')
+            ->where('u.username = :username')->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
-    public function findByEmail(string $email): ?User
+    public function findOneByEmail(string $email): ?User
     {
-        try {
-            return $this->createQueryBuilder('u')
-                ->where('u.email = :email')->setParameter('email', $email)
-                ->getQuery()
-                ->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $this->createQueryBuilder('u')
+            ->where('u.email = :email')->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
-    public function findByUsernameOrEmail(string $phrase): ?User
+    public function findOneByUsernameOrEmail(string $phrase): ?User
     {
-        try {
-            return $this->createQueryBuilder('u')
-                ->where('u.username = :username')->setParameter('username', $phrase)
-                ->orWhere('u.email = :email')->setParameter('email', $phrase)
-                ->getQuery()
-                ->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $this->createQueryBuilder('u')
+            ->where('u.username = :username')->setParameter('username', $phrase)
+            ->orWhere('u.email = :email')->setParameter('email', $phrase)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

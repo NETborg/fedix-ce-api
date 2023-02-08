@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\Controller\Api\App\User;
 
+use Netborg\Fediverse\Api\Entity\Actor;
 use Netborg\Fediverse\Api\Entity\User;
+use Netborg\Fediverse\Api\Interfaces\Factory\ActorEntityFactoryInterface;
+use Netborg\Fediverse\Api\Interfaces\Repository\ActorRepositoryInterface;
 use Netborg\Fediverse\Api\Interfaces\Repository\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,23 +23,30 @@ class UserController extends AbstractController
     public function __construct(
         private readonly ValidatorInterface $validator,
         private readonly UserRepositoryInterface $userRepository,
+        private readonly ActorRepositoryInterface $actorRepository,
+        private readonly ActorEntityFactoryInterface $actorEntityFactory,
         private readonly SerializerInterface $serializer,
     ) {
     }
 
     public function getAction(string $identifier): JsonResponse
     {
-        $user = $this->userRepository->findByUsername($identifier);
+        $user = $this->userRepository->findOneByUsername($identifier);
 
         if (!$user) {
             throw new NotFoundHttpException(sprintf('User with username `%s` not found!', $identifier));
         }
 
-        return new JsonResponse($this->serializer->normalize($user, 'json'));
+        return new JsonResponse($this->serializer->normalize(
+            $user,
+            'json',
+            [AbstractNormalizer::GROUPS => ['User', 'Actors']]
+        ));
     }
 
     public function createAction(Request $request): JsonResponse
     {
+        /** @var User $user */
         $user = $this->serializer->deserialize(
             data: $request->getContent(),
             type: User::class,
@@ -44,17 +54,36 @@ class UserController extends AbstractController
             context: [AbstractNormalizer::GROUPS => ['Create']]
         );
 
+        if ($user->getFirstName() || $user->getLastName()) {
+            $user->setName(sprintf('%s %s', $user->getFirstName(), $user->getLastName()));
+        }
+
         $errors = $this->validator->validate(value: $user, groups: ['Create']);
         if (count($errors)) {
             return new JsonResponse($this->serializer->normalize($errors, 'json'), Response::HTTP_BAD_REQUEST);
         }
 
+        $person = $this->actorEntityFactory->createFromUserEntity($user, Actor::PERSON);
+        $check = $this->actorRepository->findOneByPreferredUsername($person->getPreferredUsername());
+
+        while($check) {
+            $newUsername = sprintf(
+                '%s_%s',
+                $person->getPreferredUsername(),
+                substr(sha1(uniqid()), rand(0, 31), 8)
+            );
+
+            $person->setPreferredUsername($newUsername);
+            $check = $this->actorRepository->findOneByPreferredUsername($newUsername);
+        }
+
+        $user->addActor($person);
         $this->userRepository->save($user, true);
 
         return new JsonResponse($this->serializer->normalize(
             $user,
             'json',
-            [AbstractNormalizer::GROUPS => ['Default']]
+            [AbstractNormalizer::GROUPS => ['User', 'Created']]
         ));
     }
 }

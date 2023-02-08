@@ -12,9 +12,9 @@ interface UserRepositoryInterface
 
     public function remove(User $entity, bool $flush = false): void;
 
-    public function findByUsername(string $username): ?User;
+    public function findOneByUsername(string $username): ?User;
 
-    public function findByEmail(string $email): ?User;
+    public function findOneByEmail(string $email): ?User;
 
-    public function findByUsernameOrEmail(string $phrase): ?User;
+    public function findOneByUsernameOrEmail(string $phrase): ?User;
 }
