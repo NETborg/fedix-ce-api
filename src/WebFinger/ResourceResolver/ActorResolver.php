@@ -11,8 +11,6 @@ use Netborg\Fediverse\Api\Interfaces\Repository\ActorRepositoryInterface;
 use Netborg\Fediverse\Api\Interfaces\Sanitiser\UsernameSanitiserInterface;
 use Netborg\Fediverse\Api\WebFinger\ResourceResolverInterface;
 use Netborg\Fediverse\Api\WebFinger\WebFingerResultBuilderInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouterInterface;
 
 class ActorResolver implements ResourceResolverInterface
@@ -23,7 +21,8 @@ class ActorResolver implements ResourceResolverInterface
         private readonly ActorRepositoryInterface $actorRepository,
         private readonly UsernameSanitiserInterface $usernameSanitiser,
         private readonly RouterInterface $router,
-        private string $myDomain,
+        private readonly string $myDomain,
+        private readonly string $frontendHost
     ) {
     }
 
@@ -62,10 +61,21 @@ class ActorResolver implements ResourceResolverInterface
 
         $username = $this->usernameSanitiser->prefixise($username);
 
-        $subject = $this->router->generate('api_ap_v1_person_get', ['identifier' => $username], RouterInterface::ABSOLUTE_URL);
+        $subjectUrl = $this->router->generate('api_ap_v1_person_get', ['identifier' => $username], RouterInterface::ABSOLUTE_URL);
 
-        // TODO - add other WebFinger's resolutions here
+
         $resultBuilder
-            ->setSubject($subject);
+            ->setSubject($subjectUrl)
+            ->addLink(
+                rel: 'http://webfinger.net/rel/#profile-page',
+                href: sprintf('%s/%s/%s', $this->frontendHost, strtolower($actor->getType()), $username),
+                type: 'text/html'
+            );
+        // TODO - add other WebFinger's resolutions here
+        $resultBuilder->addLink(
+            rel: 'http://webfinger.net/rel/#avatar',
+            href: sprintf('%s/%s/%s', $this->frontendHost, 'avatar', $username),
+            type: 'image/jpeg'
+        );
     }
 }

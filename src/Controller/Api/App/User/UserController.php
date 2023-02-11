@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\Controller\Api\App\User;
 
-use Netborg\Fediverse\Api\Entity\Actor;
+use Netborg\Fediverse\Api\Entity\ActivityPub\Actor;
 use Netborg\Fediverse\Api\Entity\User;
 use Netborg\Fediverse\Api\Interfaces\Factory\ActorEntityFactoryInterface;
 use Netborg\Fediverse\Api\Interfaces\Repository\ActorRepositoryInterface;

@@ -4,7 +4,7 @@ namespace Netborg\Fediverse\Api\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Netborg\Fediverse\Api\Entity\Actor;
+use Netborg\Fediverse\Api\Entity\ActivityPub\Actor;
 use Netborg\Fediverse\Api\Interfaces\Repository\ActorRepositoryInterface;
 
 /**

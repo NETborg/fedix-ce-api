@@ -7,6 +7,8 @@ parameters:
     username_prefix: '~'
     username_pattern: 'a-zA-Z0-9_\.\-'
     redis_dsn: '%env(REDIS_DSN)%'
+    frontend_host: https://fedix.social
+    backend_host: http://localhost:8080
     domain: localhost
 
 services:
@@ -42,3 +44,4 @@ services:
     Netborg\Fediverse\Api\WebFinger\ResourceResolver\ActorResolver:
         arguments:
             $myDomain: '%domain%'
+            $frontendHost: '%frontend_host%'

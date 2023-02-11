@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\Interfaces\ActivityPub;
 
-use Netborg\Fediverse\Api\Entity\Actor;
+use Netborg\Fediverse\Api\Entity\ActivityPub\Actor;
 use Netborg\Fediverse\Api\Model\ActivityPub\Actor\Person;
 
 interface PersonFactoryInterface

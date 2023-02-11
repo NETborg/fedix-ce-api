@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\Factory\ActivityPub;
 
-use Netborg\Fediverse\Api\Entity\Actor;
+use Netborg\Fediverse\Api\Entity\ActivityPub\Actor;
 use Netborg\Fediverse\Api\Interfaces\ActivityPub\PersonFactoryInterface;
 use Netborg\Fediverse\Api\Interfaces\ActivityPub\PublicKeyFactoryInterface;
 use Netborg\Fediverse\Api\Interfaces\Sanitiser\UsernameSanitiserInterface;
