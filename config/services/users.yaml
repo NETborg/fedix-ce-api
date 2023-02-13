@@ -1,0 +1,26 @@
+parameters:
+
+
+services:
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  _instanceof:
+    Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandHandlerInterface:
+      tags: [ !php/const Netborg\Fediverse\Api\Shared\Infrastructure\DependencyInjection\CompilerPass\CommandBusHandlerPass::TAG ]
+
+    Netborg\Fediverse\Api\Shared\Domain\QueryBus\QueryHandlerInterface:
+      tags: [ !php/const Netborg\Fediverse\Api\Shared\Infrastructure\DependencyInjection\CompilerPass\QueryBusHandlerPass::TAG ]
+
+  Netborg\Fediverse\Api\UserModule\:
+    resource: '../../src/UserModule/'
+    exclude:
+      - '../../src/UserModule/Application/Exception/'
+      - '../../src/UserModule/Application/Model/'
+      - '../../src/UserModule/Application/CommandBus/Command/'
+      - '../../src/UserModule/Application/QueryBus/Query/'
+      - '../../src/UserModule/Domain/Model/'
+      - '../../src/UserModule/Infrastructure/DependencyInjection/'
+      - '../../src/UserModule/Infrastructure/Entity/'
+      - '../../src/UserModule/Infrastructure/Exception/'

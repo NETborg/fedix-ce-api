@@ -1,7 +1,9 @@
-api_app_v1:
-  resource: api/app/api_v1.yaml
-  prefix: /app/v1
+api_user_v1:
+  prefix: /v1/user
+  resource: api/user/v1.yaml
+#  schemes: https
 
-api_ap_v1:
-  resource: api/activity_pub/api_ap_v1.yaml
-  prefix: /activity_pub/v1
+api_ap_person_v1:
+  prefix: /v1/activity_pub/person
+  resource: api/activity_pub/person/v1.yaml
+#  schemes: https

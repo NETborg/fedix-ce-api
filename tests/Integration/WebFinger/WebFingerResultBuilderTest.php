@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Netborg\Fediverse\Api\Tests\Integration\WebFinger;
 
 use Netborg\Fediverse\Api\Tests\Integration\AbstractKernelTestCase;
-use Netborg\Fediverse\Api\WebFinger\Model\WebFingerLink;
-use Netborg\Fediverse\Api\WebFinger\Model\WebFingerProperties;
-use Netborg\Fediverse\Api\WebFinger\Model\WebFingerResult;
-use Netborg\Fediverse\Api\WebFinger\Model\WebFingerTitles;
-use Netborg\Fediverse\Api\WebFinger\WebFingerResultBuilder;
+use Netborg\Fediverse\Api\WebFingerModule\Domain\Model\WebFingerLink;
+use Netborg\Fediverse\Api\WebFingerModule\Domain\Model\WebFingerProperties;
+use Netborg\Fediverse\Api\WebFingerModule\Domain\Model\WebFingerResult;
+use Netborg\Fediverse\Api\WebFingerModule\Domain\Model\WebFingerTitles;
+use Netborg\Fediverse\Api\WebFingerModule\Application\Builder\WebFingerResultBuilder;
 
-/** @covers \Netborg\Fediverse\Api\WebFinger\WebFingerResultBuilder */
+/** @covers \Netborg\Fediverse\Api\WebFingerModule\Application\Builder\WebFingerResultBuilder */
 class WebFingerResultBuilderTest extends AbstractKernelTestCase
 {
     public function testBuild(): void

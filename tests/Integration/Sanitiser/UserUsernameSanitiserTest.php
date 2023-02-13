@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\Tests\Integration\Sanitiser;
 
-use Netborg\Fediverse\Api\Sanitiser\UserUsernameSanitiser;
+use Netborg\Fediverse\Api\Shared\Application\Sanitiser\UserUsernameSanitiser;
 use Netborg\Fediverse\Api\Tests\Integration\AbstractKernelTestCase;
 
-/** @covers \Netborg\Fediverse\Api\Sanitiser\UserUsernameSanitiser */
+/** @covers \Netborg\Fediverse\Api\Shared\Application\Sanitiser\UserUsernameSanitiser */
 class UserUsernameSanitiserTest extends AbstractKernelTestCase
 {
     private UserUsernameSanitiser|null $service;
@@ -16,7 +16,7 @@ class UserUsernameSanitiserTest extends AbstractKernelTestCase
     {
         parent::setUp();
 
-        $this->service = $this->getContainer()->get('Netborg\Fediverse\Api\Sanitiser\UserUsernameSanitiser');
+        $this->service = $this->getContainer()->get('Netborg\Fediverse\Api\Shared\Sanitiser\UserUsernameSanitiser');
     }
 
     protected function tearDown(): void

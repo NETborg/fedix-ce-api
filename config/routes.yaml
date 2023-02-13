@@ -10,7 +10,5 @@ api:
 #    schemes: https
 
 webfinger:
-    path: /.well-known/webfinger
-    controller: Netborg\Fediverse\Api\Controller\WellKnownController::webfinger
-    methods: GET
+    resource: routes/webfinger.yaml
 #    schemes: https

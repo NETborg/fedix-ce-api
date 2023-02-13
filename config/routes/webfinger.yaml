@@ -1,0 +1,5 @@
+webfinger_server:
+  path: /.well-known/webfinger
+  controller: Netborg\Fediverse\Api\WebFingerModule\Infrastructure\Controller\WebFingerController::webfinger
+  methods: GET
+#    schemes: https

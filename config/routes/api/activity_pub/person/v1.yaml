@@ -1,0 +1,27 @@
+api_ap_v1_person_get:
+  path: '/{identifier}'
+  controller: Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Person\PersonController::getAction
+  methods: GET
+  requirements:
+    identifier: '^%username_prefix%[%username_pattern%]+'
+
+api_ap_v1_person_inbox_get:
+  path: '/{identifier}/inbox'
+  controller: Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Person\PersonInboxController::getAction
+  methods: GET
+  requirements:
+    identifier: '^%username_prefix%[%username_pattern%]+'
+
+api_ap_v1_person_outbox_get:
+  path: '/{identifier}/outbox'
+  controller: Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Person\PersonOutboxController::getAction
+  methods: GET
+  requirements:
+    identifier: '^%username_prefix%[%username_pattern%]+'
+
+api_ap_v1_person_pub_key_get:
+  path: '/{identifier}/pub-key'
+  controller: Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Person\PersonPubKeyController::getAction
+  methods: GET
+  requirements:
+    identifier: '^%username_prefix%[%username_pattern%]+'

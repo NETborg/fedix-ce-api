@@ -1,6 +1,6 @@
 <?php
 
-use Netborg\Fediverse\Api\Kernel;
+use Netborg\Fediverse\Api\Shared\Kernel;
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 

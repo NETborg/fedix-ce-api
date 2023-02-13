@@ -1,3 +1,6 @@
+imports:
+    - { resource: services/ }
+
 # This file is the entry point to configure your own services.
 # Files in the packages/ subdirectory configure your dependencies.
 
@@ -17,31 +20,22 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    _instanceof:
-        Netborg\Fediverse\Api\WebFinger\ResourceResolverInterface:
-            tags: [ !php/const Netborg\Fediverse\Api\DependencyInjection\CompilerPass\WebFingerResourceResolverPass::TAG ]
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
-    Netborg\Fediverse\Api\:
-        resource: '../src/'
+    Netborg\Fediverse\Api\Shared\:
+        resource: '../src/Shared/'
         exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
-            - '../src/Exception/'
-            - '../src/Model/'
-            - '../src/WebFinger/Model/'
-            - '../src/Kernel.php'
+            - '../src/Shared/Infrastructure/DependencyInjection/'
+            - '../src/Shared/Application/CommandBus/Command/'
+            - '../src/Shared/Application/QueryBus/Query/'
+            - '../src/Shared/Domain/Model/'
+            - '../src/Shared/Infrastructure/Kernel.php'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    Netborg\Fediverse\Api\Sanitiser\UserUsernameSanitiser:
+    Netborg\Fediverse\Api\Shared\Application\Sanitiser\UserUsernameSanitiser:
         arguments:
             $usernamePrefix: '%username_prefix%'
             $usernameRegexPattern: '%username_pattern%'
-
-    Netborg\Fediverse\Api\WebFinger\ResourceResolver\ActorResolver:
-        arguments:
-            $myDomain: '%domain%'
-            $frontendHost: '%frontend_host%'
