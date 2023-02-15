@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netborg\Fediverse\Api\Tests\Integration\WebFinger;
+namespace Netborg\Fediverse\Api\Tests\Integration\WebFingerModule\Application\Builder;
 
 use Netborg\Fediverse\Api\Tests\Integration\AbstractKernelTestCase;
 use Netborg\Fediverse\Api\WebFingerModule\Domain\Model\WebFingerLink;

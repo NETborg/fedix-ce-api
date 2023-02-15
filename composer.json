@@ -43,6 +43,9 @@
         "symfony/yaml": "6.2.*"
     },
     "require-dev": {
+        "coduo/php-matcher": "^6.0",
+        "dama/doctrine-test-bundle": "^7.2",
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
         "friendsofphp/php-cs-fixer": "^3.14",
         "phpspec/prophecy-phpunit": "^2.0",
         "phpunit/phpunit": "^9.5",

@@ -88,6 +88,5 @@ class ActivationLink
     {
         $this->uuid = Uuid::v7()->toRfc4122();
         $this->createdAt = new \DateTimeImmutable();
-        $this->expiresAt = $this->createdAt->add(new \DateInterval('PT24H'));
     }
 }

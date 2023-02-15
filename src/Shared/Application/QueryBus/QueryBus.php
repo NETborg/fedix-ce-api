@@ -11,11 +11,12 @@ use Netborg\Fediverse\Api\Shared\Domain\QueryBus\QueryHandlerInterface;
 class QueryBus implements QueryBusInterface
 {
     /** @var QueryHandlerInterface[] */
-    private static array $queryHandlers = [];
+    private array $queryHandlers = [];
 
-    public static function registerQueryHandler(QueryHandlerInterface $queryHandler): void
+    public function registerQueryHandler(QueryHandlerInterface $queryHandler): void
     {
-        if (isset(self::$queryHandlers[$queryHandler->getName()])) {
+        if (isset($this->queryHandlers[$queryHandler->getName()])) {
+            dd($this->queryHandlers);
             $msg = sprintf(
                 'Multiple query handlers exist using the same name `%s`',
                 $queryHandler->getName()
@@ -23,7 +24,7 @@ class QueryBus implements QueryBusInterface
             throw new \LogicException($msg);
         }
 
-        self::$queryHandlers[$queryHandler->getName()] = $queryHandler;
+        $this->queryHandlers[$queryHandler->getName()] = $queryHandler;
     }
 
     /** @return array<string,mixed>|mixed */
@@ -32,7 +33,7 @@ class QueryBus implements QueryBusInterface
         $results = [];
         $handled = false;
 
-        foreach (self::$queryHandlers as $name => $queryHandler) {
+        foreach ($this->queryHandlers as $name => $queryHandler) {
             if ($queryHandler->supports($query->getName(), $query->getSubjectType())) {
                 $results[$name] = $queryHandler->handle($query);
                 $handled = true;

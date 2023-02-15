@@ -8,7 +8,7 @@ use Netborg\Fediverse\Api\Shared\Domain\QueryBus\Query\QueryInterface;
 
 interface QueryBusInterface
 {
-    public static function registerQueryHandler(QueryHandlerInterface $queryHandler): void;
+    public function registerQueryHandler(QueryHandlerInterface $queryHandler): void;
 
     /** @return array<string,mixed>|mixed */
     public function handle(QueryInterface $query): mixed;

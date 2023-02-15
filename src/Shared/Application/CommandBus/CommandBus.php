@@ -11,11 +11,11 @@ use Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandHandlerInterface;
 class CommandBus implements CommandBusInterface
 {
     /** @var CommandHandlerInterface[] */
-    private static array $commandHandlers = [];
+    private array $commandHandlers = [];
 
-    public static function registerCommandHandler(CommandHandlerInterface $commandHandler): void
+    public function registerCommandHandler(CommandHandlerInterface $commandHandler): void
     {
-        if (isset(self::$commandHandlers[$commandHandler->getName()])) {
+        if (isset($this->commandHandlers[$commandHandler->getName()])) {
             $msg = sprintf(
                 'Multiple command handlers exist using the same name `%s`',
                 $commandHandler->getName()
@@ -23,7 +23,7 @@ class CommandBus implements CommandBusInterface
             throw new \LogicException($msg);
         }
 
-        self::$commandHandlers[$commandHandler->getName()] = $commandHandler;
+        $this->commandHandlers[$commandHandler->getName()] = $commandHandler;
     }
 
     /** @return array<string,mixed>|mixed */
@@ -32,7 +32,7 @@ class CommandBus implements CommandBusInterface
         $results = [];
         $handled = false;
 
-        foreach (self::$commandHandlers as $name => $commandHandler) {
+        foreach ($this->commandHandlers as $name => $commandHandler) {
             if ($commandHandler->supports($command->getName(), $command->getSubjectType())) {
                 $results[$name] = $commandHandler->handle($command);
                 $handled = true;
