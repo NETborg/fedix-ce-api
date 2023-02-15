@@ -63,4 +63,28 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findOneByUuid(string $uuid): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.uuid = :uuid')->setParameter('uuid', $uuid)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findOneByAnyIdentifier(string $identifier): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.username = :phrase')
+            ->orWhere('u.email = :phrase')
+            ->orWhere('u.uuid = :phrase')
+            ->setParameter('phrase', $identifier)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function findOneById(int $id): ?User
+    {
+        return $this->find($id);
+    }
 }

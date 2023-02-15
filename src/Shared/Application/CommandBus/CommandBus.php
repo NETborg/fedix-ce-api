@@ -26,17 +26,30 @@ class CommandBus implements CommandBusInterface
         self::$commandHandlers[$commandHandler->getName()] = $commandHandler;
     }
 
-    /** @return array<string,mixed> */
-    public function handle(CommandInterface $command): array
+    /** @return array<string,mixed>|mixed */
+    public function handle(CommandInterface $command): mixed
     {
         $results = [];
+        $handled = false;
 
         foreach (self::$commandHandlers as $name => $commandHandler) {
             if ($commandHandler->supports($command->getName(), $command->getSubjectType())) {
                 $results[$name] = $commandHandler->handle($command);
+                $handled = true;
             }
         }
 
-        return $results;
+        if (!$handled) {
+            $msg = sprintf(
+                'Unsupported command `%s` [%s]! Add CommandHandler for this command.',
+                $command->getName(),
+                $command->getSubjectType()
+            );
+            throw new \RuntimeException($msg);
+        }
+
+        return 1 === count($results)
+            ? array_shift($results)
+            : $results ?? null;
     }
 }

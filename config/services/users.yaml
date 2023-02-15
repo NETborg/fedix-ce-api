@@ -1,4 +1,5 @@
 parameters:
+  activation_link.ttl: 'PT24H'
 
 
 services:
@@ -24,3 +25,7 @@ services:
       - '../../src/UserModule/Infrastructure/DependencyInjection/'
       - '../../src/UserModule/Infrastructure/Entity/'
       - '../../src/UserModule/Infrastructure/Exception/'
+
+  Netborg\Fediverse\Api\UserModule\Infrastructure\Factory\ActivationLinkFactory:
+    arguments:
+      $ttl: '%activation_link.ttl%'

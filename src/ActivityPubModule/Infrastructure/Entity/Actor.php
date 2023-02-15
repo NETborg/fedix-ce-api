@@ -10,10 +10,12 @@ use Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Repository\ActorRepos
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\User;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
-#[UniqueEntity(fields: ['preferredUsername'])]
+#[UniqueEntity('uuid')]
+#[UniqueEntity('preferred_username')]
 #[ORM\HasLifecycleCallbacks]
 class Actor
 {
@@ -25,6 +27,11 @@ class Actor
     #[ORM\Column]
     #[Groups(['Created'])]
     private ?int $id = null;
+
+    #[ORM\Column(type: Types::GUID, unique: true, nullable: false)]
+    #[Assert\NotBlank]
+    #[Groups(['Actor', 'Actors'])]
+    private ?string $uuid = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
@@ -48,7 +55,7 @@ class Actor
     #[Groups(['Actor'])]
     private ?array $summaryMap = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     #[Groups(['Actor', 'Actors'])]
     private ?string $preferredUsername = null;
 
@@ -56,11 +63,11 @@ class Actor
     #[Groups(['Actor'])]
     private ?string $publicKey = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     #[Groups(['Actor'])]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     #[Groups(['Actor'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
@@ -76,6 +83,18 @@ class Actor
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUuid(): ?string
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(?string $uuid): self
+    {
+        $this->uuid = $uuid;
+
+        return $this;
     }
 
     public function getType(): ?string
@@ -216,6 +235,7 @@ class Actor
     #[ORM\PrePersist]
     public function onCreate(): void
     {
+        $this->uuid = Uuid::v7()->toRfc4122();
         $this->createdAt = new \DateTimeImmutable();
     }
 

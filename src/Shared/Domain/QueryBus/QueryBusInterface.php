@@ -10,6 +10,6 @@ interface QueryBusInterface
 {
     public static function registerQueryHandler(QueryHandlerInterface $queryHandler): void;
 
-    /** @return array<string,mixed> */
-    public function handle(QueryInterface $query): array;
+    /** @return array<string,mixed>|mixed */
+    public function handle(QueryInterface $query): mixed;
 }

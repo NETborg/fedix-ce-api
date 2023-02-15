@@ -7,11 +7,12 @@ namespace Netborg\Fediverse\Api\WebFingerModule\Application\Server;
 use Netborg\Fediverse\Api\Shared\Application\QueryBus\Query\GetWebFingerDetailsQuery;
 use Netborg\Fediverse\Api\Shared\Domain\Model\DTO\GetWebFingerDetailsDTO;
 use Netborg\Fediverse\Api\Shared\Domain\QueryBus\QueryBusInterface;
-use Netborg\Fediverse\Api\WebFingerModule\Application\QueryBus\Handler\WebFingerDetailsQueryHandler;
+use Netborg\Fediverse\Api\WebFingerModule\Application\Exception\ResourceNotFoundException;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class WebFingerServer implements WebFingerServerInterface
@@ -20,6 +21,7 @@ class WebFingerServer implements WebFingerServerInterface
         private readonly QueryBusInterface $queryBus,
         private readonly ValidatorInterface $validator,
         private readonly SerializerInterface $serializer,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -33,17 +35,14 @@ class WebFingerServer implements WebFingerServerInterface
         $errors = $this->validator->validate($dto);
 
         if ($errors->count()) {
-            return new JsonResponse(
-                data: $this->serializer->serialize($errors, 'json'),
-                status: Response::HTTP_BAD_REQUEST,
-                json: true
-            );
+            throw new ValidationFailedException($dto, $errors);
         }
 
         $result = $this->queryBus->handle(new GetWebFingerDetailsQuery($dto));
 
-        if (1 === count($result) && isset($result[WebFingerDetailsQueryHandler::NAME])) {
-            $result = $result[WebFingerDetailsQueryHandler::NAME];
+        if (!$result) {
+            $this->logger->error(sprintf('Unable to resolve WebFinger result for %s!', $resource));
+            throw ResourceNotFoundException::resource($resource);
         }
 
         return new JsonResponse(

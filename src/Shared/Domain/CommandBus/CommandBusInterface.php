@@ -10,6 +10,6 @@ interface CommandBusInterface
 {
     public static function registerCommandHandler(CommandHandlerInterface $commandHandler): void;
 
-    /** @return array<string,mixed> */
-    public function handle(CommandInterface $command): array;
+    /** @return array<string,mixed>|mixed */
+    public function handle(CommandInterface $command): mixed;
 }

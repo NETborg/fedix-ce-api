@@ -26,17 +26,30 @@ class QueryBus implements QueryBusInterface
         self::$queryHandlers[$queryHandler->getName()] = $queryHandler;
     }
 
-    /** @return array<string,mixed> */
-    public function handle(QueryInterface $query): array
+    /** @return array<string,mixed>|mixed */
+    public function handle(QueryInterface $query): mixed
     {
         $results = [];
+        $handled = false;
 
         foreach (self::$queryHandlers as $name => $queryHandler) {
             if ($queryHandler->supports($query->getName(), $query->getSubjectType())) {
                 $results[$name] = $queryHandler->handle($query);
+                $handled = true;
             }
         }
 
-        return $results;
+        if (!$handled) {
+            $msg = sprintf(
+                'Unsupported query `%s` [%s]! Add QueryHandler for this query.',
+                $query->getName(),
+                $query->getSubjectType()
+            );
+            throw new \RuntimeException($msg);
+        }
+
+        return 1 === count($results)
+            ? array_shift($results)
+            : $results ?? null;
     }
 }

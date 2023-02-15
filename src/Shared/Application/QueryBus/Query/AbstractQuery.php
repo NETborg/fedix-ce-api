@@ -37,7 +37,7 @@ abstract class AbstractQuery implements QueryInterface
     private function resolveSubjectType(mixed $subject): string
     {
         if (is_object($subject)) {
-            return get_class($subject);
+            return str_replace('Proxies\\__CG__\\', '', get_class($subject));
         }
 
         return gettype($subject);
