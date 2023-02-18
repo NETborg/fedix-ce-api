@@ -9,18 +9,25 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class WebFingerPropertiesNormalizer extends AbstractNormalizer
 {
+    /** @param array<string,mixed> $context */
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): mixed
     {
         return (new $type())->setProperties((array) $data);
     }
 
+    /** @param array<string,mixed> $context */
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         return is_a($type, WebFingerProperties::class, true);
     }
 
-    /** @param WebFingerProperties $object */
-    public function normalize(mixed $object, string $format = null, array $context = []): mixed
+    /**
+     * @param WebFingerProperties $object
+     * @param array<string,mixed> $context
+     *
+     * @return array<string,mixed>
+     */
+    public function normalize(mixed $object, string $format = null, array $context = []): array
     {
         $properties = $object->getProperties();
 
@@ -31,6 +38,7 @@ class WebFingerPropertiesNormalizer extends AbstractNormalizer
         return $properties;
     }
 
+    /** @param array<string,mixed> $context */
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return is_a($data, WebFingerProperties::class);

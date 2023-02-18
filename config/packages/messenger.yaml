@@ -1,0 +1,70 @@
+framework:
+    messenger:
+        # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
+        failure_transport: failed
+
+        transports:
+            # https://symfony.com/doc/current/messenger.html#transport-configuration
+            emails_activation:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%/emails'
+                failure_transport: failed_emails
+                options:
+                    exchange:
+                        name: emails
+                        type: direct
+                        default_publish_routing_key: activation
+                    queues:
+                        emails_activation:
+                            binding_keys:
+                                - activation
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+                    max_delay: 0
+            emails_password:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%/emails'
+                failure_transport: failed_emails
+                options:
+                    exchange:
+                        name: emails
+                        type: direct
+                        default_publish_routing_key: password_reset
+                    queues:
+                        emails_password_reset:
+                            binding_keys:
+                                - password_reset
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+                    max_delay: 0
+            events:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%/events'
+                serializer: messenger.transport.symfony_serializer
+                failure_transport: failed_events
+                options:
+                    exchange:
+                        name: events
+                        type: fanout
+            failed: 'doctrine://default?queue_name=failed'
+            failed_emails: '%env(MESSENGER_TRANSPORT_DSN)%/failed_emails'
+            failed_events: '%env(MESSENGER_TRANSPORT_DSN)%/failed_events'
+            sync: 'sync://'
+
+        routing:
+            # Route your messages to the transports
+            # 'App\Message\YourMessage': async
+
+when@test:
+    framework:
+        messenger:
+            transports:
+                # replace with your transport name here (e.g., my_transport: 'in-memory://')
+                # For more Messenger testing tools, see https://github.com/zenstruck/messenger-test
+                emails_activation: 'in-memory://'
+                emails_password: 'in-memory://'
+                events: 'in-memory://'
+                failed: 'in-memory://'
+                failed_emails: 'in-memory://'
+                failed_events: 'in-memory://'

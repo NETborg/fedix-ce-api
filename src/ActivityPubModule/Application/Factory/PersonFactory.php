@@ -27,7 +27,7 @@ class PersonFactory implements PersonFactoryInterface
 
     public function fromArray(array $data, Person $subject = null, array $context = []): Person
     {
-        /** @var Person $person */
+        /** @var Person $person @phpstan-ignore-next-line */
         $person = $this->serializer->denormalize(data: $data, type: Person::class, context: $context);
 
         if ($subject) {
@@ -74,6 +74,7 @@ class PersonFactory implements PersonFactoryInterface
 
         $person = $subject ?? new Person();
 
+        /* @phpstan-ignore-next-line */
         return $person
             ->setId($id)
             ->setName($entity->getName())

@@ -11,10 +11,12 @@ use Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandHandlerInterface;
 use Netborg\Fediverse\Api\Shared\Domain\Model\DTO\RegisteredUserDTO;
 use Netborg\Fediverse\Api\Shared\Domain\Model\DTO\RegisterUserDTO;
 use Netborg\Fediverse\Api\UserModule\Application\CommandBus\Command\SendEmailActivationLinkCommand;
+use Netborg\Fediverse\Api\UserModule\Application\Event\UserRegisteredEvent;
 use Netborg\Fediverse\Api\UserModule\Application\Factory\DomainUserFactory;
 use Netborg\Fediverse\Api\UserModule\Application\Factory\UserEntityFactory;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\UserRepositoryInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -28,7 +30,8 @@ class RegisterUserCommandHandler implements CommandHandlerInterface
         private readonly UserRepositoryInterface $userRepository,
         private readonly UserEntityFactory $entityFactory,
         private readonly DomainUserFactory $domainUserFactory,
-        private readonly ValidatorInterface $validator
+        private readonly ValidatorInterface $validator,
+        private readonly MessageBusInterface $messageBus,
     ) {
     }
 
@@ -55,6 +58,7 @@ class RegisterUserCommandHandler implements CommandHandlerInterface
         }
 
         $this->userRepository->save($entity, true);
+        $this->messageBus->dispatch(UserRegisteredEvent::create($entity));
 
         $activationLink = $this->commandBus->handle(new SendEmailActivationLinkCommand($entity));
 

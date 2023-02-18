@@ -6,5 +6,4 @@ namespace Netborg\Fediverse\Api\UserModule\Application\Factory;
 
 class ActivationLinkEntityFactory
 {
-
 }

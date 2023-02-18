@@ -10,6 +10,6 @@ class ResourceOwnershipException extends HttpException
 {
     public static function create(string $identifier, int $httpStatus = 400): self
     {
-        return new static($httpStatus, sprintf('Resource `%s` doesn\'t belong to this server.', $identifier));
+        return new self($httpStatus, sprintf('Resource `%s` doesn\'t belong to this server.', $identifier));
     }
 }

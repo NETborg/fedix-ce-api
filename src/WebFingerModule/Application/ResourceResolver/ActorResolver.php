@@ -25,11 +25,13 @@ class ActorResolver implements ResourceResolverInterface
     ) {
     }
 
+    /** @param string[]|null $rel */
     public function supports(string $scheme, string $subject, string $resourceIdentifier, ?array $rel): bool
     {
         return self::SCHEME === $scheme;
     }
 
+    /** @param string[]|null $rel */
     public function resolve(
         string $scheme,
         string $subject,
@@ -61,7 +63,6 @@ class ActorResolver implements ResourceResolverInterface
         $username = $this->usernameSanitiser->prefixise($username);
 
         $subjectUrl = $this->router->generate('api_ap_v1_person_get', ['identifier' => $username], RouterInterface::ABSOLUTE_URL);
-
 
         $resultBuilder
             ->setSubject($subjectUrl)

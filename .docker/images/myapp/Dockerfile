@@ -3,11 +3,19 @@ FROM php:8.2-apache
 ENV APACHE_DOCUMENT_ROOT /app
 
 RUN apt update && apt install -y \
+    apt-transport-https \
+    apt-utils \
+    gnupg \
     unzip \
-    libpq-dev
+    libpq-dev \
+    librabbitmq-dev \
+    libssh-dev
 
 RUN docker-php-ext-configure pgsql \
-    && docker-php-ext-install pdo pdo_pgsql pgsql
+    && docker-php-ext-install pdo pdo_pgsql pgsql bcmath sockets
+
+RUN pecl install amqp \
+    && docker-php-ext-enable amqp
 
 RUN a2enmod rewrite
 

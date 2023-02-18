@@ -10,6 +10,6 @@ class ResourceIdentifierException extends HttpException
 {
     public static function create(string $identifier): self
     {
-        return new static(400, sprintf('Resource identifier `%s` is invalid!', $identifier));
+        return new self(400, sprintf('Resource identifier `%s` is invalid!', $identifier));
     }
 }

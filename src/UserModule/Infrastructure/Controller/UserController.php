@@ -35,11 +35,11 @@ class UserController extends AbstractController
             throw new NotFoundHttpException(sprintf('User with username `%s` not found!', $identifier));
         }
 
-        return new JsonResponse($this->serializer->normalize(
+        return new JsonResponse($this->serializer->serialize(
             $user,
             'json',
             [AbstractNormalizer::GROUPS => ['User', 'Actors']]
-        ));
+        ), json: true);
     }
 
     public function createAction(Request $request): JsonResponse

@@ -13,8 +13,8 @@ services:
     depends_on:
       - postgres
     ports:
-      - 8080:80
-      - 8443:443
+      - '8080:80'
+      - '8443:443'
     environment:
       PHP_CS_FIXER_IGNORE_ENV: 1
     volumes:
@@ -27,7 +27,7 @@ services:
     image: postgres:14.6-alpine
     hostname: postgres
     ports:
-      - 5432:5432
+      - '5432:5432'
     environment:
       POSTGRES_DB: fedix-ce
       POSTGRES_USER: fedix
@@ -43,7 +43,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - 8081:80
+      - '8081:80'
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@fedix.com
       PGADMIN_DEFAULT_PASSWORD: fedix123
@@ -57,7 +57,7 @@ services:
     volumes:
       - ./.docker/volumes/redis/config:/etc/redis
     ports:
-      - 6379:6379
+      - '6379:6379'
     environment:
       REDIS_AUTH: foobar
     networks:
@@ -67,12 +67,26 @@ services:
     image: bbyars/mountebank:2.8.2
     hostname: mbank
     ports:
-      - 2525:2525
+      - '2525:2525'
     networks:
       - default
 
   mailer:
     image: schickling/mailcatcher
-    ports: [ "1025", "1080" ]
+    hostname: mailer
+    ports:
+      - '1025'
+      - '1080:1080'
+    networks:
+      - default
+
+  rabbit_mq:
+    image: rabbitmq:3.11-management
+    hostname: rabbitmq
+    ports:
+      - '5672'
+      - '15672:15672'
+    volumes:
+      - ./.docker/volumes/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
     networks:
       - default

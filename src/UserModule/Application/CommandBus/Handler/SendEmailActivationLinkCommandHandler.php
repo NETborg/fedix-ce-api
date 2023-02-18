@@ -9,7 +9,9 @@ use Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandHandlerInterface;
 use Netborg\Fediverse\Api\UserModule\Application\CommandBus\Command\SendEmailActivationLinkCommand;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\User;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Factory\ActivationLinkFactory;
+use Netborg\Fediverse\Api\UserModule\Infrastructure\Message\ActivationLinkNotification;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\ActivationLinkRepositoryInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class SendEmailActivationLinkCommandHandler implements CommandHandlerInterface
 {
@@ -17,7 +19,8 @@ class SendEmailActivationLinkCommandHandler implements CommandHandlerInterface
 
     public function __construct(
         private readonly ActivationLinkFactory $activationLinkFactory,
-        private readonly ActivationLinkRepositoryInterface $activationLinkRepository
+        private readonly ActivationLinkRepositoryInterface $activationLinkRepository,
+        private readonly MessageBusInterface $messageBus
     ) {
     }
 
@@ -40,7 +43,7 @@ class SendEmailActivationLinkCommandHandler implements CommandHandlerInterface
 
         $this->activationLinkRepository->save($activationLink, true);
 
-        // TODO - add sending email on the queue procedure here
+        $this->messageBus->dispatch(new ActivationLinkNotification($activationLink->getId()));
 
         return $activationLink;
     }

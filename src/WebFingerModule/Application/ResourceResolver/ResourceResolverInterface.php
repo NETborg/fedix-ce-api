@@ -8,8 +8,10 @@ use Netborg\Fediverse\Api\WebFingerModule\Application\Builder\WebFingerResultBui
 
 interface ResourceResolverInterface
 {
+    /** @param string[]|null $rel */
     public function supports(string $scheme, string $subject, string $resourceIdentifier, ?array $rel): bool;
 
+    /** @param string[]|null $rel */
     public function resolve(
         string $scheme,
         string $subject,

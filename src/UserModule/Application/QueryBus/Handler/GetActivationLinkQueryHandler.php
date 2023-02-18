@@ -13,6 +13,7 @@ use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\ActivationLinkRep
 class GetActivationLinkQueryHandler implements QueryHandlerInterface
 {
     public const NAME = 'activation_link.get';
+    private const INTEGER = 'integer';
 
     public function __construct(
         private readonly ActivationLinkRepositoryInterface $activationLinkRepository
@@ -26,14 +27,22 @@ class GetActivationLinkQueryHandler implements QueryHandlerInterface
 
     public function supports(string $query, string $subjectType): bool
     {
-        return GetActivationLinkQuery::NAME === $query && ActivateLinkDTO::class === $subjectType;
+        return GetActivationLinkQuery::NAME === $query
+            && in_array($subjectType, [
+                ActivateLinkDTO::class,
+                self::INTEGER,
+            ]);
     }
 
     public function handle(QueryInterface $query): mixed
     {
-        /** @var ActivateLinkDTO $activateLinkDTO */
+        /** @var ActivateLinkDTO|int $activateLinkDTO */
         $activateLinkDTO = $query->getSubject();
 
-        return $this->activationLinkRepository->findOneByUuid($activateLinkDTO->activationLink);
+        return match ($query->getSubjectType()) {
+            ActivateLinkDTO::class => $this->activationLinkRepository->findOneByUuid($activateLinkDTO->activationLink),
+            self::INTEGER => $this->activationLinkRepository->findOneById($activateLinkDTO),
+            default => null,
+        };
     }
 }

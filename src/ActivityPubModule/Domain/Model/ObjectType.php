@@ -348,7 +348,7 @@ abstract class ObjectType
     }
 
     /**
-     * @return array<Image,LinkType,string>|Image|LinkType|string|null
+     * @return array<Image|LinkType|string>|Image|LinkType|string|null
      */
     public function getIcon(): LinkType|array|string|Image|null
     {
@@ -356,7 +356,7 @@ abstract class ObjectType
     }
 
     /**
-     * @param array<Image,LinkType,string>|Image|LinkType|string|null $icon
+     * @param array<Image|LinkType|string>|Image|LinkType|string|null $icon
      */
     public function setIcon(LinkType|array|string|Image|null $icon): ObjectType
     {
@@ -366,7 +366,7 @@ abstract class ObjectType
     }
 
     /**
-     * @return array<Image,LinkType,string>|Image|LinkType|string|null
+     * @return array<Image|LinkType|string>|Image|LinkType|string|null
      */
     public function getImage(): LinkType|array|string|Image|null
     {
@@ -374,7 +374,7 @@ abstract class ObjectType
     }
 
     /**
-     * @param array<Image,LinkType,string>|Image|LinkType|string|null $image
+     * @param array<Image|LinkType|string>|Image|LinkType|string|null $image
      */
     public function setImage(LinkType|array|string|Image|null $image): ObjectType
     {

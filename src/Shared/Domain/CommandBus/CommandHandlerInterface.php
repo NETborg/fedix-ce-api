@@ -9,6 +9,8 @@ use Netborg\Fediverse\Api\Shared\Domain\CommandBus\Command\CommandInterface;
 interface CommandHandlerInterface
 {
     public function getName(): string;
+
     public function supports(string $command, string $subjectType): bool;
+
     public function handle(CommandInterface $command): mixed;
 }

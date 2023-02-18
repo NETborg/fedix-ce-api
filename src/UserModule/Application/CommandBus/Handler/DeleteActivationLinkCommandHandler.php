@@ -7,7 +7,6 @@ namespace Netborg\Fediverse\Api\UserModule\Application\CommandBus\Handler;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\Command\CommandInterface;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandHandlerInterface;
 use Netborg\Fediverse\Api\UserModule\Application\CommandBus\Command\DeleteActivationLinkCommand;
-use Netborg\Fediverse\Api\UserModule\Application\Exception\ModelNotFoundException;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\ActivationLink;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\ActivationLinkRepositoryInterface;
 
@@ -39,7 +38,7 @@ class DeleteActivationLinkCommandHandler implements CommandHandlerInterface
 
     public function handle(CommandInterface $command): mixed
     {
-        /** @var ActivationLink $activationLinkEntity */
+        /** @var ActivationLink|null $activationLinkEntity */
         $activationLinkEntity = match ($command->getSubjectType()) {
             ActivationLink::class => $command->getSubject(),
             self::STRING => $this->activationLinkRepository->findOneByUuid($command->getSubject()),

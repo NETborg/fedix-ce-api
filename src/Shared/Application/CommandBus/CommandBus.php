@@ -50,6 +50,6 @@ class CommandBus implements CommandBusInterface
 
         return 1 === count($results)
             ? array_shift($results)
-            : $results ?? null;
+            : $results;
     }
 }

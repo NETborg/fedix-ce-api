@@ -10,6 +10,7 @@ use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\User;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\ActivationLinkRepository;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\Messenger\Transport\InMemoryTransport;
 
 class LinkActivationTest extends AbstractApiTestCase
 {
@@ -28,6 +29,9 @@ class LinkActivationTest extends AbstractApiTestCase
 
     public function testLinkNotFoundCase(): void
     {
+        /** @var InMemoryTransport $eventBus */
+        $eventBus = self::getContainer()->get('messenger.transport.events');
+
         $this->client->request('GET', '/api/v1/activation/018655be-5d0d-7b3b-be3f-691582cc8e8f');
 
         $expected = <<<TXT
@@ -38,10 +42,14 @@ class LinkActivationTest extends AbstractApiTestCase
 TXT;
         $this->assertResponseStatusCodeSame(404);
         $this->assertMatchesPattern($expected, $this->client->getResponse()->getContent());
+        $this->assertCount(0, $eventBus->getSent());
     }
 
     public function testInvalidLinkStructureCase(): void
     {
+        /** @var InMemoryTransport $eventBus */
+        $eventBus = self::getContainer()->get('messenger.transport.events');
+
         $this->client->request('GET', '/api/v1/activation/12345678-1234-1234-1234-1234567890ab');
 
         $expected = <<<TXT
@@ -57,10 +65,14 @@ TXT;
 TXT;
         $this->assertResponseStatusCodeSame(400);
         $this->assertMatchesPattern($expected, $this->client->getResponse()->getContent());
+        $this->assertCount(0, $eventBus->getSent());
     }
 
     public function testExpiredActivationLinkCase(): void
     {
+        /** @var InMemoryTransport $eventBus */
+        $eventBus = self::getContainer()->get('messenger.transport.events');
+
         $this->userRepository->save(
             $user = (new User())
                 ->setUsername('test')
@@ -86,10 +98,14 @@ TXT;
 TXT;
         $this->assertResponseStatusCodeSame(401);
         $this->assertMatchesPattern($expected, $this->client->getResponse()->getContent());
+        $this->assertCount(0, $eventBus->getSent());
     }
 
     public function testSuccessfulActivationCase(): void
     {
+        /** @var InMemoryTransport $eventBus */
+        $eventBus = self::getContainer()->get('messenger.transport.events');
+
         $this->userRepository->save(
             $user = (new User())
                 ->setUsername('test')
@@ -116,5 +132,6 @@ TXT;
         $this->assertMatchesPattern($expected, $this->client->getResponse()->getContent());
         $this->assertTrue($this->userRepository->findOneById($user->getId())->isActive());
         $this->assertNull($this->activationLinkRepository->findOneByUuid($activationLink->getUuid()));
+        $this->assertCount(1, $eventBus->getSent());
     }
 }

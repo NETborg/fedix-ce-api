@@ -7,7 +7,6 @@ namespace Netborg\Fediverse\Api\WebFingerModule\Application\Service;
 use Netborg\Fediverse\Api\WebFingerModule\Application\Builder\WebFingerResultBuilder;
 use Netborg\Fediverse\Api\WebFingerModule\Application\Builder\WebFingerResultBuilderInterface;
 use Netborg\Fediverse\Api\WebFingerModule\Application\ResourceResolver\ResourceResolverInterface;
-use Netborg\Fediverse\Api\WebFingerModule\Application\Service\WebFingerServiceInterface;
 use Netborg\Fediverse\Api\WebFingerModule\Domain\Model\WebFingerResult;
 
 class WebFingerService implements WebFingerServiceInterface
@@ -20,6 +19,7 @@ class WebFingerService implements WebFingerServiceInterface
         self::$resourceResolvers[] = $resolver;
     }
 
+    /** @param string[]|null $rel */
     public function resolve(string $resource, ?array $rel = null): WebFingerResult
     {
         [$scheme, $subject] = explode(':', $resource);

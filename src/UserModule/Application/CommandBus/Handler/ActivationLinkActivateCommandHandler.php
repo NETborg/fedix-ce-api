@@ -12,10 +12,12 @@ use Netborg\Fediverse\Api\Shared\Domain\QueryBus\QueryBusInterface;
 use Netborg\Fediverse\Api\UserModule\Application\CommandBus\Command\ActivationLinkCommand;
 use Netborg\Fediverse\Api\UserModule\Application\CommandBus\Command\DeleteActivationLinkCommand;
 use Netborg\Fediverse\Api\UserModule\Application\CommandBus\Command\UpdateUserCommand;
+use Netborg\Fediverse\Api\UserModule\Application\Event\UserActivatedEvent;
 use Netborg\Fediverse\Api\UserModule\Application\Exception\InvalidActivationLinkException;
 use Netborg\Fediverse\Api\UserModule\Application\QueryBus\Query\GetActivationLinkQuery;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\ActivationLink;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class ActivationLinkActivateCommandHandler implements CommandHandlerInterface
 {
@@ -24,7 +26,8 @@ class ActivationLinkActivateCommandHandler implements CommandHandlerInterface
     public function __construct(
         private readonly QueryBusInterface $queryBus,
         private readonly CommandBusInterface $commandBus,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly MessageBusInterface $messageBus
     ) {
     }
 
@@ -43,7 +46,7 @@ class ActivationLinkActivateCommandHandler implements CommandHandlerInterface
         /** @var ActivateLinkDTO $activateLinkDTO */
         $activateLinkDTO = $command->getSubject();
 
-        /** @var ActivationLink $activationLinkEntity */
+        /** @var ActivationLink|null $activationLinkEntity */
         $activationLinkEntity = $this->queryBus->handle(new GetActivationLinkQuery($activateLinkDTO));
 
         if (!$activationLinkEntity) {
@@ -65,6 +68,8 @@ class ActivationLinkActivateCommandHandler implements CommandHandlerInterface
         if (!$this->commandBus->handle(new DeleteActivationLinkCommand($activationLinkEntity))) {
             $this->logger->error(sprintf('Unable to delete Activation Link [%s] during account activation', $activationLinkEntity->getUuid()));
         }
+
+        $this->messageBus->dispatch(UserActivatedEvent::create($user));
 
         return $user->isActive();
     }

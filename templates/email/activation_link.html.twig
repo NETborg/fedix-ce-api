@@ -1,0 +1,36 @@
+{% extends 'base.email.html.twig' %}
+
+{% set activationLink = frontend_host ~ '/activation/' ~ activationLinkUuid %}
+
+{% block stylesheets %}
+<style>
+    body { background-color: #dadeff; display: block; }
+    .main {
+        display: block;
+        width: 80%;
+        max-width: 900px;
+        min-width: 450px;
+        text-align: center;
+        margin: 20px auto;
+        padding: 15px;
+        background-color: #ffffff;
+    }
+    .page {
+        font-size: 18px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="main">
+    <div class="page">
+        <h1>Welcome to our application!</h1>
+        <p>
+            To activate your account please click activation link below:<br/>
+            <a href="{{ activationLink }}" target="_blank" title="Activation Link">
+                {{ activationLink }}
+            </a>
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -16,7 +16,6 @@ class QueryBus implements QueryBusInterface
     public function registerQueryHandler(QueryHandlerInterface $queryHandler): void
     {
         if (isset($this->queryHandlers[$queryHandler->getName()])) {
-            dd($this->queryHandlers);
             $msg = sprintf(
                 'Multiple query handlers exist using the same name `%s`',
                 $queryHandler->getName()
@@ -51,6 +50,6 @@ class QueryBus implements QueryBusInterface
 
         return 1 === count($results)
             ? array_shift($results)
-            : $results ?? null;
+            : $results;
     }
 }

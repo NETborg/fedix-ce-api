@@ -12,3 +12,7 @@ api:
 webfinger:
     resource: routes/webfinger.yaml
 #    schemes: https
+
+email_preview:
+    path: /email_preview/{email}
+    controller: Netborg\Fediverse\Api\Shared\Infrastructure\Controller\MainController::previewEmail

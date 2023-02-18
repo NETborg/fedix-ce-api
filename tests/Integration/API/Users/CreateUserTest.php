@@ -7,12 +7,18 @@ namespace Netborg\Fediverse\Api\Tests\Integration\API\Users;
 use Netborg\Fediverse\Api\Tests\Integration\API\AbstractApiTestCase;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\User;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\UserRepository;
+use Symfony\Component\Messenger\Transport\InMemoryTransport;
 
 class CreateUserTest extends AbstractApiTestCase
 {
     public function testErrorMissingEmail(): void
     {
         $client = static::createClient();
+        /** @var UserRepository $repository */
+        $repository = self::getContainer()->get(UserRepository::class);
+        /** @var InMemoryTransport $transport */
+        $transport = self::getContainer()->get('messenger.transport.emails_activation');
+
         $payload = [
             'firstName' => 'Test',
             'lastName' => 'User',
@@ -32,16 +38,23 @@ class CreateUserTest extends AbstractApiTestCase
 }
 TXT;
 
-        $crawler = $client->jsonRequest('POST', '/api/v1/user', $payload);
+        $client->jsonRequest('POST', '/api/v1/user', $payload);
         $output = $client->getResponse()->getContent();
 
         $this->assertResponseStatusCodeSame(400);
         $this->assertMatchesPattern($expected, $output);
+        $this->assertCount(0, $repository->findAll());
+        $this->assertCount(0, $transport->getSent());
     }
 
     public function testErrorMissingUsername(): void
     {
         $client = static::createClient();
+        /** @var UserRepository $repository */
+        $repository = self::getContainer()->get(UserRepository::class);
+        /** @var InMemoryTransport $transport */
+        $transport = self::getContainer()->get('messenger.transport.emails_activation');
+
         $payload = [
             'firstName' => 'Test',
             'lastName' => 'User',
@@ -61,16 +74,23 @@ TXT;
 }
 TXT;
 
-        $crawler = $client->jsonRequest('POST', '/api/v1/user', $payload);
+        $client->jsonRequest('POST', '/api/v1/user', $payload);
         $output = $client->getResponse()->getContent();
 
         $this->assertResponseStatusCodeSame(400);
         $this->assertMatchesPattern($expected, $output);
+        $this->assertCount(0, $repository->findAll());
+        $this->assertCount(0, $transport->getSent());
     }
 
     public function testErrorInvalidPassword(): void
     {
         $client = static::createClient();
+        /** @var UserRepository $repository */
+        $repository = self::getContainer()->get(UserRepository::class);
+        /** @var InMemoryTransport $transport */
+        $transport = self::getContainer()->get('messenger.transport.emails_activation');
+
         $payload = [
             'firstName' => 'Test',
             'lastName' => 'User',
@@ -91,16 +111,25 @@ TXT;
 }
 TXT;
 
-        $crawler = $client->jsonRequest('POST', '/api/v1/user', $payload);
+        $client->jsonRequest('POST', '/api/v1/user', $payload);
         $output = $client->getResponse()->getContent();
 
         $this->assertResponseStatusCodeSame(400);
         $this->assertMatchesPattern($expected, $output);
+        $this->assertCount(0, $repository->findAll());
+        $this->assertCount(0, $transport->getSent());
     }
 
     public function testCreateUserFeature(): void
     {
         $client = static::createClient();
+        /** @var UserRepository $repository */
+        $repository = self::getContainer()->get(UserRepository::class);
+        /** @var InMemoryTransport $transport */
+        $transport = self::getContainer()->get('messenger.transport.emails_activation');
+        /** @var InMemoryTransport $eventBus */
+        $eventBus = self::getContainer()->get('messenger.transport.events');
+
         $payload = [
             'firstName' => 'Test',
             'lastName' => 'User',
@@ -122,16 +151,25 @@ TXT;
 }
 TXT;
 
-        $crawler = $client->jsonRequest('POST', '/api/v1/user', $payload);
+        $client->jsonRequest('POST', '/api/v1/user', $payload);
+
         $output = $client->getResponse()->getContent();
 
         $this->assertResponseIsSuccessful();
         $this->assertMatchesPattern($expected, $output);
+        $this->assertCount(1, $repository->findAll());
+        $this->assertCount(1, $transport->getSent());
+        $this->assertCount(1, $eventBus->getSent());
     }
 
     public function testPreventToRegisterDuplicateAccounts(): void
     {
         $client = static::createClient();
+        /** @var InMemoryTransport $transport */
+        $transport = self::getContainer()->get('messenger.transport.emails_activation');
+        /** @var InMemoryTransport $eventBus */
+        $eventBus = self::getContainer()->get('messenger.transport.events');
+
         $payload = [
             'firstName' => 'Test',
             'lastName' => 'User',
@@ -140,6 +178,7 @@ TXT;
             'password' => '12345678',
         ];
 
+        /** @var UserRepository $repository */
         $repository = self::getContainer()->get(UserRepository::class);
         $repository->save(
             (new User())
@@ -167,10 +206,13 @@ TXT;
 }
 TXT;
 
-        $crawler = $client->jsonRequest('POST', '/api/v1/user', $payload);
+        $client->jsonRequest('POST', '/api/v1/user', $payload);
         $output = $client->getResponse()->getContent();
 
         $this->assertResponseStatusCodeSame(400);
         $this->assertMatchesPattern($expected, $output);
+        $this->assertCount(1, $repository->findAll());
+        $this->assertCount(0, $transport->getSent());
+        $this->assertCount(0, $eventBus->getSent());
     }
 }

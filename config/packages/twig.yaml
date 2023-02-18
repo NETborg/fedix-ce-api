@@ -1,5 +1,8 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
+    globals:
+        frontend_host: '%frontend_host%'
+        backend_host: '%backend_host%'
 
 when@test:
     twig:

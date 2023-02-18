@@ -1,6 +1,15 @@
 parameters:
   activation_link.ttl: 'PT24H'
 
+framework:
+  messenger:
+    routing:
+      # notifications
+      Netborg\Fediverse\Api\UserModule\Infrastructure\Message\ActivationLinkNotification: emails_activation
+
+      # events
+      Netborg\Fediverse\Api\UserModule\Application\Event\UserRegisteredEvent: events
+      Netborg\Fediverse\Api\UserModule\Application\Event\UserActivatedEvent: events
 
 services:
   _defaults:
@@ -25,6 +34,7 @@ services:
       - '../../src/UserModule/Infrastructure/DependencyInjection/'
       - '../../src/UserModule/Infrastructure/Entity/'
       - '../../src/UserModule/Infrastructure/Exception/'
+      - '../../src/UserModule/Infrastructure/Message/'
 
   Netborg\Fediverse\Api\UserModule\Infrastructure\Factory\ActivationLinkFactory:
     arguments:

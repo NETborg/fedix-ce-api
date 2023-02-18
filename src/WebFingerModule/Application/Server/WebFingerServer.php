@@ -28,6 +28,7 @@ class WebFingerServer implements WebFingerServerInterface
     public function resolve(Request $request): JsonResponse
     {
         $resource = urldecode((string) $request->query->get('resource'));
+        /** @var string[]|null $rel */
         $rel = $request->query->get('rel');
 
         $dto = new GetWebFingerDetailsDTO($resource, $rel);

@@ -15,8 +15,8 @@ interface WebFingerResultBuilderInterface
     public function addProperty(string $name, ?string $value = null): self;
 
     /**
-     * @param array<string,string|null>|null $titles
-     * @param array<string,string|null>|null $properties
+     * @param array<string,string|null> $titles
+     * @param array<string,string|null> $properties
      */
     public function addLink(
         string $rel,

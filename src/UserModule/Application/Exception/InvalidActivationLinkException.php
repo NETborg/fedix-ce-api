@@ -11,11 +11,11 @@ class InvalidActivationLinkException extends HttpException
 {
     public static function notFound(): self
     {
-        return new static(Response::HTTP_NOT_FOUND, 'Invalid activation link!');
+        return new self(Response::HTTP_NOT_FOUND, 'Invalid activation link!');
     }
 
     public static function expired(): self
     {
-        return new static(Response::HTTP_UNAUTHORIZED, 'Activation link has expired!');
+        return new self(Response::HTTP_UNAUTHORIZED, 'Activation link has expired!');
     }
 }

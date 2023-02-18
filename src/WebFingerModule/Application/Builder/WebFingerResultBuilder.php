@@ -12,8 +12,11 @@ use Netborg\Fediverse\Api\WebFingerModule\Domain\Model\WebFingerTitles;
 class WebFingerResultBuilder implements WebFingerResultBuilderInterface
 {
     private ?string $subject = null;
+    /** @var string[] */
     private array $aliases = [];
+    /** @var array<string,string|null> */
     private array $properties = [];
+    /** @var WebFingerLink[] */
     private array $links = [];
 
     public function setSubject(string $subject): WebFingerResultBuilderInterface
@@ -37,6 +40,10 @@ class WebFingerResultBuilder implements WebFingerResultBuilderInterface
         return $this;
     }
 
+    /**
+     * @param array<string,string|null> $titles
+     * @param array<string,string|null> $properties
+     */
     public function addLink(
         string $rel,
         string $href = null,
@@ -44,15 +51,17 @@ class WebFingerResultBuilder implements WebFingerResultBuilderInterface
         array $titles = [],
         array $properties = []
     ): WebFingerResultBuilderInterface {
-        $titles = !empty($titles) ? (new WebFingerTitles())->setProperties($titles) : null;
-        $properties = !empty($properties) ? (new WebFingerProperties())->setProperties($properties) : null;
+        /** @var WebFingerTitles|null $wFTitles */
+        $wFTitles = !empty($titles) ? (new WebFingerTitles())->setProperties($titles) : null;
+        /** @var WebFingerProperties|null $wFProperties */
+        $wFProperties = !empty($properties) ? (new WebFingerProperties())->setProperties($properties) : null;
 
         $this->links[] = (new WebFingerLink())
             ->setRel($rel)
             ->setHref($href)
             ->setType($type)
-            ->setTitles($titles)
-            ->setProperties($properties)
+            ->setTitles($wFTitles)
+            ->setProperties($wFProperties)
         ;
 
         return $this;

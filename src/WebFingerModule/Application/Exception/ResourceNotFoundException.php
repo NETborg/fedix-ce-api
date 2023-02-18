@@ -10,11 +10,11 @@ class ResourceNotFoundException extends HttpException
 {
     public static function actor(string $identifier, int $httpStatus = 404): self
     {
-        return new static($httpStatus, sprintf('No actor `%s` found on this server.', $identifier));
+        return new self($httpStatus, sprintf('No actor `%s` found on this server.', $identifier));
     }
 
     public static function resource(string $resource, int $httpStatus = 404): self
     {
-        return new static($httpStatus, sprintf('No resource `%s` found on this server.', $resource));
+        return new self($httpStatus, sprintf('No resource `%s` found on this server.', $resource));
     }
 }

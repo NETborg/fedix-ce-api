@@ -11,5 +11,6 @@ interface WebFingerServiceInterface
 {
     public static function registerResolver(ResourceResolverInterface $resolver): void;
 
+    /** @param string[]|null $rel */
     public function resolve(string $resource, ?array $rel = null): WebFingerResult;
 }

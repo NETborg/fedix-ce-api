@@ -32,9 +32,9 @@ class PersonController extends AbstractController
             throw new NotFoundHttpException('Person not found');
         }
 
-        return new JsonResponse($this->serializer->normalize(
+        return new JsonResponse($this->serializer->serialize(
             $this->personFactory->fromPersonEntity($person),
             'json',
-        ));
+        ), json: true);
     }
 }

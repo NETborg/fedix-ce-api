@@ -13,7 +13,7 @@ class WebFingerResourceResolverPass implements CompilerPassInterface
 {
     public const TAG = 'webfinger.resource_resolver';
 
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!$container->has(WebFingerServiceInterface::class)) {
             return;

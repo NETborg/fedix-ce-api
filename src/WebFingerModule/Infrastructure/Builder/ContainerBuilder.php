@@ -9,7 +9,6 @@ use Netborg\Fediverse\Api\WebFingerModule\Infrastructure\DependencyInjection\Com
 
 class ContainerBuilder implements ContainerBuilderInterface
 {
-
     public function build(\Symfony\Component\DependencyInjection\ContainerBuilder $container): void
     {
         $container->addCompilerPass(new WebFingerResourceResolverPass());
