@@ -4,15 +4,32 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\UserModule\Domain\Model;
 
+use Symfony\Component\Serializer\Annotation\Groups;
+
 class User
 {
+    #[Groups(['save'])]
     private ?int $id = null;
+    #[Groups(['save', 'registration'])]
     private ?string $uuid = null;
+    #[Groups(['save', 'registration'])]
     private ?string $firstName = null;
+    #[Groups(['save', 'registration'])]
     private ?string $lastName = null;
+    #[Groups(['save', 'registration'])]
+    private ?string $name = null;
+    #[Groups(['save', 'registration'])]
     private ?string $email = null;
+    #[Groups(['create', 'sensitive'])]
+    private ?string $password = null;
+    #[Groups(['save', 'registration'])]
     private ?string $username = null;
+    #[Groups(['save'])]
+    private ?bool $active = null;
+    #[Groups(['save'])]
     private ?string $publicKey = null;
+    #[Groups(['save', 'registration'])]
+    private ?string $createdAt = null;
 
     public function getId(): ?int
     {
@@ -62,6 +79,18 @@ class User
         return $this;
     }
 
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
     public function getEmail(): ?string
     {
         return $this->email;
@@ -70,6 +99,18 @@ class User
     public function setEmail(?string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(?string $password): self
+    {
+        $this->password = $password;
 
         return $this;
     }
@@ -86,6 +127,18 @@ class User
         return $this;
     }
 
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): self
+    {
+        $this->active = $active;
+
+        return $this;
+    }
+
     public function getPublicKey(): ?string
     {
         return $this->publicKey;
@@ -94,6 +147,18 @@ class User
     public function setPublicKey(?string $publicKey): self
     {
         $this->publicKey = $publicKey;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?string
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?string $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Netborg\Fediverse\Api\UserModule\Infrastructure\Repository;
+namespace Netborg\Fediverse\Api\UserModule\Application\Repository;
 
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\User;
+use Netborg\Fediverse\Api\UserModule\Domain\Model\User;
 
 interface UserRepositoryInterface
 {
-    public function save(User $user, bool $flush = false): void;
+    public function save(User $user): void;
 
-    public function remove(User $entity, bool $flush = false): void;
+    public function remove(User $user): void;
 
     public function findOneById(int $id): ?User;
 

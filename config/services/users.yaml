@@ -36,6 +36,10 @@ services:
       - '../../src/UserModule/Infrastructure/Exception/'
       - '../../src/UserModule/Infrastructure/Message/'
 
-  Netborg\Fediverse\Api\UserModule\Infrastructure\Factory\ActivationLinkFactory:
+  Netborg\Fediverse\Api\UserModule\Application\Factory\ActivationLinkFactory:
     arguments:
       $ttl: '%activation_link.ttl%'
+
+  Netborg\Fediverse\Api\UserModule\Application\Repository\ActivationLinkRepositoryInterface: '@Netborg\Fediverse\Api\UserModule\Application\Repository\Redis\ActivationLinkRepository'
+
+  Predis\ClientInterface: '@cache.default_redis_provider'

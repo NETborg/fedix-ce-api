@@ -14,7 +14,7 @@ use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\User;
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends ServiceEntityRepository implements UserRepositoryInterface
+class UserRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -30,9 +30,9 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
         }
     }
 
-    public function remove(User $entity, bool $flush = false): void
+    public function remove(User $user, bool $flush = false): void
     {
-        $this->getEntityManager()->remove($entity);
+        $this->getEntityManager()->remove($user);
 
         if ($flush) {
             $this->getEntityManager()->flush();

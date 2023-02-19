@@ -12,13 +12,10 @@ use Netborg\Fediverse\Api\Shared\Domain\Model\DTO\RegisteredUserDTO;
 use Netborg\Fediverse\Api\Shared\Domain\Model\DTO\RegisterUserDTO;
 use Netborg\Fediverse\Api\UserModule\Application\CommandBus\Command\SendEmailActivationLinkCommand;
 use Netborg\Fediverse\Api\UserModule\Application\Event\UserRegisteredEvent;
-use Netborg\Fediverse\Api\UserModule\Application\Factory\DomainUserFactory;
-use Netborg\Fediverse\Api\UserModule\Application\Factory\UserEntityFactory;
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\UserRepositoryInterface;
+use Netborg\Fediverse\Api\UserModule\Application\Factory\UserFactory;
+use Netborg\Fediverse\Api\UserModule\Application\Repository\UserRepositoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Validator\Exception\ValidationFailedException;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegisterUserCommandHandler implements CommandHandlerInterface
 {
@@ -28,9 +25,7 @@ class RegisterUserCommandHandler implements CommandHandlerInterface
         private readonly LoggerInterface $logger,
         private readonly CommandBusInterface $commandBus,
         private readonly UserRepositoryInterface $userRepository,
-        private readonly UserEntityFactory $entityFactory,
-        private readonly DomainUserFactory $domainUserFactory,
-        private readonly ValidatorInterface $validator,
+        private readonly UserFactory $userFactory,
         private readonly MessageBusInterface $messageBus,
     ) {
     }
@@ -50,25 +45,20 @@ class RegisterUserCommandHandler implements CommandHandlerInterface
         /** @var RegisterUserDTO $registerUserDTO */
         $registerUserDTO = $command->getSubject();
 
-        $entity = $this->entityFactory->fromRegisterUserDTO($registerUserDTO);
+        $user = $this->userFactory->fromRegisterUserDTO($registerUserDTO);
 
-        $errors = $this->validator->validate(value: $entity, groups: ['Create']);
-        if ($errors->count()) {
-            throw new ValidationFailedException($entity, $errors);
-        }
+        $this->userRepository->save($user);
+        $this->messageBus->dispatch(UserRegisteredEvent::create($user));
 
-        $this->userRepository->save($entity, true);
-        $this->messageBus->dispatch(UserRegisteredEvent::create($entity));
-
-        $activationLink = $this->commandBus->handle(new SendEmailActivationLinkCommand($entity));
+        $activationLink = $this->commandBus->handle(new SendEmailActivationLinkCommand($user));
 
         if (!$activationLink) {
-            $this->logger->error(sprintf('Unable to send email confirmation to %s', $entity->getEmail()));
+            $this->logger->error(sprintf('Unable to send email confirmation to %s', $user->getEmail()));
             throw new \Exception('Unable to send confirmation email on email provided!');
         }
 
         return new RegisteredUserDTO(
-            $this->domainUserFactory->fromEntity($entity),
+            $user,
             (bool) $activationLink
         );
     }

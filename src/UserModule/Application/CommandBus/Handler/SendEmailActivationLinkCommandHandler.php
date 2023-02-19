@@ -7,10 +7,10 @@ namespace Netborg\Fediverse\Api\UserModule\Application\CommandBus\Handler;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\Command\CommandInterface;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandHandlerInterface;
 use Netborg\Fediverse\Api\UserModule\Application\CommandBus\Command\SendEmailActivationLinkCommand;
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\User;
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Factory\ActivationLinkFactory;
+use Netborg\Fediverse\Api\UserModule\Application\Factory\ActivationLinkFactory;
+use Netborg\Fediverse\Api\UserModule\Application\Repository\ActivationLinkRepositoryInterface;
+use Netborg\Fediverse\Api\UserModule\Domain\Model\User;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Message\ActivationLinkNotification;
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\ActivationLinkRepositoryInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class SendEmailActivationLinkCommandHandler implements CommandHandlerInterface
@@ -39,11 +39,11 @@ class SendEmailActivationLinkCommandHandler implements CommandHandlerInterface
         /** @var User $user */
         $user = $command->getSubject();
 
-        $activationLink = $this->activationLinkFactory->create($user);
+        $activationLink = $this->activationLinkFactory->createNew($user);
 
-        $this->activationLinkRepository->save($activationLink, true);
+        $this->activationLinkRepository->save($activationLink);
 
-        $this->messageBus->dispatch(new ActivationLinkNotification($activationLink->getId()));
+        $this->messageBus->dispatch(new ActivationLinkNotification($activationLink->getUuid()));
 
         return $activationLink;
     }

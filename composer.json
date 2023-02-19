@@ -120,6 +120,11 @@
             "@auto-scripts",
             "@db-recreate",
             "@transport"
+        ],
+        "check-all": [
+            "@fix",
+            "@test",
+            "@stan"
         ]
     },
     "conflict": {

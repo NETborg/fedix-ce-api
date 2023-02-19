@@ -14,25 +14,25 @@ use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\ActivationLink;
  * @method ActivationLink[]    findAll()
  * @method ActivationLink[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ActivationLinkRepository extends ServiceEntityRepository implements ActivationLinkRepositoryInterface
+class ActivationLinkRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ActivationLink::class);
     }
 
-    public function save(ActivationLink $entity, bool $flush = false): void
+    public function save(ActivationLink $activationLink, bool $flush = false): void
     {
-        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->persist($activationLink);
 
         if ($flush) {
             $this->getEntityManager()->flush();
         }
     }
 
-    public function remove(ActivationLink $entity, bool $flush = false): void
+    public function remove(ActivationLink $activationLink, bool $flush = false): void
     {
-        $this->getEntityManager()->remove($entity);
+        $this->getEntityManager()->remove($activationLink);
 
         if ($flush) {
             $this->getEntityManager()->flush();

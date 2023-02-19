@@ -9,11 +9,11 @@ class ActivationLinkNotification
     public const ROUTING_KEY = 'activation';
 
     public function __construct(
-        private readonly int $activationLinkId
+        private readonly string $activationLinkId
     ) {
     }
 
-    public function getActivationLinkId(): int
+    public function getActivationLinkId(): string
     {
         return $this->activationLinkId;
     }

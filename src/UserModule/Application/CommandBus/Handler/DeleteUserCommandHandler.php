@@ -7,8 +7,8 @@ namespace Netborg\Fediverse\Api\UserModule\Application\CommandBus\Handler;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\Command\CommandInterface;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandHandlerInterface;
 use Netborg\Fediverse\Api\UserModule\Application\CommandBus\Command\DeleteUserCommand;
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\User;
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\UserRepositoryInterface;
+use Netborg\Fediverse\Api\UserModule\Application\Repository\UserRepositoryInterface;
+use Netborg\Fediverse\Api\UserModule\Domain\Model\User;
 
 class DeleteUserCommandHandler implements CommandHandlerInterface
 {

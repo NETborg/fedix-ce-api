@@ -144,8 +144,10 @@ TXT;
     "uuid": "@uuid@",
     "firstName": "Test",
     "lastName": "User",
+    "name": "Test User",
     "email": "test@example.com",
-    "username": "TestUser"
+    "username": "TestUser",
+    "createdAt": "@string@"
   },
   "activationLinkSent": true
 }

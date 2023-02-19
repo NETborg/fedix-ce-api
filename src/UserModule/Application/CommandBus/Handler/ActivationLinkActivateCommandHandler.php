@@ -15,7 +15,7 @@ use Netborg\Fediverse\Api\UserModule\Application\CommandBus\Command\UpdateUserCo
 use Netborg\Fediverse\Api\UserModule\Application\Event\UserActivatedEvent;
 use Netborg\Fediverse\Api\UserModule\Application\Exception\InvalidActivationLinkException;
 use Netborg\Fediverse\Api\UserModule\Application\QueryBus\Query\GetActivationLinkQuery;
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\ActivationLink;
+use Netborg\Fediverse\Api\UserModule\Domain\Model\ActivationLink;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -46,18 +46,19 @@ class ActivationLinkActivateCommandHandler implements CommandHandlerInterface
         /** @var ActivateLinkDTO $activateLinkDTO */
         $activateLinkDTO = $command->getSubject();
 
-        /** @var ActivationLink|null $activationLinkEntity */
-        $activationLinkEntity = $this->queryBus->handle(new GetActivationLinkQuery($activateLinkDTO));
+        /** @var ActivationLink|null $activationLink */
+        $activationLink = $this->queryBus->handle(new GetActivationLinkQuery($activateLinkDTO));
 
-        if (!$activationLinkEntity) {
+        if (!$activationLink) {
             throw InvalidActivationLinkException::notFound();
         }
 
-        if ($activationLinkEntity->getExpiresAt() < new \DateTimeImmutable()) {
+        $expiresAt = \DateTimeImmutable::createFromFormat(\DateTimeInterface::RFC3339_EXTENDED, $activationLink->getExpiresAt());
+        if ($expiresAt < new \DateTimeImmutable()) {
             throw InvalidActivationLinkException::expired();
         }
 
-        $user = $activationLinkEntity->getUser()->setActive(true);
+        $user = $activationLink->getUser()->setActive(true);
 
         if (!$this->commandBus->handle(new UpdateUserCommand($user))) {
             $this->logger->critical(sprintf('Unable to update User [%s] during account activation', $user->getUuid()));
@@ -65,11 +66,14 @@ class ActivationLinkActivateCommandHandler implements CommandHandlerInterface
             return false;
         }
 
-        if (!$this->commandBus->handle(new DeleteActivationLinkCommand($activationLinkEntity))) {
-            $this->logger->error(sprintf('Unable to delete Activation Link [%s] during account activation', $activationLinkEntity->getUuid()));
+        if (!$this->commandBus->handle(new DeleteActivationLinkCommand($activationLink))) {
+            $this->logger->error(sprintf('Unable to delete Activation Link [%s] during account activation', $activationLink->getUuid()));
         }
 
-        $this->messageBus->dispatch(UserActivatedEvent::create($user));
+        $this->messageBus->dispatch(UserActivatedEvent::create(
+            $user,
+            (new \DateTimeImmutable())->format(\DateTimeInterface::RFC3339_EXTENDED)
+        ));
 
         return $user->isActive();
     }

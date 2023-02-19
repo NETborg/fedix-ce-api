@@ -7,7 +7,7 @@ namespace Netborg\Fediverse\Api\UserModule\Infrastructure\Controller;
 use Netborg\Fediverse\Api\Shared\Application\CommandBus\Command\RegisterUserCommand;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandBusInterface;
 use Netborg\Fediverse\Api\Shared\Domain\Model\DTO\RegisterUserDTO;
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\UserRepositoryInterface;
+use Netborg\Fediverse\Api\UserModule\Application\Repository\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,7 +60,8 @@ class UserController extends AbstractController
 
         return new JsonResponse($this->serializer->serialize(
             data: $user,
-            format: 'json'
+            format: 'json',
+            context: [AbstractNormalizer::GROUPS => ['registration']]
         ), json: true);
     }
 }

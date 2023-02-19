@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\UserModule\Application\Event;
 
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\User as UserEntity;
+use Netborg\Fediverse\Api\UserModule\Domain\Model\User;
 
 class UserRegisteredEvent
 {
     public const NAME = 'user.registered';
 
-    public static function create(UserEntity $user): self
+    public static function create(User $user): self
     {
         return new self(
             $user->getId(),
@@ -26,15 +26,15 @@ class UserRegisteredEvent
     }
 
     public function __construct(
-        private int $id,
-        private string $uuid,
-        private string $email,
-        private string $username,
-        private ?string $firstName = null,
-        private ?string $lastName = null,
-        private ?string $name = null,
-        private ?string $pubKey = null,
-        private \DateTimeInterface|string|null $createdAt = null
+        private readonly ?int $id,
+        private readonly string $uuid,
+        private readonly string $email,
+        private readonly string $username,
+        private readonly ?string $firstName = null,
+        private readonly ?string $lastName = null,
+        private readonly ?string $name = null,
+        private readonly ?string $pubKey = null,
+        private readonly \DateTimeInterface|string|null $createdAt = null
     ) {
     }
 

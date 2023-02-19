@@ -7,8 +7,8 @@ namespace Netborg\Fediverse\Api\UserModule\Application\CommandBus\Handler;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\Command\CommandInterface;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandHandlerInterface;
 use Netborg\Fediverse\Api\UserModule\Application\CommandBus\Command\UpdateActivationLinkCommand;
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\ActivationLink;
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\ActivationLinkRepositoryInterface;
+use Netborg\Fediverse\Api\UserModule\Application\Repository\ActivationLinkRepositoryInterface;
+use Netborg\Fediverse\Api\UserModule\Domain\Model\ActivationLink;
 
 class UpdateActivationLinkCommandHandler implements CommandHandlerInterface
 {
@@ -32,11 +32,11 @@ class UpdateActivationLinkCommandHandler implements CommandHandlerInterface
 
     public function handle(CommandInterface $command): mixed
     {
-        /** @var ActivationLink $activationLinkEntity */
-        $activationLinkEntity = $command->getSubject();
+        /** @var ActivationLink $activationLink */
+        $activationLink = $command->getSubject();
 
-        $this->activationLinkRepository->save($activationLinkEntity, true);
+        $this->activationLinkRepository->save($activationLink);
 
-        return $activationLinkEntity;
+        return $activationLink;
     }
 }

@@ -6,11 +6,9 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\ActivationLinkRepository;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ActivationLinkRepository::class)]
 #[UniqueEntity('uuid')]
-#[ORM\HasLifecycleCallbacks]
 class ActivationLink
 {
     #[ORM\Id]
@@ -81,12 +79,5 @@ class ActivationLink
         $this->user = $user;
 
         return $this;
-    }
-
-    #[ORM\PrePersist]
-    public function onPersist(): void
-    {
-        $this->uuid = Uuid::v7()->toRfc4122();
-        $this->createdAt = new \DateTimeImmutable();
     }
 }

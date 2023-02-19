@@ -6,7 +6,7 @@ namespace Netborg\Fediverse\Api\UserModule\Infrastructure\MessageHandler;
 
 use Netborg\Fediverse\Api\Shared\Domain\QueryBus\QueryBusInterface;
 use Netborg\Fediverse\Api\UserModule\Application\QueryBus\Query\GetActivationLinkQuery;
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\ActivationLink;
+use Netborg\Fediverse\Api\UserModule\Domain\Model\ActivationLink;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Message\ActivationLinkNotification;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -38,12 +38,12 @@ class EmailNotificationHandler
     #[AsMessageHandler]
     public function handleActivationLinkNotification(ActivationLinkNotification $notification): void
     {
-        /** @var ActivationLink|null $activationLinkEntity */
-        $activationLinkEntity = $this->queryBus->handle(
+        /** @var ActivationLink|null $activationLink */
+        $activationLink = $this->queryBus->handle(
             new GetActivationLinkQuery($notification->getActivationLinkId())
         );
 
-        if (!$activationLinkEntity) {
+        if (!$activationLink) {
             $msg = sprintf(
                 'Unable to send Activation Link to user! Activation Link ID [%d] not found.',
                 $notification->getActivationLinkId()
@@ -60,10 +60,10 @@ class EmailNotificationHandler
 
         $email = (new Email())
             ->from('no-reply@fedix.com')
-            ->to($activationLinkEntity->getUser()->getEmail())
+            ->to($activationLink->getUser()->getEmail())
             ->subject('Activation Link')
             ->html($this->twig->render('email/activation_link.html.twig', [
-                'activationLinkUuid' => $activationLinkEntity->getUuid(),
+                'activationLinkUuid' => $activationLink->getUuid(),
             ]));
 
         $this->mailer->send($email);

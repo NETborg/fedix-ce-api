@@ -7,8 +7,8 @@ namespace Netborg\Fediverse\Api\UserModule\Application\CommandBus\Handler;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\Command\CommandInterface;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandHandlerInterface;
 use Netborg\Fediverse\Api\UserModule\Application\CommandBus\Command\DeleteActivationLinkCommand;
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\ActivationLink;
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\ActivationLinkRepositoryInterface;
+use Netborg\Fediverse\Api\UserModule\Application\Repository\ActivationLinkRepositoryInterface;
+use Netborg\Fediverse\Api\UserModule\Domain\Model\ActivationLink;
 
 class DeleteActivationLinkCommandHandler implements CommandHandlerInterface
 {
@@ -50,7 +50,7 @@ class DeleteActivationLinkCommandHandler implements CommandHandlerInterface
             return false;
         }
 
-        $this->activationLinkRepository->remove($activationLinkEntity, true);
+        $this->activationLinkRepository->remove($activationLinkEntity);
 
         return true;
     }
