@@ -21,7 +21,9 @@ final class Version20230214205625 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SEQUENCE activation_link_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE TABLE activation_link (id INT NOT NULL, user_id INT DEFAULT NULL, uuid UUID NOT NULL, expires_at VARCHAR(255) NOT NULL, created_at VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE activation_link (id INT NOT NULL, user_id INT DEFAULT NULL, uuid UUID NOT NULL, expires_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('COMMENT ON COLUMN activation_link.expires_at IS \'(DC2Type:datetime_immutable)\'');
+        $this->addSql('COMMENT ON COLUMN activation_link.created_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_1D2EF46FD17F50A6 ON activation_link (uuid)');
         $this->addSql('CREATE INDEX IDX_1D2EF46FA76ED395 ON activation_link (user_id)');
         $this->addSql('ALTER TABLE activation_link ADD CONSTRAINT FK_1D2EF46FA76ED395 FOREIGN KEY (user_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');

@@ -19,10 +19,10 @@ class ActivationLink
     #[ORM\Column(type: Types::GUID, unique: true, nullable: false)]
     private ?string $uuid = null;
 
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
     private \DateTimeInterface $expiresAt;
 
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
     private \DateTimeInterface $createdAt;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'activationLinks')]
