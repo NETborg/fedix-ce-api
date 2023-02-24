@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataFixtures;
+namespace Netborg\Fediverse\Api\Shared\Infrastructure\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;

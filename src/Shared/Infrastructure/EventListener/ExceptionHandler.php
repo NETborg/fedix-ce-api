@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
@@ -39,6 +40,7 @@ class ExceptionHandler
 
         $httpStatus = match (true) {
             is_a($throwable, HttpException::class) => $throwable->getStatusCode(),
+            is_a($throwable, AuthenticationException::class) => $throwable->getCode() ?: 401,
             default => 500
         };
 

@@ -1,0 +1,39 @@
+parameters:
+  oauth2_config.private_key_location: '%env(resolve:OAUTH_PRIVATE_KEY)%'
+  oauth2_config.public_key_location: '%env(resolve:OAUTH_PUBLIC_KEY)%'
+  oauth2_config.passphrase: '%env(resolve:OAUTH_PASSPHRASE)%'
+
+services:
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  _instanceof:
+    Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandHandlerInterface:
+      tags: [ !php/const Netborg\Fediverse\Api\Shared\Infrastructure\DependencyInjection\CompilerPass\CommandBusHandlerPass::TAG ]
+
+    Netborg\Fediverse\Api\Shared\Domain\QueryBus\QueryHandlerInterface:
+      tags: [ !php/const Netborg\Fediverse\Api\Shared\Infrastructure\DependencyInjection\CompilerPass\QueryBusHandlerPass::TAG ]
+
+  Netborg\Fediverse\Api\AuthModule\:
+    resource: '../../src/AuthModule/'
+    exclude:
+      - '../../src/AuthModule/Application/Exception/'
+      - '../../src/AuthModule/Application/Model/'
+      - '../../src/AuthModule/Application/CommandBus/Command/'
+      - '../../src/AuthModule/Application/QueryBus/Query/'
+      - '../../src/AuthModule/Domain/Model/'
+      - '../../src/AuthModule/Infrastructure/DependencyInjection/'
+      - '../../src/AuthModule/Infrastructure/Entity/'
+      - '../../src/AuthModule/Infrastructure/Exception/'
+      - '../../src/AuthModule/Infrastructure/Message/'
+
+  Netborg\Fediverse\Api\AuthModule\Infrastructure\Command\Oauth2KeyGenerateCommand:
+    arguments:
+      $privateKeyLocation: '%oauth2_config.private_key_location%'
+      $publicKeyLocation: '%oauth2_config.public_key_location%'
+      $passPhrase: '%oauth2_config.passphrase%'
+
+  Netborg\Fediverse\Api\AuthModule\Infrastructure\UserResolver\PasswordGrantResolver:
+    arguments:
+      $userProvider: '@security.user.provider.concrete.fedix_users'
