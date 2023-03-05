@@ -22,7 +22,11 @@ security:
             provider: fedix_users
         main:
             lazy: true
-            provider: users_in_memory
+            provider: fedix_users
+            form_login:
+                login_path: app_login
+                check_path: app_login_post
+                enable_csrf: true
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -33,10 +37,14 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/doc.json, roles: ROLE_PUBLIC }
-        - { path: ^/api/oauth2/authorize, roles: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/api/doc, roles: PUBLIC_ACCESS }
+        - { path: ^/api/oauth2/authorize, roles: PUBLIC_ACCESS }
+        - { path: ^/login, role: PUBLIC_ACCESS }
+        - { path: ^/activation, role: PUBLIC_ACCESS }
+        - { path: ^/.well-known, roles: PUBLIC_ACCESS }
         - { path: ^/api/v1/user, roles: ROLE_OAUTH2_REGISTER_USERS, methods: POST }
         - { path: ^/api, roles: ROLE_USER }
+        - { path: ^/, role: ROLE_USER }
 
 when@test:
     security:

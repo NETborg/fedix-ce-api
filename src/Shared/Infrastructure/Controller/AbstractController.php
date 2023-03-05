@@ -6,6 +6,6 @@ namespace Netborg\Fediverse\Api\Shared\Infrastructure\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 
-class AbstractController extends SymfonyAbstractController
+abstract class AbstractController extends SymfonyAbstractController
 {
 }

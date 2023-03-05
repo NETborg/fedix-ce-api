@@ -1,0 +1,6 @@
+api_v1_activation_get:
+  path: '/activation/{identifier}'
+  controller: Netborg\Fediverse\Api\UserModule\Infrastructure\Controller\ActivationLinkController::getAction
+  methods: GET
+  requirements:
+    identifier: '%uuid_pattern%'

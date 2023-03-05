@@ -5,6 +5,7 @@ namespace Netborg\Fediverse\Api\UserModule\Infrastructure\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\User;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -74,10 +75,13 @@ class UserRepository extends ServiceEntityRepository
 
     public function findOneByAnyIdentifier(string $identifier): ?User
     {
+        if (Uuid::isValid($identifier)) {
+            return $this->findOneByUuid($identifier);
+        }
+
         return $this->createQueryBuilder('u')
             ->where('u.username = :phrase')
             ->orWhere('u.email = :phrase')
-            ->orWhere('u.uuid = :phrase')
             ->setParameter('phrase', $identifier)
             ->getQuery()
             ->getOneOrNullResult();

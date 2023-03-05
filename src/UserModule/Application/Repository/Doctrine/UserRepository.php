@@ -8,6 +8,7 @@ use Netborg\Fediverse\Api\UserModule\Application\Factory\UserFactory;
 use Netborg\Fediverse\Api\UserModule\Application\Repository\UserRepositoryInterface;
 use Netborg\Fediverse\Api\UserModule\Domain\Model\User;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\UserRepository as DoctrineUserRepository;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -80,6 +81,10 @@ class UserRepository implements UserRepositoryInterface
 
     public function findOneByUuid(string $uuid): ?User
     {
+        if (empty($identifier) || !Uuid::isValid($uuid)) {
+            return null;
+        }
+
         $userEntity = $this->doctrineUserRepository->findOneByUuid($uuid);
 
         if (!$userEntity) {
@@ -91,6 +96,10 @@ class UserRepository implements UserRepositoryInterface
 
     public function findOneByUsernameOrEmail(string $phrase): ?User
     {
+        if (empty($identifier)) {
+            return null;
+        }
+
         $userEntity = $this->doctrineUserRepository->findOneByUsernameOrEmail($phrase);
 
         if (!$userEntity) {
@@ -102,6 +111,10 @@ class UserRepository implements UserRepositoryInterface
 
     public function findOneByAnyIdentifier(string $identifier): ?User
     {
+        if (empty($identifier)) {
+            return null;
+        }
+
         $userEntity = $this->doctrineUserRepository->findOneByAnyIdentifier($identifier);
 
         if (!$userEntity) {

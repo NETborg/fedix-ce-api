@@ -34,6 +34,14 @@ services:
       $publicKeyLocation: '%oauth2_config.public_key_location%'
       $passPhrase: '%oauth2_config.passphrase%'
 
+  Netborg\Fediverse\Api\AuthModule\Infrastructure\Controller\JwksController:
+    arguments:
+      $privateKeyPath: '%oauth2_config.public_key_location%'
+
   Netborg\Fediverse\Api\AuthModule\Infrastructure\UserResolver\PasswordGrantResolver:
     arguments:
       $userProvider: '@security.user.provider.concrete.fedix_users'
+
+  League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface:
+    class: Netborg\Fediverse\Api\AuthModule\Infrastructure\Repository\AccessTokenRepository
+    decorates: League\Bundle\OAuth2ServerBundle\Repository\AccessTokenRepository

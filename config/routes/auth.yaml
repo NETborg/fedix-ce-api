@@ -1,0 +1,17 @@
+jwks_server:
+  path: /.well-known/jwks.json
+  controller: Netborg\Fediverse\Api\AuthModule\Infrastructure\Controller\JwksController
+  methods: [GET]
+#  schemes: https
+
+app_login:
+  path: /login
+  controller: Netborg\Fediverse\Api\AuthModule\Infrastructure\Controller\LoginController::getAction
+  methods: [GET]
+#  schemes: https
+
+app_login_post:
+  path: /login
+  controller: Netborg\Fediverse\Api\AuthModule\Infrastructure\Controller\LoginController::postAction
+  methods: [POST]
+#  schemes: https

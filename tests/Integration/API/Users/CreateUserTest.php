@@ -11,6 +11,37 @@ use Symfony\Component\Messenger\Transport\InMemoryTransport;
 
 class CreateUserTest extends AbstractApiTestCase
 {
+    public function testUnauthorizedAccessDenied(): void
+    {
+        $client = static::createClient();
+        /** @var UserRepository $repository */
+        $repository = self::getContainer()->get(UserRepository::class);
+        /** @var InMemoryTransport $transport */
+        $transport = self::getContainer()->get('messenger.transport.emails_activation');
+
+        $payload = [
+            'firstName' => 'Test',
+            'lastName' => 'User',
+            'username' => 'TestUser',
+            'email' => 'test@example.com',
+            'password' => '12345678',
+        ];
+
+        $expected = '';
+
+        $client->jsonRequest(
+            method: 'POST',
+            uri: '/api/v1/user',
+            parameters: $payload
+        );
+        $output = $client->getResponse()->getContent();
+
+        $this->assertResponseStatusCodeSame(401);
+        $this->assertMatchesPattern($expected, $output);
+        $this->assertCount(0, $repository->findBy(['username' => 'TestUser']));
+        $this->assertCount(0, $transport->getSent());
+    }
+
     public function testErrorMissingEmail(): void
     {
         $client = static::createClient();
@@ -38,12 +69,19 @@ class CreateUserTest extends AbstractApiTestCase
 }
 TXT;
 
-        $client->jsonRequest('POST', '/api/v1/user', $payload);
+        $client->jsonRequest(
+            method: 'POST',
+            uri: '/api/v1/user',
+            parameters: $payload,
+            server: [
+                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient()))
+            ]
+        );
         $output = $client->getResponse()->getContent();
 
         $this->assertResponseStatusCodeSame(400);
         $this->assertMatchesPattern($expected, $output);
-        $this->assertCount(0, $repository->findAll());
+        $this->assertCount(0, $repository->findBy(['username' => 'TestUser']));
         $this->assertCount(0, $transport->getSent());
     }
 
@@ -74,12 +112,19 @@ TXT;
 }
 TXT;
 
-        $client->jsonRequest('POST', '/api/v1/user', $payload);
+        $client->jsonRequest(
+            method: 'POST',
+            uri: '/api/v1/user',
+            parameters: $payload,
+            server: [
+                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient()))
+            ]
+        );
         $output = $client->getResponse()->getContent();
 
         $this->assertResponseStatusCodeSame(400);
         $this->assertMatchesPattern($expected, $output);
-        $this->assertCount(0, $repository->findAll());
+        $this->assertCount(0, $repository->findBy(['username' => 'TestUser']));
         $this->assertCount(0, $transport->getSent());
     }
 
@@ -111,12 +156,19 @@ TXT;
 }
 TXT;
 
-        $client->jsonRequest('POST', '/api/v1/user', $payload);
+        $client->jsonRequest(
+            method: 'POST',
+            uri: '/api/v1/user',
+            parameters: $payload,
+            server: [
+                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient()))
+            ]
+        );
         $output = $client->getResponse()->getContent();
 
         $this->assertResponseStatusCodeSame(400);
         $this->assertMatchesPattern($expected, $output);
-        $this->assertCount(0, $repository->findAll());
+        $this->assertCount(0, $repository->findBy(['username' => 'TestUser']));
         $this->assertCount(0, $transport->getSent());
     }
 
@@ -153,13 +205,20 @@ TXT;
 }
 TXT;
 
-        $client->jsonRequest('POST', '/api/v1/user', $payload);
+        $client->jsonRequest(
+            method: 'POST',
+            uri: '/api/v1/user',
+            parameters: $payload,
+            server: [
+                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient()))
+            ]
+        );
 
         $output = $client->getResponse()->getContent();
 
         $this->assertResponseIsSuccessful();
         $this->assertMatchesPattern($expected, $output);
-        $this->assertCount(1, $repository->findAll());
+        $this->assertCount(1, $repository->findBy(['username' => 'TestUser']));
         $this->assertCount(1, $transport->getSent());
         $this->assertCount(1, $eventBus->getSent());
     }
@@ -208,12 +267,19 @@ TXT;
 }
 TXT;
 
-        $client->jsonRequest('POST', '/api/v1/user', $payload);
+        $client->jsonRequest(
+            method: 'POST',
+            uri: '/api/v1/user',
+            parameters: $payload,
+            server: [
+                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient()))
+            ]
+        );
         $output = $client->getResponse()->getContent();
 
         $this->assertResponseStatusCodeSame(400);
         $this->assertMatchesPattern($expected, $output);
-        $this->assertCount(1, $repository->findAll());
+        $this->assertCount(1, $repository->findBy(['username' => 'TestUser']));
         $this->assertCount(0, $transport->getSent());
         $this->assertCount(0, $eventBus->getSent());
     }

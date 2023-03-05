@@ -105,8 +105,13 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
+        "fixtures-test": [
+            "bin/console doctrine:fixtures:load -n --purge-with-truncate --env=test"
+        ],
         "test": [
             "bin/console c:c --env=test",
+            "@db-recreate-test",
+            "@fixtures-test",
             "bin/phpunit"
         ],
         "fix": "vendor/bin/php-cs-fixer fix",
@@ -118,9 +123,17 @@
             "bin/console doctrine:database:create",
             "bin/console doctrine:migrations:migrate -n"
         ],
+        "db-test": [
+            "bin/console doctrine:database:create --env=test",
+            "bin/console doctrine:migrations:migrate -n --env=test"
+        ],
         "db-recreate": [
             "bin/console doctrine:database:drop --force",
             "@db"
+        ],
+        "db-recreate-test": [
+            "bin/console doctrine:database:drop --force --env=test",
+            "@db-test"
         ],
         "init-project": [
             "@auto-scripts",

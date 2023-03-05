@@ -33,7 +33,7 @@ class LinkActivationTest extends AbstractApiTestCase
         /** @var InMemoryTransport $eventBus */
         $eventBus = self::getContainer()->get('messenger.transport.events');
 
-        $this->client->request('GET', '/api/v1/activation/018655be-5d0d-7b3b-be3f-691582cc8e8f');
+        $this->client->request('GET', '/activation/018655be-5d0d-7b3b-be3f-691582cc8e8f');
 
         $expected = <<<TXT
 {
@@ -51,7 +51,7 @@ TXT;
         /** @var InMemoryTransport $eventBus */
         $eventBus = self::getContainer()->get('messenger.transport.events');
 
-        $this->client->request('GET', '/api/v1/activation/12345678-1234-1234-1234-1234567890ab');
+        $this->client->request('GET', '/activation/12345678-1234-1234-1234-1234567890ab');
 
         $expected = <<<TXT
 {
@@ -94,7 +94,7 @@ TXT;
                 )
         );
 
-        $this->client->request('GET', sprintf('/api/v1/activation/%s', $uuid));
+        $this->client->request('GET', sprintf('/activation/%s', $uuid));
 
         $expected = <<<TXT
 {
@@ -132,7 +132,7 @@ TXT;
                 )
         );
 
-        $this->client->request('GET', sprintf('/api/v1/activation/%s', $uuid));
+        $this->client->request('GET', sprintf('/activation/%s', $uuid));
 
         $expected = <<<TXT
 {

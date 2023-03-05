@@ -17,12 +17,12 @@ class DoctrineProvider implements UserProviderInterface
     ) {
     }
 
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): UserInterface
     {
         return $this->loadUserByIdentifier($user->getUserIdentifier());
     }
 
-    public function supportsClass(string $class)
+    public function supportsClass(string $class): bool
     {
         return DoctrineEntityUser::class === $class;
     }
@@ -30,6 +30,10 @@ class DoctrineProvider implements UserProviderInterface
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
         $user = $this->userRepository->findOneByAnyIdentifier($identifier);
+
+        if (!$user) {
+            throw new AuthenticationException('User not found!', 404);
+        }
 
         if (!$user->isActive()) {
             throw new AuthenticationException('User needs to activate an account!', 401);
