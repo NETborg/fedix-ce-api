@@ -35,6 +35,6 @@ class ClientFactory
                 static fn(RedirectUri $redirectUri) => (string) $redirectUri,
                 $entity->getRedirectUris()
             ))
-            ;
+        ;
     }
 }

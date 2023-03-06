@@ -45,3 +45,7 @@ services:
   League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface:
     class: Netborg\Fediverse\Api\AuthModule\Infrastructure\Repository\AccessTokenRepository
     decorates: League\Bundle\OAuth2ServerBundle\Repository\AccessTokenRepository
+
+  Netborg\Fediverse\Api\AuthModule\Infrastructure\Listener\LogoutListener:
+    arguments:
+      $frontendHost: '%frontend_host%'

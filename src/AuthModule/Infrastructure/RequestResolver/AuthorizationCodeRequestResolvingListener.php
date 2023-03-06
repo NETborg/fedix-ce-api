@@ -49,9 +49,6 @@ class AuthorizationCodeRequestResolvingListener
                 return;
             }
 
-            $request->getSession()->set('consent_granted', true);
-            return;
-
             $response = new RedirectResponse($this->urlGenerator->generate('app_consent', $request->query->all()), 307);
         }
         $event->setResponse($response);
