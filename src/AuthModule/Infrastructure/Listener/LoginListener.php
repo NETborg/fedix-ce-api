@@ -12,6 +12,7 @@ class LoginListener
 {
     public function onLoginSuccess(LoginSuccessEvent $event): void
     {
+        // TODO - temporary consent grant - to be removed
         $event->getRequest()->getSession()->set('consent_granted', true);
     }
 }

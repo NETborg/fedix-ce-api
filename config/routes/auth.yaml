@@ -14,3 +14,9 @@ app_logout:
   path: /logout
   methods: [GET]
 #  schemes: https
+
+app_consent:
+  path: /oauth2/consent
+  controller: Netborg\Fediverse\Api\AuthModule\Infrastructure\Controller\Oauth2ConsentController
+  methods: [GET, POST]
+#  schemes: https

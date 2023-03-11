@@ -1,8 +1,10 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
     globals:
+        app_name: '%app_name%'
         frontend_host: '%frontend_host%'
         backend_host: '%backend_host%'
+        logo: 'images/dummy-logo.png'
 
 when@test:
     twig:

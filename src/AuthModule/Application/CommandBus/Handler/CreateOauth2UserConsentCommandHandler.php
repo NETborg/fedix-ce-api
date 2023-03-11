@@ -39,6 +39,13 @@ class CreateOauth2UserConsentCommandHandler implements CommandHandlerInterface
 
         $entity = $this->consentEntityFactory->fromModel($userConsent);
 
+        $previous = $this->consentRepository->findOneByUserAndClient(
+            $entity->getUser(),
+            $entity->getClient()
+        );
+
+        $entity = $this->consentEntityFactory->fromModel($userConsent, $previous);
+
         $this->consentRepository->save($entity, true);
 
         return true;

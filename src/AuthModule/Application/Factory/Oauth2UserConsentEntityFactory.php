@@ -12,6 +12,7 @@ class Oauth2UserConsentEntityFactory
 {
     public function __construct(
         private readonly UserFactory $userFactory,
+        private readonly LeagueClientFactory $leagueClientFactory,
     ) {
     }
 
@@ -27,7 +28,7 @@ class Oauth2UserConsentEntityFactory
         }
 
         return $entity
-            ->setClient($model->getClient())
+            ->setClient($this->leagueClientFactory->fromClient($model->getClient()))
             ->setUser($this->userFactory->fromDomainModel($model->getUser()))
             ->setScopes($model->getScopes())
             ->setExpiresAt($model->getExpiresAt()

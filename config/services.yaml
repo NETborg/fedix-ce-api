@@ -7,11 +7,12 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app_name: 'FedX'
     username_prefix: '~'
     username_pattern: 'a-zA-Z0-9_\.\-'
     uuid_pattern: '^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$'
     redis_dsn: '%env(REDIS_DSN)%'
-    frontend_host: https://fedix.social
+    frontend_host: https://fedx.social
     backend_host: http://localhost:8080
     domain: localhost
 

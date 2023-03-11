@@ -43,13 +43,19 @@ class Oauth2UserConsentRepository extends ServiceEntityRepository
 
     public function findOneByUserAndClient(User|null $user, Client|null $client): ?Oauth2UserConsent
     {
-        if (!$user || $client) {
+        if (!$user || !$client) {
             return null;
         }
 
-        return $this->createQueryBuilder('o')
+        $qb = $this->createQueryBuilder('o');
+
+        return $qb
             ->where('o.user = :user')->setParameter('user', $user)
             ->andWhere('o.client = :client')->setParameter('client', $client)
+            ->andWhere($qb->expr()->orX(
+                $qb->expr()->isNull('o.expiresAt'),
+                $qb->expr()->gte('o.expiresAt', ':expires')
+            ))->setParameter('expires', new \DateTimeImmutable())
             ->getQuery()
             ->getOneOrNullResult()
         ;

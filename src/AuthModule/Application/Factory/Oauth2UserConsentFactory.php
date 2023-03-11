@@ -22,7 +22,7 @@ class Oauth2UserConsentFactory
             ->setClient($this->clientFactory->fromLeagueModel($entity->getClient()))
             ->setUser($this->userFactory->toDomainModel($entity->getUser()))
             ->setScopes($entity->getScopes())
-            ->setCreatedAt($entity->getExpiresAt()->format(\DateTimeInterface::RFC3339_EXTENDED))
+            ->setCreatedAt($entity->getCreatedAt()->format(\DateTimeInterface::RFC3339_EXTENDED))
             ->setExpiresAt($entity->getExpiresAt()?->format(\DateTimeInterface::RFC3339_EXTENDED))
         ;
     }

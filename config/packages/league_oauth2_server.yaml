@@ -7,8 +7,16 @@ league_oauth2_server:
     resource_server:
         public_key: '%env(resolve:OAUTH_PUBLIC_KEY)%'
     scopes:
-        available: ['register_users']
-        default: ['register_users']
+        available:
+            - 'client.register_users'
+            - 'user.email'
+            - 'user.first_name'
+            - 'user.last_name'
+            - 'user.posts_read'
+            - 'user.posts_write'
+        default:
+            - 'client.register_users'
+            - 'user.email'
     persistence:
         doctrine: null
 

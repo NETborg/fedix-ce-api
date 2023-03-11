@@ -18,6 +18,7 @@ class Oauth2UserConsent
     private ?int $id = null;
 
     #[ORM\ManyToOne(Client::class)]
+    #[ORM\JoinColumn(referencedColumnName: 'identifier', onDelete: 'CASCADE')]
     private Client $client;
 
     #[ORM\ManyToOne(User::class)]
