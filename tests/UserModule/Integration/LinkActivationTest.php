@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Netborg\Fediverse\Api\Tests\Integration\API\Users;
+namespace Netborg\Fediverse\Api\Tests\UserModule\Integration;
 
-use Netborg\Fediverse\Api\Tests\Integration\API\AbstractApiTestCase;
+use Netborg\Fediverse\Api\Tests\AbstractApiTestCase;
 use Netborg\Fediverse\Api\UserModule\Application\Repository\ActivationLinkRepositoryInterface;
 use Netborg\Fediverse\Api\UserModule\Application\Repository\UserRepositoryInterface;
 use Netborg\Fediverse\Api\UserModule\Domain\Model\ActivationLink;

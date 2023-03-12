@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netborg\Fediverse\Api\Tests\Integration;
+namespace Netborg\Fediverse\Api\Tests;
 
 use Netborg\Fediverse\Api\AuthModule\Infrastructure\AuthenticatedUser\DoctrineEntityUser;
 use Netborg\Fediverse\Api\Shared\Domain\QueryBus\QueryBusInterface;

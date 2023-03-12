@@ -19,14 +19,35 @@
     </php>
 
     <testsuites>
-        <testsuite name="Project Test Suite">
-            <directory>tests</directory>
+        <testsuite name="auth">
+            <directory>tests/AuthModule</directory>
         </testsuite>
-        <testsuite name="Integration">
-            <directory>tests/Integration</directory>
+        <testsuite name="user">
+            <directory>tests/UserModule</directory>
         </testsuite>
-        <testsuite name="Unit">
-            <directory>tests/Unit</directory>
+        <testsuite name="web_finger">
+            <directory>tests/WebFingerModule</directory>
+        </testsuite>
+        <testsuite name="shared">
+            <directory>tests/Shared</directory>
+        </testsuite>
+        <testsuite name="activity_pub">
+            <directory>tests/ActivityPubModule</directory>
+        </testsuite>
+
+        <testsuite name="unit">
+            <directory>tests/ActivityPubModule/Unit</directory>
+            <directory>tests/AuthModule/Unit</directory>
+            <directory>tests/Shared/Unit</directory>
+            <directory>tests/UserModule/Unit</directory>
+            <directory>tests/WebFingerModule/Unit</directory>
+        </testsuite>
+        <testsuite name="integration">
+            <directory>tests/ActivityPubModule/Integration</directory>
+            <directory>tests/AuthModule/Integration</directory>
+            <directory>tests/Shared/Integration</directory>
+            <directory>tests/UserModule/Integration</directory>
+            <directory>tests/WebFingerModule/Integration</directory>
         </testsuite>
     </testsuites>
 

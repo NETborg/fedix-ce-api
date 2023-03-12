@@ -45,7 +45,7 @@ security:
         - { path: ^/login, role: PUBLIC_ACCESS }
         - { path: ^/activation, role: PUBLIC_ACCESS }
         - { path: ^/.well-known, roles: PUBLIC_ACCESS }
-        - { path: ^/api/v1/user, roles: ROLE_OAUTH2_CLIENT_REGISTER_USERS, methods: POST }
+        - { path: ^/api/v1/user, roles: ROLE_OAUTH2_CLIENT.REGISTER_USERS, methods: POST }
         - { path: ^/api, roles: ROLE_USER }
         - { path: ^/, role: ROLE_USER }
 

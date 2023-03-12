@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\AuthModule\Application\Factory;
 
-use Doctrine\ORM\EntityManagerInterface;
+use League\Bundle\OAuth2ServerBundle\Manager\ClientManagerInterface;
 use League\Bundle\OAuth2ServerBundle\Model\Client as LeagueClient;
 use League\Bundle\OAuth2ServerBundle\ValueObject\Grant;
 use League\Bundle\OAuth2ServerBundle\ValueObject\RedirectUri;
@@ -15,7 +15,7 @@ use Netborg\Fediverse\Api\AuthModule\Infrastructure\Util\ClientHelper;
 class LeagueClientFactory
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
+        private readonly ClientManagerInterface $clientManager,
     ) {
     }
 
@@ -23,7 +23,7 @@ class LeagueClientFactory
     {
         $leagueClient = $leagueClient
             ?? $client->getIdentifier()
-            ? $this->entityManager->getRepository(LeagueClient::class)->findOneBy(['identifier' => $client->getIdentifier()])
+            ? $this->clientManager->find($client->getIdentifier())
             : new LeagueClient(
                 name: $client->getName(),
                 identifier: $client->getIdentifier() ?? ClientHelper::generateIdentifier(),

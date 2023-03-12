@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Netborg\Fediverse\Api\Tests\Integration\Shared\Application\Sanitiser;
+namespace Netborg\Fediverse\Api\Tests\Shared\Integration\Application\Sanitiser;
 
 use Netborg\Fediverse\Api\Shared\Application\Sanitiser\UserUsernameSanitiser;
-use Netborg\Fediverse\Api\Tests\Integration\AbstractKernelTestCase;
+use Netborg\Fediverse\Api\Tests\AbstractKernelTestCase;
 
 /** @covers \Netborg\Fediverse\Api\Shared\Application\Sanitiser\UserUsernameSanitiser */
 class UserUsernameSanitiserTest extends AbstractKernelTestCase

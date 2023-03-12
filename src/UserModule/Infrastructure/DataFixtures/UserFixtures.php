@@ -4,7 +4,7 @@ namespace Netborg\Fediverse\Api\UserModule\Infrastructure\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Netborg\Fediverse\Api\Tests\Integration\AbstractKernelTestCase;
+use Netborg\Fediverse\Api\Tests\AbstractKernelTestCase;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\User;
 
 class UserFixtures extends Fixture

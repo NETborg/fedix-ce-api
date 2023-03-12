@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Netborg\Fediverse\Api\Tests\Integration\API\Users;
+namespace Netborg\Fediverse\Api\Tests\UserModule\Integration;
 
-use Netborg\Fediverse\Api\Tests\Integration\API\AbstractApiTestCase;
+use Netborg\Fediverse\Api\Tests\AbstractApiTestCase;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\User;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\UserRepository;
 use Symfony\Component\Messenger\Transport\InMemoryTransport;

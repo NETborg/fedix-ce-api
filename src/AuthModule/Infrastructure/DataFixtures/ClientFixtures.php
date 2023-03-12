@@ -11,7 +11,7 @@ use League\Bundle\OAuth2ServerBundle\Model\Client;
 use League\Bundle\OAuth2ServerBundle\ValueObject\Grant;
 use League\Bundle\OAuth2ServerBundle\ValueObject\RedirectUri;
 use League\Bundle\OAuth2ServerBundle\ValueObject\Scope;
-use Netborg\Fediverse\Api\Tests\Integration\API\AbstractApiTestCase;
+use Netborg\Fediverse\Api\Tests\AbstractApiTestCase;
 
 class ClientFixtures extends Fixture
 {
@@ -36,10 +36,10 @@ class ClientFixtures extends Fixture
                 new Grant('refresh_token')
             )
             ->setScopes(
-                new Scope('register_users')
+                new Scope('client.register_users')
             )
             ->setRedirectUris(
-                new RedirectUri('http://zion.social')
+                new RedirectUri('https://zion.social')
             )
         ;
 

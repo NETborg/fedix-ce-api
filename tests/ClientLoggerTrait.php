@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netborg\Fediverse\Api\Tests\Integration;
+namespace Netborg\Fediverse\Api\Tests;
 
 use League\Bundle\OAuth2ServerBundle\Manager\ClientManagerInterface;
 use League\Bundle\OAuth2ServerBundle\Entity\Client as LeagueClientEntity;
@@ -18,7 +18,7 @@ use Symfony\Component\Uid\Uuid;
 trait ClientLoggerTrait
 {
     public const CLIENT_REGULAR = 'Client Regular';
-    public const CLIENT_REGULAR_ID = '111111';
+    public const CLIENT_REGULAR_ID = '11111111111111111111111111111111';
     public const CLIENT_REGULAR_SECRET = 'S3kr3TPas5w0rd';
 
     protected function createRegularClient(): Client
@@ -34,7 +34,7 @@ trait ClientLoggerTrait
                 new Grant('refresh_token')
             ],
             scopes: [
-                new Scope('register_users')
+                new Scope('client.register_users')
             ],
             redirectUris: [
                 new RedirectUri('http://zion.social')
@@ -79,7 +79,7 @@ trait ClientLoggerTrait
 
     protected function createAccessToken(Client $client, string $userIdentifier = null): string
     {
-        $this->getContainer()->get(ClientManagerInterface::class)->save($client);
+        $this->saveClient($client);
         $accessTokenRepository = $this->getContainer()->get(AccessTokenRepositoryInterface::class);
 
         $clientEntity = new LeagueClientEntity();
@@ -111,5 +111,18 @@ trait ClientLoggerTrait
         $accessTokenRepository->persistNewAccessToken($accessToken);
 
         return (string) $accessToken;
+    }
+
+    protected function saveClient(Client $client): void
+    {
+        if (empty($client->getIdentifier())) {
+            return;
+        }
+
+        $clientManager = $this->getContainer()->get(ClientManagerInterface::class);
+
+        if (!$clientManager->find($client->getIdentifier())) {
+            $clientManager->save($client);
+        }
     }
 }

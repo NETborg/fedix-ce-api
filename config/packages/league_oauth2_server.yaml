@@ -18,9 +18,9 @@ league_oauth2_server:
             - 'client.register_users'
             - 'user.email'
     persistence:
-        doctrine: null
+        doctrine: ~
 
-when@test:
-    league_oauth2_server:
-        persistence:
-            in_memory: null
+#when@test:
+#    league_oauth2_server:
+#        persistence:
+#            in_memory: ~
