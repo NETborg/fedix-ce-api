@@ -6,17 +6,17 @@ namespace Netborg\Fediverse\Api\Tests;
 
 use Netborg\Fediverse\Api\AuthModule\Infrastructure\AuthenticatedUser\DoctrineEntityUser;
 use Netborg\Fediverse\Api\Shared\Domain\QueryBus\QueryBusInterface;
+use Netborg\Fediverse\Api\Tests\UserModule\Enum\RegularUserEnum;
 use Netborg\Fediverse\Api\UserModule\Application\QueryBus\Query\GetUserQuery;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 trait UserLoggerTrait
 {
-    public const USERNAME_REGULAR_USER = 'RegularUser';
     public const FIREWALL_API = 'api';
 
     protected function loginUser(
         KernelBrowser $client,
-        string $username = self::USERNAME_REGULAR_USER,
+        string $username = RegularUserEnum::USERNAME,
         string $firewall = self::FIREWALL_API
     ): void {
         $queryBus = $this->getContainer()->get(QueryBusInterface::class);

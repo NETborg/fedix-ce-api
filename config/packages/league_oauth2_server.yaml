@@ -8,15 +8,14 @@ league_oauth2_server:
         public_key: '%env(resolve:OAUTH_PUBLIC_KEY)%'
     scopes:
         available:
-            - 'client.register_users'
-            - 'user.email'
-            - 'user.first_name'
-            - 'user.last_name'
-            - 'user.posts_read'
-            - 'user.posts_write'
+            - !php/const Netborg\Fediverse\Api\AuthModule\Domain\Enum\ScopeEnum::REGISTER_USERS
+            - !php/const Netborg\Fediverse\Api\AuthModule\Domain\Enum\ScopeEnum::USER_EMAIL
+            - !php/const Netborg\Fediverse\Api\AuthModule\Domain\Enum\ScopeEnum::USER_PROFILE
+            - !php/const Netborg\Fediverse\Api\AuthModule\Domain\Enum\ScopeEnum::USER_POSTS_READ
+            - !php/const Netborg\Fediverse\Api\AuthModule\Domain\Enum\ScopeEnum::USER_POSTS_WRITE
         default:
-            - 'client.register_users'
-            - 'user.email'
+            - !php/const Netborg\Fediverse\Api\AuthModule\Domain\Enum\ScopeEnum::REGISTER_USERS
+            - !php/const Netborg\Fediverse\Api\AuthModule\Domain\Enum\ScopeEnum::USER_EMAIL
     persistence:
         doctrine: ~
 

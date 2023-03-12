@@ -11,7 +11,9 @@ use League\Bundle\OAuth2ServerBundle\Model\Client;
 use League\Bundle\OAuth2ServerBundle\ValueObject\Grant;
 use League\Bundle\OAuth2ServerBundle\ValueObject\RedirectUri;
 use League\Bundle\OAuth2ServerBundle\ValueObject\Scope;
-use Netborg\Fediverse\Api\Tests\AbstractApiTestCase;
+use Netborg\Fediverse\Api\AuthModule\Domain\Enum\ScopeEnum;
+use Netborg\Fediverse\Api\Tests\AuthModule\Enum\NonConfidentialClientEnum;
+use Netborg\Fediverse\Api\Tests\AuthModule\Enum\RegularClientEnum;
 
 class ClientFixtures extends Fixture
 {
@@ -22,10 +24,21 @@ class ClientFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $client = (new Client(
-            AbstractApiTestCase::CLIENT_REGULAR,
-            AbstractApiTestCase::CLIENT_REGULAR_ID,
-            AbstractApiTestCase::CLIENT_REGULAR_SECRET
+        $this->clientManager->save(
+            $this->createRegularClient()
+        );
+
+        $this->clientManager->save(
+            $this->createNonConfidentialClient()
+        );
+    }
+
+    private function createRegularClient(): Client
+    {
+        return (new Client(
+            RegularClientEnum::NAME,
+            RegularClientEnum::IDENTIFIER,
+            RegularClientEnum::SECRET
         ))
             ->setActive(true)
             ->setAllowPlainTextPkce(false)
@@ -33,16 +46,38 @@ class ClientFixtures extends Fixture
                 new Grant('password'),
                 new Grant('client_credentials'),
                 new Grant('authorization_code'),
-                new Grant('refresh_token')
+                new Grant('refresh_token'),
             )
             ->setScopes(
-                new Scope('client.register_users')
+                new Scope(ScopeEnum::REGISTER_USERS),
+                new Scope(ScopeEnum::USER_EMAIL),
             )
             ->setRedirectUris(
                 new RedirectUri('https://zion.social')
             )
         ;
+    }
 
-        $this->clientManager->save($client);
+    private function createNonConfidentialClient(): Client
+    {
+        return (new Client(
+            NonConfidentialClientEnum::NAME,
+            NonConfidentialClientEnum::IDENTIFIER,
+            NonConfidentialClientEnum::SECRET
+        ))
+            ->setActive(true)
+            ->setAllowPlainTextPkce(false)
+            ->setGrants(
+                new Grant('password'),
+                new Grant('authorization_code'),
+            )
+            ->setScopes(
+                new Scope(ScopeEnum::REGISTER_USERS),
+                new Scope(ScopeEnum::USER_EMAIL),
+            )
+            ->setRedirectUris(
+                new RedirectUri('https://zion.social')
+            )
+        ;
     }
 }

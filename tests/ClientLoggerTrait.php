@@ -12,29 +12,28 @@ use League\Bundle\OAuth2ServerBundle\ValueObject\RedirectUri;
 use League\Bundle\OAuth2ServerBundle\ValueObject\Scope;
 use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
+use Netborg\Fediverse\Api\AuthModule\Domain\Enum\ScopeEnum;
 use Netborg\Fediverse\Api\AuthModule\Infrastructure\Util\ClientHelper;
+use Netborg\Fediverse\Api\Tests\AuthModule\Enum\RegularClientEnum;
 use Symfony\Component\Uid\Uuid;
 
 trait ClientLoggerTrait
 {
-    public const CLIENT_REGULAR = 'Client Regular';
-    public const CLIENT_REGULAR_ID = '11111111111111111111111111111111';
-    public const CLIENT_REGULAR_SECRET = 'S3kr3TPas5w0rd';
-
     protected function createRegularClient(): Client
     {
         return $this->createClientModel(
-            name: self::CLIENT_REGULAR,
-            identifier: self::CLIENT_REGULAR_ID,
-            secret: self::CLIENT_REGULAR_SECRET,
+            name: RegularClientEnum::NAME,
+            identifier: RegularClientEnum::IDENTIFIER,
+            secret: RegularClientEnum::SECRET,
             grants: [
                 new Grant('password'),
                 new Grant('client_credentials'),
                 new Grant('authorization_code'),
-                new Grant('refresh_token')
+                new Grant('refresh_token'),
             ],
             scopes: [
-                new Scope('client.register_users')
+                new Scope(ScopeEnum::REGISTER_USERS),
+                new Scope(ScopeEnum::USER_EMAIL),
             ],
             redirectUris: [
                 new RedirectUri('http://zion.social')
