@@ -81,7 +81,7 @@
 {% block body %}
     <body class="text-center">
         <main class="form-consent w-100 m-auto">
-            <form action="" method="post">
+            <form action="{{ path('app_consent', app.session.get('_query')) }}" method="post">
                 <h1 class="h3 mb-3 fw-normal">Grant permissions</h1>
 
                 {% if has_existing_scopes %}

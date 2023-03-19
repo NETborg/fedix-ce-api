@@ -51,9 +51,10 @@ class ClientFixtures extends Fixture
             ->setScopes(
                 new Scope(ScopeEnum::REGISTER_USERS),
                 new Scope(ScopeEnum::USER_EMAIL),
+                new Scope(ScopeEnum::USER_PROFILE),
             )
             ->setRedirectUris(
-                new RedirectUri('https://zion.social')
+                new RedirectUri(RegularClientEnum::REDIRECT_URI),
             )
         ;
     }
@@ -76,7 +77,7 @@ class ClientFixtures extends Fixture
                 new Scope(ScopeEnum::USER_EMAIL),
             )
             ->setRedirectUris(
-                new RedirectUri('https://zion.social')
+                new RedirectUri(NonConfidentialClientEnum::REDIRECT_URI)
             )
         ;
     }

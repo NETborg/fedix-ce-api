@@ -198,7 +198,8 @@ TXT;
         $this->assertResponseRedirects('http://localhost/');
         $client->followRedirect();
 
-        $this->assertResponseStatusCodeSame(404);
+        $this->assertResponseIsSuccessful();
+        $this->assertMatchesPattern('{"test":"OK"}', $client->getResponse()->getContent());
     }
 
     public function testFORMSuccessfulLoginByEmailCase(): void
@@ -222,7 +223,8 @@ TXT;
         $this->assertResponseRedirects('http://localhost/');
         $client->followRedirect();
 
-        $this->assertResponseStatusCodeSame(404);
+        $this->assertResponseIsSuccessful();
+        $this->assertMatchesPattern('{"test":"OK"}', $client->getResponse()->getContent());
     }
 
     public function testJSONSuccessfulLoginByUsernameCase(): void
@@ -264,7 +266,8 @@ TXT;
         $this->assertResponseRedirects('http://localhost/');
         $client->followRedirect();
 
-        $this->assertResponseStatusCodeSame(404);
+        $this->assertResponseIsSuccessful();
+        $this->assertMatchesPattern('{"test":"OK"}', $client->getResponse()->getContent());
     }
 
     public function testFORMSuccessfulLoginByUsernameCase(): void
@@ -288,6 +291,7 @@ TXT;
         $this->assertResponseRedirects('http://localhost/');
         $client->followRedirect();
 
-        $this->assertResponseStatusCodeSame(404);
+        $this->assertResponseIsSuccessful();
+        $this->assertMatchesPattern('{"test":"OK"}', $client->getResponse()->getContent());
     }
 }

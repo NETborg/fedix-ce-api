@@ -49,7 +49,7 @@ TXT;
         $this->assertMatchesPattern($expectedResponse, $client->getResponse()->getContent());
     }
 
-    public function testNoRedirectUriCase(): void
+    public function testSuccessfulNoRedirectUriCase(): void
     {
         $client = static::createClient();
 
@@ -80,6 +80,36 @@ TXT;
         $client->jsonRequest('POST', '/api/oauth2/token', $payload);
 
         $this->assertResponseIsSuccessful();
+        $this->assertMatchesPattern($expectedResponse, $client->getResponse()->getContent());
+    }
+
+    public function testInvalidUsernameCase(): void
+    {
+        $client = static::createClient();
+
+        $clientManager = $this->getContainer()->get(ClientManagerInterface::class);
+        $appClient = $clientManager->find(RegularClientEnum::IDENTIFIER);
+
+        $payload = [
+            'grant_type' => 'password',
+            'client_id' => $appClient->getIdentifier(),
+            'client_secret' => $appClient->getSecret(),
+            'scope' => ScopeEnum::USER_EMAIL,
+            'username' => 'invalid_username',
+            'password' => RegularUserEnum::PASSWORD,
+        ];
+
+        $expectedResponse = <<<TXT
+{
+  "error": "User not found!",
+  "code": 404
+}
+TXT;
+
+
+        $client->jsonRequest('POST', '/api/oauth2/token', $payload);
+
+        $this->assertResponseStatusCodeSame(404);
         $this->assertMatchesPattern($expectedResponse, $client->getResponse()->getContent());
     }
 
@@ -119,7 +149,7 @@ TXT;
         $client = static::createClient();
 
         $payload = [
-            'grant_type' => 'other_password',
+            'grant_type' => 'other_grant',
             'client_id' => RegularClientEnum::IDENTIFIER,
             'client_secret' => RegularClientEnum::SECRET,
             'scope' => ScopeEnum::USER_EMAIL,
@@ -151,7 +181,7 @@ TXT;
             'grant_type' => 'password',
             'client_id' => RegularClientEnum::IDENTIFIER,
             'client_secret' => RegularClientEnum::SECRET,
-            'scope' => sprintf('%s %s', ScopeEnum::USER_EMAIL, ScopeEnum::USER_PROFILE),
+            'scope' => sprintf('%s %s', ScopeEnum::USER_EMAIL, ScopeEnum::USER_POSTS_WRITE),
             'username' => RegularUserEnum::USERNAME,
             'password' => RegularUserEnum::PASSWORD,
         ];
@@ -160,7 +190,7 @@ TXT;
 {
   "error": "invalid_scope",
   "error_description": "The requested scope is invalid, unknown, or malformed",
-  "hint": "Check the `user.profile` scope",
+  "hint": "Check the `user.posts_write` scope",
   "message": "The requested scope is invalid, unknown, or malformed"
 }
 TXT;

@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 trait UserLoggerTrait
 {
     public const FIREWALL_API = 'api';
+    public const FIREWALL_MAIN = 'main';
 
     protected function loginUser(
         KernelBrowser $client,

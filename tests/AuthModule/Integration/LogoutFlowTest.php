@@ -12,14 +12,10 @@ class LogoutFlowTest extends AbstractApiTestCase
     {
         $client = static::createClient();
 
-        $this->loginUser($client);
+        $this->loginUser(client: $client, firewall: self::FIREWALL_MAIN);
 
         $client->request('GET', '/logout');
 
-        $this->assertResponseRedirects('http://localhost/login');
-        $client->followRedirect();
-
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextSame('h1', 'Please sign in');
+        $this->assertResponseRedirects('https://fedx.social');
     }
 }

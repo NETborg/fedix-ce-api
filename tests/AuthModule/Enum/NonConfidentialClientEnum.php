@@ -9,4 +9,5 @@ enum NonConfidentialClientEnum
     public const NAME = 'Client NonConfidential';
     public const IDENTIFIER = '22222222222222222222222222222222';
     public const SECRET = null;
+    public const REDIRECT_URI = 'https://zion.social/auth';
 }

@@ -4,6 +4,11 @@
 #        namespace: Netborg\Fediverse\Api\Controller
 #    type: attribute
 
+app_index:
+    path: /
+    controller: Netborg\Fediverse\Api\Shared\Infrastructure\Controller\MainController::main
+    methods: [GET]
+
 email_preview:
     path: /email_preview/{email}
     controller: Netborg\Fediverse\Api\Shared\Infrastructure\Controller\MainController::previewEmail

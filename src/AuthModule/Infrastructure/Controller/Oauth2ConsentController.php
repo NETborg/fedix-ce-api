@@ -16,13 +16,18 @@ use Netborg\Fediverse\Api\Shared\Domain\QueryBus\QueryBusInterface;
 use Netborg\Fediverse\Api\Shared\Infrastructure\Controller\AbstractController;
 use Netborg\Fediverse\Api\UserModule\Application\QueryBus\Query\GetUserQuery;
 use Netborg\Fediverse\Api\UserModule\Domain\Model\User;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class Oauth2ConsentController extends AbstractController
 {
+    private const CONSENT_GRANTED = 'consent_granted';
+    private const QUERY_CACHE = '_query';
+
     public function __construct(
         private readonly QueryBusInterface $queryBus,
         private readonly CommandBusInterface $commandBus,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -30,14 +35,24 @@ class Oauth2ConsentController extends AbstractController
     {
         $clientId = $request->query->get('client_id');
         if (!$clientId || !ctype_alnum($clientId) || !$this->getUser()) {
+            $this->logger->warning('Could not find required `client_id` query parameter. Redirecting to `app_index`.');
+
             return $this->redirectToRoute('app_index');
         }
 
         /** @var Client|null $appClient */
         $appClient = $this->queryBus->handle(new GetOauth2ClientQuery($clientId));
         if (!$appClient) {
+            $this->logger->warning(sprintf(
+                'Could not find client with ID: %s. Redirecting to `app_index`.',
+                $clientId
+            ));
+
             return $this->redirectToRoute('app_index');
         }
+
+        $session = $request->getSession();
+        $session->set(self::QUERY_CACHE, $request->query->all());
 
         // Get the client scopes
         $requestedScopes = array_filter(
@@ -50,6 +65,10 @@ class Oauth2ConsentController extends AbstractController
 
         // Check all requested scopes are in the client scopes
         if (count(array_diff($requestedScopes, $clientScopes)) > 0) {
+            $this->logger->warning(
+                'Requested scope not included in client\'s scope allowance. Redirecting to `app_index`.'
+            );
+
             return $this->redirectToRoute('app_index');
         }
 
@@ -69,8 +88,16 @@ class Oauth2ConsentController extends AbstractController
 
         // If user has already consented to the scopes, give consent
         if (count(array_diff($requestedScopes, $userScopes)) === 0) {
-            $request->getSession()->set('consent_granted', true);
-            return $this->redirectToRoute('oauth2_authorize', $request->query->all());
+            $session->set(self::CONSENT_GRANTED, true);
+            $this->logger->debug('User already approved client\'s consent.');
+            $this->logger->debug(sprintf(
+            ' [1] Setting user\'s consent: %s. Redirecting back to authorization route.',
+            $session->get(self::CONSENT_GRANTED) ? 'APPROVED' : 'REJECTED'
+            ));
+
+            $query = $session->remove(self::QUERY_CACHE) ?? $request->query->all();
+
+            return $this->redirectToRoute('oauth2_authorize', $query);
         }
 
         // Remove the scopes to which the user has already consented
@@ -79,6 +106,7 @@ class Oauth2ConsentController extends AbstractController
         // Map the requested scopes to scope names
         $scopeNames = [
             'user.email' => 'Your email address',
+            'user.profile' => 'Your profile details',
             'user.first_name' => 'Your first name',
             'user.last_name' => 'Your last name',
             'user.posts_read' => 'Your blog posts (read)',
@@ -90,7 +118,8 @@ class Oauth2ConsentController extends AbstractController
         $existingScopes = array_map(fn($scope) => $scopeNames[$scope], $userScopes);
 
         if ($request->isMethod('POST')) {
-            $request->getSession()->set('consent_granted', false);
+            $session = $request->getSession();
+            $session->set(self::CONSENT_GRANTED, false);
 
             if ($request->request->get('consent') === 'yes') {
                 // Add the requested scopes to the user's scopes
@@ -100,11 +129,19 @@ class Oauth2ConsentController extends AbstractController
                 $consent->setUser($user);
 
                 $this->commandBus->handle(new CreateOauth2UserConsentCommand($consent));
-                $request->getSession()->set('consent_granted', true);
+                $session->set(self::CONSENT_GRANTED, true);
+                $this->logger->debug('User approved client\'s consent.');
             }
+            $this->logger->debug(sprintf(
+                '[2] Setting user\'s consent: %s. Redirecting back to authorization route.',
+                $session->get(self::CONSENT_GRANTED) ? 'APPROVED' : 'REJECTED'
+            ));
 
-            return $this->redirectToRoute('oauth2_authorize', $request->query->all());
+            $query = $session->remove(self::QUERY_CACHE) ?? $request->query->all();
+
+            return $this->redirectToRoute('oauth2_authorize', $query);
         }
+
         return $this->render('auth/oauth2_consent.html.twig', [
             'client_name' => $appClient->getName(),
             'scopes' => $requestedScopeNames,
