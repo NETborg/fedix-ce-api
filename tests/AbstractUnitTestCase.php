@@ -10,4 +10,5 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 abstract class AbstractUnitTestCase extends KernelTestCase
 {
     use ProphecyTrait;
+    use FakerTrait;
 }

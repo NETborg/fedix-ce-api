@@ -6,6 +6,18 @@ doctrine:
         # either here or in the DATABASE_URL env var (see .env file)
         #server_version: '14'
     orm:
+        dql:
+            string_functions:
+                JSONB_CONTAINS: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonbContains
+                JSONB_EXISTS: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonbExists
+                JSONB_EXISTS_ALL: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonbExistsAll
+                JSONB_EXISTS_ANY: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonbExistsAny
+                JSONB_IS_CONTAINED: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonbIsContained
+                JSON_EXTRACT_PATH: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonExtractPath
+                JSON_GET: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonGet
+                JSON_GET_PATH: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonGetPath
+                JSON_GET_PATH_TEXT: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonGetPathText
+                JSON_GET_TEXT: Scienta\DoctrineJsonFunctions\Query\AST\Functions\Postgresql\JsonGetText
         auto_generate_proxy_classes: true
         enable_lazy_ghost_objects: true
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware

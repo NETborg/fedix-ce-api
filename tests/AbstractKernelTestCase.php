@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 abstract class AbstractKernelTestCase extends KernelTestCase
 {
     use UserLoggerTrait;
+    use FakerTrait;
 
     private ?EntityManagerInterface $entityManager;
 

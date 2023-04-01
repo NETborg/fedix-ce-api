@@ -1,27 +1,32 @@
+api_ap_v1_person_create:
+  path: '/person'
+  controller: Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Person\CrudController::createAction
+  methods: POST
+
 api_ap_v1_person_get:
   path: '/person/{identifier}'
-  controller: Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Person\PersonController::getAction
+  controller: Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Person\CrudController::getAction
   methods: GET
   requirements:
     identifier: '^%username_prefix%[%username_pattern%]+'
 
 api_ap_v1_person_inbox_get:
   path: '/person/{identifier}/inbox'
-  controller: Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Person\PersonInboxController::getAction
+  controller: Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Person\InboxController::getAction
   methods: GET
   requirements:
     identifier: '^%username_prefix%[%username_pattern%]+'
 
 api_ap_v1_person_outbox_get:
   path: '/person/{identifier}/outbox'
-  controller: Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Person\PersonOutboxController::getAction
+  controller: Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Person\OutboxController::getAction
   methods: GET
   requirements:
     identifier: '^%username_prefix%[%username_pattern%]+'
 
 api_ap_v1_person_pub_key_get:
   path: '/person/{identifier}/pub-key'
-  controller: Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Person\PersonPubKeyController::getAction
+  controller: Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Person\PubKeyController::getAction
   methods: GET
   requirements:
     identifier: '^%username_prefix%[%username_pattern%]+'

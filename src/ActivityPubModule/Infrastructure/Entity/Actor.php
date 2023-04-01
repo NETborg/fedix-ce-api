@@ -2,83 +2,97 @@
 
 namespace Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\AbstractActor as DomainActor;
+use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\Application as DomainApplication;
+use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\Group as DomainGroup;
+use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\Organization as DomainOrganization;
+use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\Person as DomainPerson;
+use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\Service as DomainService;
 use Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Repository\ActorRepository;
-use Netborg\Fediverse\Api\UserModule\Infrastructure\Entity\User;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
-#[UniqueEntity('uuid')]
-#[UniqueEntity('preferred_username')]
+#[UniqueEntity(fields: 'uuid', groups: ['create', 'update'])]
+#[UniqueEntity(fields: 'preferredUsername', groups: ['create', 'update'])]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'discriminator', type: 'string')]
+#[ORM\DiscriminatorMap([
+    DomainActor::TYPE => Actor::class,
+    DomainApplication::TYPE => Application::class,
+    DomainGroup::TYPE => Group::class,
+    DomainOrganization::TYPE => Organization::class,
+    DomainPerson::TYPE => Person::class,
+    DomainService::TYPE => Service::class,
+])]
 #[ORM\HasLifecycleCallbacks]
 class Actor
 {
-    public const PERSON = 'Person';
-    public const ORGANIZATION = 'Organization';
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['Created'])]
-    private ?int $id = null;
+    #[Groups(['created'])]
+    protected ?int $id = null;
 
     #[ORM\Column(type: Types::GUID, unique: true, nullable: false)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(groups: ['create', 'update'])]
     #[Groups(['Actor', 'Actors'])]
-    private ?string $uuid = null;
+    protected ?string $uuid = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\Choice(choices: [self::PERSON, self::ORGANIZATION])]
+    #[Assert\NotBlank(groups: ['create', 'update'])]
+    #[Assert\Choice(choices: [
+        DomainApplication::TYPE,
+        DomainGroup::TYPE,
+        DomainOrganization::TYPE,
+        DomainPerson::TYPE,
+        DomainService::TYPE,
+    ])]
     #[Groups(['Actor', 'Actors'])]
-    private ?string $type = null;
+    protected ?string $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(groups: ['create', 'update'])]
     #[Groups(['Actor', 'Actors'])]
-    private ?string $name = null;
+    protected ?string $name = null;
 
-    #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[ORM\Column(type: 'json_document', nullable: true, options: ['jsonb' => true])]
     #[Groups(['Actor'])]
-    private ?array $nameMap = null;
+    protected ?array $nameMap = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['Actor'])]
-    private ?string $summary = null;
+    protected ?string $summary = null;
 
-    #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[ORM\Column(type: 'json_document', nullable: true, options: ['jsonb' => true])]
     #[Groups(['Actor'])]
-    private ?array $summaryMap = null;
+    protected ?array $summaryMap = null;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Assert\NotBlank(groups: ['create', 'update'])]
     #[Groups(['Actor', 'Actors'])]
-    private ?string $preferredUsername = null;
+    protected ?string $preferredUsername = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(['Actor'])]
-    private ?string $publicKey = null;
+    protected ?string $publicKey = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     #[Groups(['Actor'])]
-    private ?\DateTimeImmutable $createdAt = null;
+    protected ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     #[Groups(['Actor'])]
-    private ?\DateTimeImmutable $updatedAt = null;
+    protected ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'actors')]
+    #[ORM\Column(type: 'json_document', nullable: true, options: ['jsonb' => true])]
+    #[Assert\Count(min: 1, groups: ['create', 'update'])]
     #[Groups(['Users'])]
-    private Collection $users;
-
-    public function __construct()
-    {
-        $this->users = new ArrayCollection();
-    }
+    protected ?array $users = null;
 
     public function getId(): ?int
     {
@@ -121,7 +135,7 @@ class Actor
         return $this;
     }
 
-    public function getNameMap(): array
+    public function getNameMap(): ?array
     {
         return $this->nameMap;
     }
@@ -145,7 +159,7 @@ class Actor
         return $this;
     }
 
-    public function getSummaryMap(): array
+    public function getSummaryMap(): ?array
     {
         return $this->summaryMap;
     }
@@ -205,28 +219,35 @@ class Actor
         return $this;
     }
 
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUsers(): Collection
+    public function getUsers(): ?array
     {
         return $this->users;
     }
 
-    public function addUser(User $user): self
+    public function setUsers(array $users): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->addActor($this);
+        $this->users = $users;
+
+        return $this;
+    }
+
+    public function addUser(string $userId): self
+    {
+        if (is_null($this->users)) {
+            $this->users = [];
+        }
+
+        if (!in_array($userId, $this->users)) {
+            $this->users[] = $userId;
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function removeUser(string $userId): self
     {
-        if ($this->users->removeElement($user)) {
-            $user->removeActor($this);
+        if (in_array($userId, $this->users ?? [])) {
+            $this->users = array_filter($this->users, static fn (string $user) => $user !== $userId);
         }
 
         return $this;
@@ -235,7 +256,7 @@ class Actor
     #[ORM\PrePersist]
     public function onCreate(): void
     {
-        $this->uuid = Uuid::v7()->toRfc4122();
+        $this->uuid ??= Uuid::v7()->toRfc4122();
         $this->createdAt = new \DateTimeImmutable();
     }
 

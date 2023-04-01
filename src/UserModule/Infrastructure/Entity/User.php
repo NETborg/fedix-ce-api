@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Entity\Actor;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -78,16 +77,11 @@ class User
     #[Groups(['User'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToMany(targetEntity: Actor::class, inversedBy: 'users', cascade: ['persist', 'merge'])]
-    #[Groups(['Actors'])]
-    private Collection $actors;
-
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: ActivationLink::class, orphanRemoval: true)]
     private Collection $activationLinks;
 
     public function __construct()
     {
-        $this->actors = new ArrayCollection();
         $this->activationLinks = new ArrayCollection();
     }
 
@@ -205,31 +199,7 @@ class User
     }
 
     /**
-     * @return Collection<int, Actor>
-     */
-    public function getActors(): Collection
-    {
-        return $this->actors;
-    }
-
-    public function addActor(Actor $actor): self
-    {
-        if (!$this->actors->contains($actor)) {
-            $this->actors->add($actor);
-        }
-
-        return $this;
-    }
-
-    public function removeActor(Actor $actor): self
-    {
-        $this->actors->removeElement($actor);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Actor>
+     * @return Collection<int, ActivationLink>
      */
     public function getActivationLinks(): Collection
     {
@@ -279,7 +249,7 @@ class User
     #[ORM\PrePersist]
     public function prePersist(): void
     {
-        $this->uuid = Uuid::v7()->toRfc4122();
+        $this->uuid ??= Uuid::v7()->toRfc4122();
         $this->createdAt = new \DateTimeImmutable();
 
         if ($this->firstName || $this->lastName) {

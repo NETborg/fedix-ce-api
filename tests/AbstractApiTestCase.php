@@ -14,4 +14,5 @@ abstract class AbstractApiTestCase extends WebTestCase
     use PHPMatcherAssertions;
     use UserLoggerTrait;
     use ClientLoggerTrait;
+    use FakerTrait;
 }

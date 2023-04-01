@@ -10,23 +10,23 @@ class User
 {
     #[Groups(['save'])]
     private ?int $id = null;
-    #[Groups(['save', 'registration'])]
+    #[Groups(['save', 'registration', 'get'])]
     private ?string $uuid = null;
-    #[Groups(['save', 'registration'])]
+    #[Groups(['save', 'registration', 'user.profile'])]
     private ?string $firstName = null;
-    #[Groups(['save', 'registration'])]
+    #[Groups(['save', 'registration', 'user.profile'])]
     private ?string $lastName = null;
-    #[Groups(['save', 'registration'])]
+    #[Groups(['save', 'registration', 'user.profile'])]
     private ?string $name = null;
-    #[Groups(['save', 'registration'])]
+    #[Groups(['save', 'registration', 'user.email'])]
     private ?string $email = null;
     #[Groups(['create', 'sensitive'])]
     private ?string $password = null;
-    #[Groups(['save', 'registration'])]
+    #[Groups(['save', 'registration', 'get', 'user.profile'])]
     private ?string $username = null;
     #[Groups(['save'])]
     private ?bool $active = null;
-    #[Groups(['save'])]
+    #[Groups(['save', 'user.profile'])]
     private ?string $publicKey = null;
     #[Groups(['save', 'registration'])]
     private ?string $createdAt = null;

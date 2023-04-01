@@ -8,7 +8,7 @@ use Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Entity\Actor;
 
 interface ActorRepositoryInterface
 {
-    public function save(Actor $user, bool $flush = false): void;
+    public function save(Actor $entity, bool $flush = false): void;
 
     public function remove(Actor $entity, bool $flush = false): void;
 

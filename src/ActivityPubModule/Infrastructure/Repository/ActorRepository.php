@@ -3,6 +3,7 @@
 namespace Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Entity\Actor;
 
@@ -39,6 +40,9 @@ class ActorRepository extends ServiceEntityRepository implements ActorRepository
         }
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
     public function findOneByPreferredUsername(string $username): ?Actor
     {
         return $this->createQueryBuilder('a')

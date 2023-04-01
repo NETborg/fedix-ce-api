@@ -9,18 +9,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 class PublicKey
 {
     #[Assert\All([
-        new Assert\NotBlank(groups: ['Default', 'Create', 'Update']),
-        new Assert\Url(groups: ['Default', 'Create', 'Update']),
+        new Assert\NotBlank(groups: ['Default', 'create', 'update']),
+        new Assert\Url(groups: ['Default', 'create', 'update']),
     ])]
     protected string|null $id = null;
 
     #[Assert\All([
-        new Assert\NotBlank(groups: ['Default', 'Create', 'Update']),
-        new Assert\Url(groups: ['Default', 'Create', 'Update']),
+        new Assert\NotBlank(groups: ['Default', 'create', 'Update']),
+        new Assert\Url(groups: ['Default', 'create', 'update']),
     ])]
     protected string|null $owner = null;
 
-    #[Assert\NotBlank(groups: ['Default', 'Create', 'Update'])]
+    #[Assert\NotBlank(groups: ['Default', 'create', 'update'])]
     protected string|null $publicKeyPem = null;
 
     public function getId(): ?string
@@ -28,7 +28,7 @@ class PublicKey
         return $this->id;
     }
 
-    public function setId(?string $id): PublicKey
+    public function setId(?string $id): self
     {
         $this->id = $id;
 
@@ -40,7 +40,7 @@ class PublicKey
         return $this->owner;
     }
 
-    public function setOwner(?string $owner): PublicKey
+    public function setOwner(?string $owner): self
     {
         $this->owner = $owner;
 
@@ -52,7 +52,7 @@ class PublicKey
         return $this->publicKeyPem;
     }
 
-    public function setPublicKeyPem(?string $publicKeyPem): PublicKey
+    public function setPublicKeyPem(?string $publicKeyPem): self
     {
         $this->publicKeyPem = $publicKeyPem;
 
