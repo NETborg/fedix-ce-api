@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Netborg\Fediverse\Api\ActivityPubModule\Application\CommandBus\Handler;
 
 use Netborg\Fediverse\Api\ActivityPubModule\Application\CommandBus\Command\CreatePersonCommand;
-use Netborg\Fediverse\Api\ActivityPubModule\Application\Model\DTO\CreatePersonDTO;
+use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\DTO\CreatePersonDTO;
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Exception\PersonAlreadyExistsException;
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Exception\ValidationException;
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\Person;

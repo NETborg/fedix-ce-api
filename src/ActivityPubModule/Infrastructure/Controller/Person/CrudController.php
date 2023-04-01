@@ -5,8 +5,11 @@ declare(strict_types=1);
 namespace Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Person;
 
 use Netborg\Fediverse\Api\ActivityPubModule\Application\CommandBus\Command\CreatePersonCommand;
-use Netborg\Fediverse\Api\ActivityPubModule\Application\Model\DTO\CreatePersonDTO;
+use Netborg\Fediverse\Api\ActivityPubModule\Application\CommandBus\Command\UpdatePersonDetailsCommand;
+use Netborg\Fediverse\Api\ActivityPubModule\Domain\Exception\ActorNotFoundException;
+use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\DTO\CreatePersonDTO;
 use Netborg\Fediverse\Api\ActivityPubModule\Application\QueryBus\Query\GetPersonQuery;
+use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\DTO\UpdatePersonDetailsDTO;
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\Person;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandBusInterface;
 use Netborg\Fediverse\Api\Shared\Domain\QueryBus\QueryBusInterface;
@@ -49,7 +52,7 @@ class CrudController extends AbstractController
             data: $person,
             format: 'json',
             context: [
-                AbstractNormalizer::GROUPS => ['get']
+                AbstractNormalizer::GROUPS => ['public', 'owner']
             ]
         );
 
@@ -62,17 +65,60 @@ class CrudController extends AbstractController
             $identifier = $this->sanitiser->deprefixise($identifier, true);
         }
 
+        /** @var Person $person */
         $person = $this->queryBus->handle(new GetPersonQuery($identifier));
 
         if (!$person) {
             throw new NotFoundHttpException('Person not found');
         }
 
+        $userIdentifier = $this->getUser()?->getUserIdentifier();
+        $groups = ['public'];
+        if ($userIdentifier && $person->hasOwner($userIdentifier)) {
+            array_push($groups, 'owner');
+        }
+
         return new JsonResponse($this->serializer->serialize(
             data: $person,
             format: 'json',
             context: [
-                AbstractNormalizer::GROUPS => ['get']
+                AbstractNormalizer::GROUPS => $groups
+            ]
+        ), json: true);
+    }
+
+    public function updateDetailsAction(string $identifier, Request $request): JsonResponse
+    {
+        if (!Uuid::isValid($identifier)) {
+            $identifier = $this->sanitiser->deprefixise($identifier, true);
+        }
+
+        /** @var Person $person */
+        $person = $this->queryBus->handle(new GetPersonQuery($identifier));
+
+        if (!$person) {
+            throw ActorNotFoundException::person($identifier);
+        }
+
+        $userIdentifier = $this->getUser()?->getUserIdentifier();
+
+        /** @var UpdatePersonDetailsDTO $dto */
+        $dto = $this->serializer->denormalize($request->request->all(), UpdatePersonDetailsDTO::class);
+        $dto->owner = $userIdentifier;
+        $dto->person = $person;
+
+        $this->commandBus->handle(new UpdatePersonDetailsCommand($dto));
+
+        $groups = ['public'];
+        if ($userIdentifier && $person->hasOwner($userIdentifier)) {
+            array_push($groups, 'owner');
+        }
+
+        return new JsonResponse($this->serializer->serialize(
+            data: $person,
+            format: 'json',
+            context: [
+                AbstractNormalizer::GROUPS => $groups
             ]
         ), json: true);
     }

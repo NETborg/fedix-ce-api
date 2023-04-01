@@ -72,6 +72,14 @@ class Actor
     #[Groups(['Actor'])]
     protected ?array $summaryMap = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['Actor'])]
+    protected ?string $content = null;
+
+    #[ORM\Column(type: 'json_document', nullable: true, options: ['jsonb' => true])]
+    #[Groups(['Actor'])]
+    protected ?array $contentMap = null;
+
     #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank(groups: ['create', 'update'])]
     #[Groups(['Actor', 'Actors'])]
@@ -167,6 +175,30 @@ class Actor
     public function setSummaryMap(?array $summaryMap): self
     {
         $this->summaryMap = $summaryMap;
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(?string $content): self
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    public function getContentMap(): ?array
+    {
+        return $this->contentMap;
+    }
+
+    public function setContentMap(?array $contentMap): self
+    {
+        $this->contentMap = $contentMap;
 
         return $this;
     }

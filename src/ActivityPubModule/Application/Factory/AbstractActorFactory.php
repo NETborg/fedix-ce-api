@@ -17,6 +17,7 @@ abstract class AbstractActorFactory
         protected readonly RouterInterface $router,
         protected readonly PublicKeyFactoryInterface $publicKeyFactory,
         protected readonly UsernameSanitiserInterface $sanitiser,
+        protected readonly string $frontendHost,
     ) {
     }
 

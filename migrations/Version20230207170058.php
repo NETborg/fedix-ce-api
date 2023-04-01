@@ -21,9 +21,10 @@ final class Version20230207170058 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SEQUENCE actor_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE TABLE actor (id INT NOT NULL, uuid UUID NOT NULL, discriminator VARCHAR(255) NOT NULL, type VARCHAR(255) NOT NULL, name VARCHAR(255) DEFAULT NULL, name_map JSONB DEFAULT NULL, summary TEXT DEFAULT NULL, summary_map JSONB DEFAULT NULL, preferred_username VARCHAR(255) NOT NULL, public_key TEXT DEFAULT NULL, users JSONB DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE actor (id INT NOT NULL, uuid UUID NOT NULL, discriminator VARCHAR(255) NOT NULL, type VARCHAR(255) NOT NULL, name VARCHAR(255) DEFAULT NULL, name_map JSONB DEFAULT NULL, summary TEXT DEFAULT NULL, summary_map JSONB DEFAULT NULL, content TEXT DEFAULT NULL, content_map JSONB DEFAULT NULL, preferred_username VARCHAR(255) NOT NULL, public_key TEXT DEFAULT NULL, users JSONB DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN actor.name_map IS \'(DC2Type:json_document)\'');
         $this->addSql('COMMENT ON COLUMN actor.summary_map IS \'(DC2Type:json_document)\'');
+        $this->addSql('COMMENT ON COLUMN actor.content_map IS \'(DC2Type:json_document)\'');
         $this->addSql('COMMENT ON COLUMN actor.users IS \'(DC2Type:json_document)\'');
         $this->addSql('COMMENT ON COLUMN actor.created_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('COMMENT ON COLUMN actor.updated_at IS \'(DC2Type:datetime_immutable)\'');

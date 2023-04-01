@@ -15,33 +15,35 @@ abstract class AbstractActor extends ObjectType
 {
     public const TYPE = 'Actor';
 
-    protected static string $type = self::TYPE;
-
     protected array $schemaContext = [
         'https://w3id.org/security/v1',
     ];
 
-    #[Groups(['create', 'get', 'update'])]
+    #[Groups(['public'])]
+    protected static string $type = self::TYPE;
+
+    #[Groups(['create', 'public', 'update'])]
     #[Assert\NotBlank(groups: ['create', 'update'])]
     protected string|null $preferredUsername = null;
-    #[Groups(['get'])]
+    #[Groups(['public'])]
     protected string|OrderedCollection|null $inbox = null;
-    #[Groups(['get'])]
+    #[Groups(['public'])]
     protected string|OrderedCollection|null $outbox = null;
 
-    #[Groups(['get'])]
+    #[Groups(['public'])]
     protected string|Collection|null $following = null;
-    #[Groups(['get'])]
+    #[Groups(['public'])]
     protected string|Collection|null $followers = null;
-    #[Groups(['get'])]
+    #[Groups(['public'])]
     protected string|Collection|null $liked = null;
-    #[Groups(['get'])]
+    #[Groups(['public'])]
     protected string|Collection|null $streams = null;
 
-    #[Groups(['get'])]
+    #[Groups(['public'])]
     protected PublicKey|null $publicKey = null;
 
     /** @var string[] */
+    #[Groups(['owner'])]
     protected array $owners = [];
 
     public function getPreferredUsername(): ?string

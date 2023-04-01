@@ -6,6 +6,7 @@ namespace Netborg\Fediverse\Api\ActivityPubModule\Application\Factory;
 
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\Person;
 use Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Entity\Person as PersonEntity;
+use Symfony\Component\Uid\Uuid;
 
 class PersonEntityFactory extends AbstractActorFactory implements PersonEntityFactoryInterface
 {
@@ -42,14 +43,18 @@ class PersonEntityFactory extends AbstractActorFactory implements PersonEntityFa
     public function createFromDomainModel(Person $person, PersonEntity $subject = null): PersonEntity
     {
         $subject = $subject ?? new $this->className();
+        if (Uuid::isValid($person->getId())) {
+            $subject->setUuid($person->getId());
+        }
         return $subject
             ->setPreferredUsername($person->getPreferredUsername())
             ->setName($person->getName())
             ->setNameMap($person->getNameMap())
-            ->setUuid($person->getId())
             ->setType($person->getType())
             ->setSummary($person->getSummary())
             ->setSummaryMap($person->getSummaryMap())
+            ->setContent($person->getContent())
+            ->setContentMap($person->getContentMap())
             ->setPublicKey($person->getPublicKey()?->getPublicKeyPem())
             ->setUsers($person->getOwners())
         ;

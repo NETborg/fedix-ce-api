@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Netborg\Fediverse\Api\ActivityPubModule\Application\Model\DTO;
+namespace Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\DTO;
 
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\Person;
 
