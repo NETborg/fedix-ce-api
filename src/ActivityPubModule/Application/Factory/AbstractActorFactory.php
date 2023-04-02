@@ -28,7 +28,7 @@ abstract class AbstractActorFactory
 
     protected function denormalize(array $data, array $context = [])
     {
-        /** @phpstan-ignore-next-line */
+        /* @phpstan-ignore-next-line */
         return $this->serializer->denormalize(data: $data, type: $this->className, context: $context);
     }
 

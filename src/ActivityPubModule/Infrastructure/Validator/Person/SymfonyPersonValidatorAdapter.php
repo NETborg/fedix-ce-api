@@ -10,11 +10,11 @@ use Netborg\Fediverse\Api\ActivityPubModule\Domain\Validator\PersonValidatorInte
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class SymfonyPersonValidatorAdapter implements PersonValidatorInterface
+readonly class SymfonyPersonValidatorAdapter implements PersonValidatorInterface
 {
     public function __construct(
-        private readonly ValidatorInterface $validator,
-        private readonly PersonValidationGroupsFactoryInterface $validationGroupsFactory,
+        private ValidatorInterface $validator,
+        private PersonValidationGroupsFactoryInterface $validationGroupsFactory,
     ) {
     }
 
@@ -33,7 +33,7 @@ class SymfonyPersonValidatorAdapter implements PersonValidatorInterface
     {
         $errors = [];
 
-        for ($i = 0; $i < $violationList->count(); $i++) {
+        for ($i = 0; $i < $violationList->count(); ++$i) {
             $violation = $violationList->get($i);
             $errors[$violation->getPropertyPath()] = (string) $violation->getMessage();
         }

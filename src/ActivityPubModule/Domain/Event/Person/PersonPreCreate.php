@@ -7,7 +7,7 @@ namespace Netborg\Fediverse\Api\ActivityPubModule\Domain\Event\Person;
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Event\EventInterface;
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\Person;
 
-class PersonPreCreate implements EventInterface
+readonly class PersonPreCreate implements EventInterface
 {
     public function __construct(
         private Person $person

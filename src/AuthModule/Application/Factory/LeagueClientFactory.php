@@ -37,15 +37,15 @@ class LeagueClientFactory
             ->setActive($client->isActive())
             ->setAllowPlainTextPkce($client->isAllowPlainTextPkce())
             ->setGrants(...array_map(
-                static fn(string $grant): Grant => new Grant($grant),
+                static fn (string $grant): Grant => new Grant($grant),
                 $client->getGrants()
             ))
             ->setScopes(...array_map(
-                static fn(string $scope): Scope => new Scope($scope),
+                static fn (string $scope): Scope => new Scope($scope),
                 $client->getScopes()
             ))
             ->setRedirectUris(...array_map(
-                static fn(string $redirectUri): RedirectUri => new RedirectUri($redirectUri),
+                static fn (string $redirectUri): RedirectUri => new RedirectUri($redirectUri),
                 $client->getRedirectUris()
             ))
         ;

@@ -6,11 +6,11 @@ namespace Netborg\Fediverse\Api\UserModule\Infrastructure\Controller;
 
 use Netborg\Fediverse\Api\Shared\Application\CommandBus\Command\RegisterUserCommand;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandBusInterface;
+use Netborg\Fediverse\Api\Shared\Domain\Exception\ForbiddenException;
 use Netborg\Fediverse\Api\Shared\Domain\Model\DTO\RegisterUserDTO;
 use Netborg\Fediverse\Api\Shared\Domain\QueryBus\QueryBusInterface;
-use Netborg\Fediverse\Api\UserModule\Application\QueryBus\Query\GetUserQuery;
 use Netborg\Fediverse\Api\Shared\Infrastructure\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
+use Netborg\Fediverse\Api\UserModule\Application\QueryBus\Query\GetUserQuery;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -31,6 +31,10 @@ class UserController extends AbstractController
 
     public function getAction(string $identifier): JsonResponse
     {
+        if (!$this->isGranted(['ROLE_USER', 'ROLE_OAUTH2_CLIENT.REGISTER_USERS'])) {
+            throw new ForbiddenException(message: 'Access denied!');
+        }
+
         $user = $this->queryBus->handle(new GetUserQuery($identifier));
 
         if (!$user) {
@@ -46,6 +50,10 @@ class UserController extends AbstractController
 
     public function createAction(Request $request): JsonResponse
     {
+        if (!$this->isGranted('ROLE_OAUTH2_CLIENT.REGISTER_USERS')) {
+            throw new ForbiddenException(message: 'Access denied!');
+        }
+
         /** @var RegisterUserDTO $registerUserDTO */
         $registerUserDTO = $this->serializer->deserialize(
             data: $request->getContent(),

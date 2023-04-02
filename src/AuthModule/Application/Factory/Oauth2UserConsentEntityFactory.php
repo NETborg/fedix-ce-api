@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\AuthModule\Application\Factory;
 
-use Netborg\Fediverse\Api\AuthModule\Infrastructure\Entity\Oauth2UserConsent as Oauth2UserConsentEntity;
 use Netborg\Fediverse\Api\AuthModule\Domain\Model\Oauth2UserConsent;
+use Netborg\Fediverse\Api\AuthModule\Infrastructure\Entity\Oauth2UserConsent as Oauth2UserConsentEntity;
 use Netborg\Fediverse\Api\UserModule\Application\Factory\UserFactory;
 
 class Oauth2UserConsentEntityFactory

@@ -23,7 +23,7 @@ TXT;
             method: 'GET',
             uri: '/login',
             server: [
-                'HTTP_ACCEPT' => 'application/json'
+                'HTTP_ACCEPT' => 'application/json',
             ]
         );
         $output = $client->getResponse()->getContent();
@@ -36,7 +36,7 @@ TXT;
         $payload = [
             '_username' => RegularUserEnum::EMAIL,
             '_password' => 'invalidPassword',
-            '_csrf_token' => $csrfToken
+            '_csrf_token' => $csrfToken,
         ];
 
         $crawler = $client->request(
@@ -98,7 +98,7 @@ TXT;
             method: 'GET',
             uri: '/login',
             server: [
-                'HTTP_ACCEPT' => 'application/json'
+                'HTTP_ACCEPT' => 'application/json',
             ]
         );
         $output = $client->getResponse()->getContent();
@@ -111,7 +111,7 @@ TXT;
         $payload = [
             '_username' => 'NonExisting',
             '_password' => 'invalidPassword',
-            '_csrf_token' => $csrfToken
+            '_csrf_token' => $csrfToken,
         ];
 
         $crawler = $client->request(
@@ -173,7 +173,7 @@ TXT;
             method: 'GET',
             uri: '/login',
             server: [
-                'HTTP_ACCEPT' => 'application/json'
+                'HTTP_ACCEPT' => 'application/json',
             ]
         );
         $output = $client->getResponse()->getContent();
@@ -186,7 +186,7 @@ TXT;
         $payload = [
             '_username' => RegularUserEnum::EMAIL,
             '_password' => RegularUserEnum::PASSWORD,
-            '_csrf_token' => $csrfToken
+            '_csrf_token' => $csrfToken,
         ];
 
         $client->request(
@@ -241,7 +241,7 @@ TXT;
             method: 'GET',
             uri: '/login',
             server: [
-                        'HTTP_ACCEPT' => 'application/json'
+                        'HTTP_ACCEPT' => 'application/json',
                     ]
         );
         $output = $client->getResponse()->getContent();
@@ -254,7 +254,7 @@ TXT;
         $payload = [
             '_username' => RegularUserEnum::USERNAME,
             '_password' => RegularUserEnum::PASSWORD,
-            '_csrf_token' => $csrfToken
+            '_csrf_token' => $csrfToken,
         ];
 
         $client->request(

@@ -11,7 +11,7 @@ class JsonableException extends \Exception implements \JsonSerializable
 
     public function __construct(
         protected int $httpResponseStatus = self::RESPONSE_CODE,
-        string $message = "",
+        string $message = '',
         int $code = self::ERROR,
         ?\Throwable $previous = null
     ) {

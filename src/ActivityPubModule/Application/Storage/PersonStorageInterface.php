@@ -6,5 +6,4 @@ namespace Netborg\Fediverse\Api\ActivityPubModule\Application\Storage;
 
 interface PersonStorageInterface
 {
-
 }

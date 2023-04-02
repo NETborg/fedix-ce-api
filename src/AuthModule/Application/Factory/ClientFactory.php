@@ -24,15 +24,15 @@ class ClientFactory
             ->setConfidential($entity->isConfidential())
             ->setAllowPlainTextPkce($entity->isPlainTextPkceAllowed())
             ->setGrants(array_map(
-                static fn(Grant $grant) => (string) $grant,
+                static fn (Grant $grant) => (string) $grant,
                 $entity->getGrants()
             ))
             ->setScopes(array_map(
-                static fn(Scope $scope) => (string) $scope,
+                static fn (Scope $scope) => (string) $scope,
                 $entity->getScopes()
             ))
             ->setRedirectUris(array_map(
-                static fn(RedirectUri $redirectUri) => (string) $redirectUri,
+                static fn (RedirectUri $redirectUri) => (string) $redirectUri,
                 $entity->getRedirectUris()
             ))
         ;

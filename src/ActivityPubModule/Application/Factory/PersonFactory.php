@@ -6,9 +6,6 @@ namespace Netborg\Fediverse\Api\ActivityPubModule\Application\Factory;
 
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\Person;
 use Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Entity\Person as PersonEntity;
-use Netborg\Fediverse\Api\Shared\Domain\Sanitiser\UsernameSanitiserInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class PersonFactory extends AbstractActorFactory implements PersonFactoryInterface
 {
@@ -52,7 +49,7 @@ class PersonFactory extends AbstractActorFactory implements PersonFactoryInterfa
         $inbox = $this->generateUrl('api_ap_v1_person_inbox_get', $options);
         $outbox = $this->generateUrl('api_ap_v1_person_outbox_get', $options);
         $url = sprintf('%s/person/%s', $this->frontendHost, $options['identifier']);
-        $image = sprintf('%s/image/person/%s',$this->frontendHost, $options['identifier']);
+        $image = sprintf('%s/image/person/%s', $this->frontendHost, $options['identifier']);
         $publicKey = $entity->getPublicKey()
             ? $this->publicKeyFactory->create(
                 $this->generateUrl('api_ap_v1_person_pub_key_get', $options),

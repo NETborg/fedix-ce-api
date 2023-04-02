@@ -37,7 +37,7 @@ class LinkActivationTest extends AbstractApiTestCase
 
         $expected = <<<TXT
 {
-  "code": 0,
+  "code":  4000201,
   "error": "Invalid activation link!"
 }
 TXT;
@@ -99,7 +99,7 @@ TXT;
         $expected = <<<TXT
 {
   "error": "Invalid activation link!",
-  "code": 0
+  "code": 4000201
 }
 TXT;
         $this->assertResponseStatusCodeSame(404);

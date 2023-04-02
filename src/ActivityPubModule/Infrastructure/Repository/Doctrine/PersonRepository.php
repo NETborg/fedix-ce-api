@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Repository\Doctrine;
 
+use Netborg\Fediverse\Api\ActivityPubModule\Application\Factory\PersonEntityFactoryInterface;
 use Netborg\Fediverse\Api\ActivityPubModule\Application\Factory\PersonFactoryInterface;
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\Person;
-use Netborg\Fediverse\Api\ActivityPubModule\Application\Factory\PersonEntityFactoryInterface;
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Repository\PersonRepositoryInterface;
-use Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Repository\PersonDoctrineRepositoryInterface as DoctrineRepository;
 use Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Entity\Person as PersonEntity;
+use Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Repository\PersonDoctrineRepositoryInterface as DoctrineRepository;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 

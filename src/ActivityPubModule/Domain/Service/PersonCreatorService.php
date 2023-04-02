@@ -17,14 +17,14 @@ use Netborg\Fediverse\Api\ActivityPubModule\Domain\Repository\PersonRepositoryIn
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Tool\UuidGeneratorInterface;
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Validator\PersonValidatorInterface;
 
-class PersonCreatorService
+readonly class PersonCreatorService
 {
     public function __construct(
-        private readonly LoggerInterface $logger,
-        private readonly PersonValidatorInterface $validator,
-        private readonly PersonRepositoryInterface $personRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly UuidGeneratorInterface $uuidGenerator,
+        private LoggerInterface $logger,
+        private PersonValidatorInterface $validator,
+        private PersonRepositoryInterface $personRepository,
+        private EventDispatcherInterface $eventDispatcher,
+        private UuidGeneratorInterface $uuidGenerator,
     ) {
     }
 
@@ -71,14 +71,14 @@ class PersonCreatorService
         $person->setId($person->getId() ?? $this->uuidGenerator->generate());
         $person->addOwner($owner);
 
+        $this->logger->debug(
+            sprintf(
+                '[%s] Validating Person [%s]',
+                __METHOD__,
+                $person->getPreferredUsername()
+            )
+        );
         try {
-            $this->logger->debug(
-                sprintf(
-                    '[%s] Validating Person [%s]',
-                    __METHOD__,
-                    $person->getPreferredUsername()
-                )
-            );
             $this->validator->validate($person, [Context::ACTION => ContextAction::CREATE]);
         } catch (ValidationException $exception) {
             $this->logger->debug(

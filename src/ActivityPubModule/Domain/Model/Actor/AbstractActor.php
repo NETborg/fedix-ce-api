@@ -172,14 +172,14 @@ abstract class AbstractActor extends ObjectType
 
     public function removeOwner(string $owner): self
     {
-        $this->owners = array_filter($this->owners, static fn(string $ownerId) => $ownerId !== $owner);
+        $this->owners = array_filter($this->owners, static fn (string $ownerId) => $ownerId !== $owner);
 
         return $this;
     }
 
     public function removeOwners(array $owners): self
     {
-        $this->owners = array_filter($this->owners, static fn(string $ownerId) => !in_array($ownerId, $owners));
+        $this->owners = array_filter($this->owners, static fn (string $ownerId) => !in_array($ownerId, $owners));
 
         return $this;
     }

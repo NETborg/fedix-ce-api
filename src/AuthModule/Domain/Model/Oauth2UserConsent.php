@@ -96,7 +96,7 @@ class Oauth2UserConsent
 
     public function removeScope(string $scope): self
     {
-        $this->scopes = array_filter($this->scopes, static fn(string $entry) => $entry !== $scope);
+        $this->scopes = array_filter($this->scopes, static fn (string $entry) => $entry !== $scope);
 
         return $this;
     }

@@ -46,6 +46,7 @@ class PersonEntityFactory extends AbstractActorFactory implements PersonEntityFa
         if (Uuid::isValid($person->getId())) {
             $subject->setUuid($person->getId());
         }
+
         return $subject
             ->setPreferredUsername($person->getPreferredUsername())
             ->setName($person->getName())

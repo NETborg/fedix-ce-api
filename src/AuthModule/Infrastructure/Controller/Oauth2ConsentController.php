@@ -10,7 +10,6 @@ use Netborg\Fediverse\Api\AuthModule\Application\QueryBus\Query\GetOauth2ClientQ
 use Netborg\Fediverse\Api\AuthModule\Application\QueryBus\Query\GetOauth2UserConsentQuery;
 use Netborg\Fediverse\Api\AuthModule\Domain\Model\Client;
 use Netborg\Fediverse\Api\AuthModule\Domain\Model\Oauth2UserConsent;
-use Netborg\Fediverse\Api\AuthModule\Infrastructure\AuthenticatedUser\DoctrineEntityUser;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandBusInterface;
 use Netborg\Fediverse\Api\Shared\Domain\QueryBus\QueryBusInterface;
 use Netborg\Fediverse\Api\Shared\Infrastructure\Controller\AbstractController;
@@ -57,7 +56,7 @@ class Oauth2ConsentController extends AbstractController
         // Get the client scopes
         $requestedScopes = array_filter(
             explode(' ', $request->query->get('scope')),
-            fn(string $scope) => str_starts_with($scope, 'user.')
+            fn (string $scope) => str_starts_with($scope, 'user.')
         );
 
         // Get the client scopes in the database
@@ -87,12 +86,12 @@ class Oauth2ConsentController extends AbstractController
         $hasExistingScopes = count($userScopes) > 0;
 
         // If user has already consented to the scopes, give consent
-        if (count(array_diff($requestedScopes, $userScopes)) === 0) {
+        if (0 === count(array_diff($requestedScopes, $userScopes))) {
             $session->set(self::CONSENT_GRANTED, true);
             $this->logger->debug('User already approved client\'s consent.');
             $this->logger->debug(sprintf(
-            ' [1] Setting user\'s consent: %s. Redirecting back to authorization route.',
-            $session->get(self::CONSENT_GRANTED) ? 'APPROVED' : 'REJECTED'
+                ' [1] Setting user\'s consent: %s. Redirecting back to authorization route.',
+                $session->get(self::CONSENT_GRANTED) ? 'APPROVED' : 'REJECTED'
             ));
 
             $query = $session->remove(self::QUERY_CACHE) ?? $request->query->all();
@@ -114,16 +113,16 @@ class Oauth2ConsentController extends AbstractController
         ];
 
         // Get all the scope names in the requested scopes.
-        $requestedScopeNames = array_map(fn($scope) => $scopeNames[$scope], $requestedScopes);
-        $existingScopes = array_map(fn($scope) => $scopeNames[$scope], $userScopes);
+        $requestedScopeNames = array_map(fn ($scope) => $scopeNames[$scope], $requestedScopes);
+        $existingScopes = array_map(fn ($scope) => $scopeNames[$scope], $userScopes);
 
         if ($request->isMethod('POST')) {
             $session = $request->getSession();
             $session->set(self::CONSENT_GRANTED, false);
 
-            if ($request->request->get('consent') === 'yes') {
+            if ('yes' === $request->request->get('consent')) {
                 // Add the requested scopes to the user's scopes
-                $consent = $userConsent ?? new OAuth2UserConsent();;
+                $consent = $userConsent ?? new OAuth2UserConsent();
                 $consent->setScopes(array_merge($requestedScopes, $userScopes));
                 $consent->setClient($appClient);
                 $consent->setUser($user);

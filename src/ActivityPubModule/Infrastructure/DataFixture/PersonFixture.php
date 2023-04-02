@@ -11,18 +11,29 @@ use Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Entity\Person;
 use Netborg\Fediverse\Api\Tests\ActivityPubModule\Enum\RegularPersonEnum;
 use Netborg\Fediverse\Api\Tests\UserModule\Enum\RegularUserEnum;
 
-
 class PersonFixture extends Fixture
 {
-
     public function load(ObjectManager $manager)
     {
         $person = (new Person())
             ->setType(DomainPerson::TYPE)
             ->setUuid(RegularPersonEnum::UUID)
             ->setName(RegularPersonEnum::NAME)
+            ->setNameMap([
+                'pl_PL' => RegularPersonEnum::NAME_PL,
+                'en' => RegularPersonEnum::NAME
+            ])
             ->setPreferredUsername(RegularPersonEnum::USERNAME)
             ->setSummary(RegularPersonEnum::SUMMARY)
+            ->setSummaryMap([
+                'pl_PL' => RegularPersonEnum::SUMMARY_PL,
+                'en' => RegularPersonEnum::SUMMARY
+            ])
+            ->setContent(RegularPersonEnum::CONTENT)
+            ->setContentMap([
+                'pl_PL' => RegularPersonEnum::CONTENT_PL,
+                'en' => RegularPersonEnum::CONTENT
+            ])
             ->addUser(RegularUserEnum::UUID)
         ;
 

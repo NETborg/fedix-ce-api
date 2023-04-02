@@ -26,7 +26,12 @@ class CreatePersonTest extends AbstractApiTestCase
             'summary' => 'Just a Test Person summary',
         ];
 
-        $expected = '';
+        $expected = <<<TXT
+{
+  "code": 4030102,
+  "error": "Access denied!"
+}
+TXT;
 
         $client->jsonRequest(
             method: 'POST',
@@ -35,7 +40,7 @@ class CreatePersonTest extends AbstractApiTestCase
         );
         $output = $client->getResponse()->getContent();
 
-        $this->assertResponseStatusCodeSame(401);
+        $this->assertResponseStatusCodeSame(403);
         $this->assertMatchesPattern($expected, $output);
         $this->assertNull($repository->findOneByPreferredUsername('TestPerson'));
     }
@@ -73,7 +78,7 @@ TXT;
                 'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken(
                     $this->createRegularClient(),
                     $user->getUuid()
-                ))
+                )),
             ]
         );
         $output = $client->getResponse()->getContent();
@@ -110,7 +115,7 @@ TXT;
                 'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken(
                     $this->createRegularClient(),
                     RegularUserEnum::UUID
-                ))
+                )),
             ]
         );
         $output = $client->getResponse()->getContent();
@@ -131,16 +136,46 @@ TXT;
 
         $payload = [
             'name' => 'Test Person',
+            'nameMap' => [
+                'pl_PL' => 'Testowa Osoba',
+                'en' => 'Test Person'
+            ],
             'preferredUsername' => 'TestPerson',
             'summary' => 'Just a Test Person summary',
+            'summaryMap' => [
+                'pl_PL' => 'Poprostu podsumowanie Test Person',
+                'en' => 'Just a Test Person summary'
+            ],
+            'content' => '<div>Some default content</div>',
+            'contentMap' => [
+                'pl_PL' => '<div>Jakiś PL tekst</div>',
+                'en' => '<div>Some EN text content</div>'
+            ]
         ];
 
         $expected = <<<TXT
 {
-    "id": "@uuid@",
-    "name": "Test Person",
-    "preferredUsername": "TestPerson",
-    "summary": "Just a Test Person summary"
+  "type": "Person",
+  "preferredUsername": "TestPerson",
+  "owners": [
+    "@uuid@"
+  ],
+  "id": "@uuid@",
+  "content": "<div>Some default content<\/div>",
+  "contentMap": {
+    "pl_PL": "<div>Jaki\u015b PL tekst<\/div>",
+    "en": "<div>Some EN text content<\/div>"
+  },
+  "name": "Test Person",
+  "nameMap": {
+    "pl_PL": "Testowa Osoba",
+    "en": "Test Person"
+  },
+  "summary": "Just a Test Person summary",
+  "summaryMap": {
+    "pl_PL": "Poprostu podsumowanie Test Person",
+    "en": "Just a Test Person summary"
+  }
 }
 TXT;
 
@@ -152,7 +187,7 @@ TXT;
                         'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken(
                             $this->createRegularClient(),
                             $user->getUuid()
-                        ))
+                        )),
                     ]
         );
         $output = $client->getResponse()->getContent();

@@ -12,7 +12,7 @@ class ValidationException extends ValidationFailedException
 
     public function __construct(
         array $violations = [],
-        string $message = "Invalid data provided!",
+        string $message = 'Invalid data provided!',
         ?\Throwable $previous = null
     ) {
         parent::__construct(

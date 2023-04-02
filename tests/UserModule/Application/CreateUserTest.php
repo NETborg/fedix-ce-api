@@ -74,7 +74,7 @@ TXT;
             uri: '/api/v1/user',
             parameters: $payload,
             server: [
-                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient()))
+                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient())),
             ]
         );
         $output = $client->getResponse()->getContent();
@@ -117,7 +117,7 @@ TXT;
             uri: '/api/v1/user',
             parameters: $payload,
             server: [
-                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient()))
+                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient())),
             ]
         );
         $output = $client->getResponse()->getContent();
@@ -161,7 +161,7 @@ TXT;
             uri: '/api/v1/user',
             parameters: $payload,
             server: [
-                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient()))
+                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient())),
             ]
         );
         $output = $client->getResponse()->getContent();
@@ -210,7 +210,7 @@ TXT;
             uri: '/api/v1/user',
             parameters: $payload,
             server: [
-                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient()))
+                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient())),
             ]
         );
 
@@ -272,7 +272,7 @@ TXT;
             uri: '/api/v1/user',
             parameters: $payload,
             server: [
-                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient()))
+                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken($this->createRegularClient())),
             ]
         );
         $output = $client->getResponse()->getContent();

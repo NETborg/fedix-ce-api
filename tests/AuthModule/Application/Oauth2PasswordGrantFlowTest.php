@@ -42,7 +42,6 @@ class Oauth2PasswordGrantFlowTest extends AbstractApiTestCase
 }
 TXT;
 
-
         $client->jsonRequest('POST', '/api/oauth2/token', $payload);
 
         $this->assertResponseIsSuccessful();
@@ -76,7 +75,6 @@ TXT;
 }
 TXT;
 
-
         $client->jsonRequest('POST', '/api/oauth2/token', $payload);
 
         $this->assertResponseIsSuccessful();
@@ -105,7 +103,6 @@ TXT;
   "code": 404
 }
 TXT;
-
 
         $client->jsonRequest('POST', '/api/oauth2/token', $payload);
 
@@ -137,7 +134,6 @@ TXT;
 }
 TXT;
 
-
         $client->jsonRequest('POST', '/api/oauth2/token', $payload);
 
         $this->assertResponseIsSuccessful();
@@ -165,7 +161,6 @@ TXT;
     "message": "The authorization grant type is not supported by the authorization server."
 }
 TXT;
-
 
         $client->jsonRequest('POST', '/api/oauth2/token', $payload);
 
@@ -195,7 +190,6 @@ TXT;
 }
 TXT;
 
-
         $client->jsonRequest('POST', '/api/oauth2/token', $payload);
 
         $this->assertResponseStatusCodeSame(400);
@@ -223,7 +217,6 @@ TXT;
 }
 TXT;
 
-
         $client->jsonRequest('POST', '/api/oauth2/token', $payload);
 
         $this->assertResponseStatusCodeSame(401);
@@ -250,7 +243,6 @@ TXT;
   "message": "Client authentication failed"
 }
 TXT;
-
 
         $client->jsonRequest('POST', '/api/oauth2/token', $payload);
 
@@ -283,7 +275,6 @@ TXT;
 }
 TXT;
 
-
         $client->jsonRequest('POST', '/api/oauth2/token', $payload);
 
         $this->assertResponseStatusCodeSame(401);
@@ -315,7 +306,6 @@ TXT;
   "message": "Client authentication failed"
 }
 TXT;
-
 
         $client->jsonRequest('POST', '/api/oauth2/token', $payload);
 

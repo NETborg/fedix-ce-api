@@ -83,7 +83,7 @@ class Oauth2AuthorizationCodeFlowTest extends AbstractApiTestCase
             'client_id' => RegularClientEnum::IDENTIFIER,
             'client_secret' => RegularClientEnum::SECRET,
             'redirect_uri' => RegularClientEnum::REDIRECT_URI,
-            'code' => $code
+            'code' => $code,
         ];
 
         $expectedResponse = <<<TXT
@@ -159,7 +159,7 @@ TXT;
         $clientId = RegularClientEnum::IDENTIFIER;
         $userId = RegularUserEnum::EMAIL;
         $scope = [
-            ScopeEnum::USER_EMAIL
+            ScopeEnum::USER_EMAIL,
         ];
 
         $this->createUserConsent($clientId, $userId, $scope);
@@ -215,7 +215,7 @@ TXT;
             'client_id' => RegularClientEnum::IDENTIFIER,
             'client_secret' => RegularClientEnum::SECRET,
             'redirect_uri' => RegularClientEnum::REDIRECT_URI,
-            'code' => $code
+            'code' => $code,
         ];
 
         $expectedResponse = <<<TXT
@@ -239,7 +239,7 @@ TXT;
         $clientId = RegularClientEnum::IDENTIFIER;
         $userId = RegularUserEnum::EMAIL;
         $scope = [
-            ScopeEnum::USER_EMAIL
+            ScopeEnum::USER_EMAIL,
         ];
 
         $this->createUserConsent($clientId, $userId, $scope);
@@ -303,7 +303,7 @@ TXT;
             'client_id' => RegularClientEnum::IDENTIFIER,
             'client_secret' => RegularClientEnum::SECRET,
             'redirect_uri' => RegularClientEnum::REDIRECT_URI,
-            'code' => $code
+            'code' => $code,
         ];
 
         $expectedResponse = <<<TXT
@@ -345,7 +345,7 @@ TXT;
 
     private function createUserConsent(string $clientId, string $userId, array $scope): void
     {
-        $consent = new OAuth2UserConsent();;
+        $consent = new OAuth2UserConsent();
         $consent->setScopes($scope);
         $consent->setClient($this->getClientModel($clientId));
         $consent->setUser($this->getUserModel($userId));

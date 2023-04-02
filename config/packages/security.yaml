@@ -40,14 +40,15 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/doc, roles: PUBLIC_ACCESS }
-        - { path: ^/api/oauth2/authorize, roles: PUBLIC_ACCESS }
-        - { path: ^/login, role: PUBLIC_ACCESS }
-        - { path: ^/activation, role: PUBLIC_ACCESS }
-        - { path: ^/.well-known, roles: PUBLIC_ACCESS }
+#        - { path: ^/api/doc, roles: PUBLIC_ACCESS }
+#        - { path: ^/api/oauth2/authorize, roles: PUBLIC_ACCESS }
+#        - { path: ^/login, roles: PUBLIC_ACCESS }
+#        - { path: ^/activation, roles: PUBLIC_ACCESS }
+#        - { path: ^/.well-known, roles: PUBLIC_ACCESS }
         - { path: ^/api/v1/user, roles: ROLE_OAUTH2_CLIENT.REGISTER_USERS, methods: POST }
-        - { path: ^/api, roles: ROLE_USER }
-        - { path: ^/, role: ROLE_USER }
+#        - { path: ^/api/v1/activity_pub/person, methods: GET, roles: [ PUBLIC_ACCESS, ROLE_USER ] }
+#        - { path: ^/api, roles: ROLE_USER }
+#        - { path: ^/, roles: ROLE_USER }
 
 when@test:
     security:

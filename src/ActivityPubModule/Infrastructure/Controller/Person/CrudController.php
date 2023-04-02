@@ -6,9 +6,10 @@ namespace Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Controller\Pers
 
 use Netborg\Fediverse\Api\ActivityPubModule\Application\CommandBus\Command\CreatePersonCommand;
 use Netborg\Fediverse\Api\ActivityPubModule\Application\CommandBus\Command\UpdatePersonDetailsCommand;
-use Netborg\Fediverse\Api\ActivityPubModule\Domain\Exception\ActorNotFoundException;
-use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\DTO\CreatePersonDTO;
 use Netborg\Fediverse\Api\ActivityPubModule\Application\QueryBus\Query\GetPersonQuery;
+use Netborg\Fediverse\Api\ActivityPubModule\Domain\Exception\ActorNotFoundException;
+use Netborg\Fediverse\Api\ActivityPubModule\Domain\Exception\UnauthorizedException;
+use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\DTO\CreatePersonDTO;
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\DTO\UpdatePersonDetailsDTO;
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\Person;
 use Netborg\Fediverse\Api\Shared\Domain\CommandBus\CommandBusInterface;
@@ -34,11 +35,15 @@ class CrudController extends AbstractController
 
     public function createAction(Request $request): JsonResponse
     {
+        if (!$this->isGranted('ROLE_USER')) {
+            throw new UnauthorizedException('Access denied!');
+        }
+
         $person = $this->serializer->denormalize(
             data: $request->request->all(),
             type: Person::class,
             context: [
-                AbstractNormalizer::GROUPS => ['create']
+                AbstractNormalizer::GROUPS => ['create'],
             ]
         );
 
@@ -52,7 +57,7 @@ class CrudController extends AbstractController
             data: $person,
             format: 'json',
             context: [
-                AbstractNormalizer::GROUPS => ['public', 'owner']
+                AbstractNormalizer::GROUPS => ['public', 'owner'],
             ]
         );
 
@@ -82,13 +87,17 @@ class CrudController extends AbstractController
             data: $person,
             format: 'json',
             context: [
-                AbstractNormalizer::GROUPS => $groups
+                AbstractNormalizer::GROUPS => $groups,
             ]
         ), json: true);
     }
 
     public function updateDetailsAction(string $identifier, Request $request): JsonResponse
     {
+        if (!$this->isGranted('ROLE_USER')) {
+            throw new UnauthorizedException('Access denied!');
+        }
+
         if (!Uuid::isValid($identifier)) {
             $identifier = $this->sanitiser->deprefixise($identifier, true);
         }
@@ -118,7 +127,7 @@ class CrudController extends AbstractController
             data: $person,
             format: 'json',
             context: [
-                AbstractNormalizer::GROUPS => $groups
+                AbstractNormalizer::GROUPS => $groups,
             ]
         ), json: true);
     }

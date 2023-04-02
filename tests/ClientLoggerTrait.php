@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\Tests;
 
-use League\Bundle\OAuth2ServerBundle\Manager\ClientManagerInterface;
 use League\Bundle\OAuth2ServerBundle\Entity\Client as LeagueClientEntity;
+use League\Bundle\OAuth2ServerBundle\Manager\ClientManagerInterface;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
 use League\Bundle\OAuth2ServerBundle\ValueObject\Grant;
 use League\Bundle\OAuth2ServerBundle\ValueObject\RedirectUri;
@@ -36,7 +36,7 @@ trait ClientLoggerTrait
                 new Scope(ScopeEnum::USER_EMAIL),
             ],
             redirectUris: [
-                new RedirectUri('http://zion.social')
+                new RedirectUri('http://zion.social'),
             ]
         );
     }

@@ -8,7 +8,7 @@ class ForbiddenException extends JsonableException
 {
     public function __construct(
         int $httpResponseStatus = 403,
-        string $message = "",
+        string $message = '',
         int $code = 4030000,
         ?\Throwable $previous = null
     ) {

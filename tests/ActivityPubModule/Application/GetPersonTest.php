@@ -14,154 +14,148 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class GetPersonTest extends AbstractApiTestCase
 {
-    public function testUnauthorizedAccessDenied(): void
+    public function testUnauthorizedAccessOnlyPublicView(): void
     {
         $client = static::createClient();
-        /** @var PersonRepositoryInterface $repository */
-        $repository = self::getContainer()->get(PersonRepositoryInterface::class);
-
-        $payload = [
-            'name' => 'Test Person',
-            'preferredUsername' => 'TestPerson',
-            'summary' => 'Just a Test Person summary',
-        ];
-
-        $expected = '';
-
-        $client->jsonRequest(
-            method: 'POST',
-            uri: '/api/v1/activity_pub/person',
-            parameters: $payload
-        );
-        $output = $client->getResponse()->getContent();
-
-        $this->assertResponseStatusCodeSame(401);
-        $this->assertMatchesPattern($expected, $output);
-        $this->assertNull($repository->findOneByPreferredUsername('TestPerson'));
-    }
-
-    public function testMissingRequiredAttributes(): void
-    {
-        $client = static::createClient();
-        /** @var PersonRepositoryInterface $repository */
-        $repository = self::getContainer()->get(PersonRepositoryInterface::class);
-
-        $userUuid = $this->getFaker()->uuid();
-        $user = $this->createUser($userUuid);
-
-        $payload = [
-            'name' => 'Test Person',
-            'preferredUsername' => '',
-            'summary' => 'Just a Test Person summary',
-        ];
+        $preferredUsername = 'RegularPerson';
 
         $expected = <<<TXT
 {
-    "code": 4000101,
-    "error": "Invalid data provided!",
-    "violations": {
-        "preferredUsername": "@string@"
-    }
+    "content": "<div>Some Regular Person text content</div>",
+    "contentMap": {
+        "en": "<div>Some Regular Person text content</div>",
+        "pl_PL": "<div>Jakaś teksotwa zawartość Normalnej Osoby</div>"
+    },
+    "id": "http://localhost/api/v1/activity_pub/person/~RegularPerson",
+    "image": "https://fedx.social/image/person/~RegularPerson",
+    "inbox": "http://localhost/api/v1/activity_pub/person/~RegularPerson/inbox",
+    "name": "Regular Person",
+    "nameMap": {
+        "en": "Regular Person",
+        "pl_PL": "Normalna Osoba"
+    },
+    "outbox": "http://localhost/api/v1/activity_pub/person/~RegularPerson/outbox",
+    "preferredUsername": "RegularPerson",
+    "summary": "I'm just Regular Person summary",
+    "summaryMap": {
+        "en": "I'm just Regular Person summary",
+        "pl_PL": "Jestem tylko Normalną Osobą"
+    },
+    "type": "Person",
+    "url": "https://fedx.social/person/~RegularPerson"
 }
 TXT;
 
         $client->jsonRequest(
-            method: 'POST',
-            uri: '/api/v1/activity_pub/person',
-            parameters: $payload,
+            method: 'GET',
+            uri: '/api/v1/activity_pub/person/~'.$preferredUsername,
+        );
+        $output = $client->getResponse()->getContent();
+
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertMatchesPattern($expected, $output);
+    }
+
+    public function testPublicViewForForeignUser(): void
+    {
+        $client = static::createClient();
+        $preferredUsername = 'RegularPerson';
+
+        $userUuid = $this->getFaker()->uuid();
+        $user = $this->createUser($userUuid);
+
+        $expected = <<<TXT
+{
+    "content": "<div>Some Regular Person text content</div>",
+    "contentMap": {
+        "en": "<div>Some Regular Person text content</div>",
+        "pl_PL": "<div>Jakaś teksotwa zawartość Normalnej Osoby</div>"
+    },
+    "id": "http://localhost/api/v1/activity_pub/person/~RegularPerson",
+    "image": "https://fedx.social/image/person/~RegularPerson",
+    "inbox": "http://localhost/api/v1/activity_pub/person/~RegularPerson/inbox",
+    "name": "Regular Person",
+    "nameMap": {
+        "en": "Regular Person",
+        "pl_PL": "Normalna Osoba"
+    },
+    "outbox": "http://localhost/api/v1/activity_pub/person/~RegularPerson/outbox",
+    "preferredUsername": "RegularPerson",
+    "summary": "I'm just Regular Person summary",
+    "summaryMap": {
+        "en": "I'm just Regular Person summary",
+        "pl_PL": "Jestem tylko Normalną Osobą"
+    },
+    "type": "Person",
+    "url": "https://fedx.social/person/~RegularPerson"
+}
+TXT;
+
+        $client->jsonRequest(
+            method: 'GET',
+            uri: '/api/v1/activity_pub/person/~'.$preferredUsername,
             server: [
                 'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken(
                     $this->createRegularClient(),
                     $user->getUuid()
-                ))
+                )),
             ]
         );
         $output = $client->getResponse()->getContent();
-
-        $this->assertResponseStatusCodeSame(400);
-        $this->assertMatchesPattern($expected, $output);
-        $this->assertNull($repository->findOneByPreferredUsername('TestPerson'));
-    }
-
-    public function testPreventMoreThenOnePersonAccount(): void
-    {
-        $client = static::createClient();
-        /** @var PersonRepositoryInterface $repository */
-        $repository = self::getContainer()->get(PersonRepositoryInterface::class);
-
-        $payload = [
-            'name' => 'Test Person',
-            'preferredUsername' => '',
-            'summary' => 'Just a Test Person summary',
-        ];
-
-        $expected = <<<TXT
-{
-    "code": 4030101,
-    "error": "Person already exists for this User."
-}
-TXT;
-
-        $client->jsonRequest(
-            method: 'POST',
-            uri: '/api/v1/activity_pub/person',
-            parameters: $payload,
-            server: [
-                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken(
-                    $this->createRegularClient(),
-                    RegularUserEnum::UUID
-                ))
-            ]
-        );
-        $output = $client->getResponse()->getContent();
-
-        $this->assertResponseStatusCodeSame(403);
-        $this->assertMatchesPattern($expected, $output);
-        $this->assertNull($repository->findOneByPreferredUsername('TestPerson'));
-    }
-
-    public function testSuccessfulPersonCreation(): void
-    {
-        $client = static::createClient();
-        /** @var PersonRepositoryInterface $repository */
-        $repository = self::getContainer()->get(PersonRepositoryInterface::class);
-
-        $userUuid = $this->getFaker()->uuid();
-        $user = $this->createUser($userUuid);
-
-        $payload = [
-            'name' => 'Test Person',
-            'preferredUsername' => 'TestPerson',
-            'summary' => 'Just a Test Person summary',
-        ];
-
-        $expected = <<<TXT
-{
-    "id": "@uuid@",
-    "name": "Test Person",
-    "preferredUsername": "TestPerson",
-    "summary": "Just a Test Person summary"
-}
-TXT;
-
-        $client->jsonRequest(
-            method: 'POST',
-            uri: '/api/v1/activity_pub/person',
-            parameters: $payload,
-            server: [
-                        'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken(
-                            $this->createRegularClient(),
-                            $user->getUuid()
-                        ))
-                    ]
-        );
-        $output = $client->getResponse()->getContent();
-        $dbRecord = $repository->findOneByPreferredUsername('TestPerson');
 
         $this->assertResponseStatusCodeSame(200);
         $this->assertMatchesPattern($expected, $output);
-        $this->assertNotNull($dbRecord);
-        $this->assertRecordContains($payload, $dbRecord);
+    }
+
+    public function testOwnerViewForOwningUser(): void
+    {
+        $client = static::createClient();
+        $preferredUsername = 'RegularPerson';
+
+        $expected = <<<TXT
+{
+    "content": "<div>Some Regular Person text content</div>",
+    "contentMap": {
+        "en": "<div>Some Regular Person text content</div>",
+        "pl_PL": "<div>Jakaś teksotwa zawartość Normalnej Osoby</div>"
+    },
+    "id": "http://localhost/api/v1/activity_pub/person/~RegularPerson",
+    "image": "https://fedx.social/image/person/~RegularPerson",
+    "inbox": "http://localhost/api/v1/activity_pub/person/~RegularPerson/inbox",
+    "name": "Regular Person",
+    "nameMap": {
+        "en": "Regular Person",
+        "pl_PL": "Normalna Osoba"
+    },
+    "outbox": "http://localhost/api/v1/activity_pub/person/~RegularPerson/outbox",
+    "preferredUsername": "RegularPerson",
+    "summary": "I'm just Regular Person summary",
+    "summaryMap": {
+        "en": "I'm just Regular Person summary",
+        "pl_PL": "Jestem tylko Normalną Osobą"
+    },
+    "type": "Person",
+    "url": "https://fedx.social/person/~RegularPerson",
+    "owners": [
+        "@uuid@"
+    ]
+}
+TXT;
+
+        $client->jsonRequest(
+            method: 'GET',
+            uri: '/api/v1/activity_pub/person/~'.$preferredUsername,
+            server: [
+                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken(
+                    $this->createRegularClient(),
+                   RegularUserEnum::UUID
+                )),
+            ]
+        );
+        $output = $client->getResponse()->getContent();
+
+        $this->assertResponseStatusCodeSame(200);
+        $this->assertMatchesPattern($expected, $output);
     }
 
     private function createUser(string $uuid = null, string $username = null): User

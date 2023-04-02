@@ -11,9 +11,9 @@ class UnauthorizedException extends ForbiddenException
     public const ERROR = 4030102;
 
     public function __construct(
-        string $message = "",
+        string $message = '',
         ?\Throwable $previous = null
     ) {
-        parent::__construct(message: $message, code: self::ERROR, previous:  $previous);
+        parent::__construct(message: $message, code: self::ERROR, previous: $previous);
     }
 }
