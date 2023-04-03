@@ -12,6 +12,8 @@ interface PersonRepositoryInterface
 
     public function findAllOwnedBy(string $owner): iterable;
 
+    public function findOneByUuid(string $uuid): ?Person;
+
     public function findOneByPreferredUsername(string $preferredUsername): ?Person;
 
     public function update(Person $person): void;

@@ -43,6 +43,26 @@ readonly class PersonCreatorService
 
         $this->logger->debug(
             sprintf(
+                '[%s] Validating owner [%s]',
+                __METHOD__,
+                $person->getPreferredUsername()
+            )
+        );
+
+        if (empty($owner)) {
+            $this->logger->debug(
+                sprintf(
+                    '[%s] Validating owner [%s] - failed',
+                    __METHOD__,
+                    $person->getPreferredUsername()
+                )
+            );
+
+            throw new ValidationException(['owner' => 'Owner identifier must be provided']);
+        }
+
+        $this->logger->debug(
+            sprintf(
                 '[%s] Checking Person Existence Criteria [%s]',
                 __METHOD__,
                 $person->getPreferredUsername()
@@ -86,7 +106,8 @@ readonly class PersonCreatorService
                     '[%s] Validating Person [%s] - failed!',
                     __METHOD__,
                     $person->getPreferredUsername()
-                )
+                ),
+                $exception->getTrace()
             );
             throw $exception;
         }

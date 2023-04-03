@@ -48,6 +48,15 @@ class PersonRepository implements PersonRepositoryInterface
         $this->doctrineRepository->save($personEntity, true);
     }
 
+    public function findOneByUuid(string $uuid): ?Person
+    {
+        $personEntity = $this->doctrineRepository->findOneByUuid($uuid);
+
+        return $personEntity
+            ? $this->personFactory->fromPersonEntity($personEntity)
+            : null;
+    }
+
     public function findOneByPreferredUsername(string $preferredUsername): ?Person
     {
         $personEntity = $this->doctrineRepository->findOneByPreferredUsername($preferredUsername);
