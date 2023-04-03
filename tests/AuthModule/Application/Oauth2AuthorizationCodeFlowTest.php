@@ -33,7 +33,7 @@ class Oauth2AuthorizationCodeFlowTest extends AbstractApiTestCase
             'state' => '1234abcd',
         ]);
 
-        $this->assertResponseRedirects('http://localhost/login');
+        $this->assertResponseRedirects('/login');
         $crawler = $client->followRedirect();
 
         $this->assertSelectorExists('form');
@@ -113,7 +113,7 @@ TXT;
             'state' => '1234abcd',
         ]);
 
-        $this->assertResponseRedirects('http://localhost/login');
+        $this->assertResponseRedirects('/login');
         $crawler = $client->followRedirect();
 
         $this->assertSelectorExists('form');
@@ -172,7 +172,7 @@ TXT;
             'state' => '1234abcd',
         ]);
 
-        $this->assertResponseRedirects('http://localhost/login');
+        $this->assertResponseRedirects('/login');
         $crawler = $client->followRedirect();
 
         $this->assertSelectorExists('form');
@@ -252,7 +252,7 @@ TXT;
             'state' => '1234abcd',
         ]);
 
-        $this->assertResponseRedirects('http://localhost/login');
+        $this->assertResponseRedirects('/login');
         $crawler = $client->followRedirect();
 
         $this->assertSelectorExists('form');

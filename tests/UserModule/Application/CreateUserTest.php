@@ -59,13 +59,11 @@ class CreateUserTest extends AbstractApiTestCase
 
         $expected = <<<TXT
 {
-  "message": "Invalid data provided.",
-  "errors": [
-    {
-      "property": "email",
-      "error": "This value should not be blank."
-    }
-  ]
+  "code": 4000201,
+  "error": "Invalid data provided!",
+  "violations": {
+    "email": "This value should not be blank."
+  }
 }
 TXT;
 
@@ -102,13 +100,11 @@ TXT;
 
         $expected = <<<TXT
 {
-  "message": "Invalid data provided.",
-  "errors": [
-    {
-      "property": "username",
-      "error": "This value should not be blank."
-    }
-  ]
+  "code": 4000201,
+  "error": "Invalid data provided!",
+  "violations": {
+    "username": "This value should not be blank."
+  }
 }
 TXT;
 
@@ -146,13 +142,11 @@ TXT;
 
         $expected = <<<TXT
 {
-  "message": "Invalid data provided.",
-  "errors": [
-    {
-      "property": "password",
-      "error": "Password must have min. 8 characters"
-    }
-  ]
+  "code": 4000201,
+  "error": "Invalid data provided!",
+  "violations": {
+    "password": "Password must have min. 8 characters"
+  }
 }
 TXT;
 
@@ -253,17 +247,12 @@ TXT;
 
         $expected = <<<TXT
 {
-  "message": "Invalid data provided.",
-  "errors": [
-    {
-      "property": "email",
-      "error": "This value is already used."
-    },
-    {
-      "property": "username",
-      "error": "This value is already used."
-    }
-  ]
+  "code": 4000201,
+  "error": "Invalid data provided!",
+  "violations": {
+    "email": "This value is already used.",
+    "username": "This value is already used."
+  }
 }
 TXT;
 

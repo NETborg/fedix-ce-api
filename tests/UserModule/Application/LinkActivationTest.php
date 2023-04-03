@@ -55,13 +55,11 @@ TXT;
 
         $expected = <<<TXT
 {
-  "message": "Invalid data provided.",
-  "errors": [
-    {
-      "property": "activationLink",
-      "error": "Invalid activation link"
-    }
-  ]
+  "code": 4000201,
+  "error": "Invalid data provided!",
+  "violations": {
+    "activationLink": "Invalid activation link"
+  }
 }
 TXT;
         $this->assertResponseStatusCodeSame(400);

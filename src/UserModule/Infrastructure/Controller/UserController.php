@@ -10,13 +10,14 @@ use Netborg\Fediverse\Api\Shared\Domain\Exception\ForbiddenException;
 use Netborg\Fediverse\Api\Shared\Domain\Model\DTO\RegisterUserDTO;
 use Netborg\Fediverse\Api\Shared\Domain\QueryBus\QueryBusInterface;
 use Netborg\Fediverse\Api\Shared\Infrastructure\Controller\AbstractController;
+use Netborg\Fediverse\Api\Shared\Infrastructure\Util\ViolationListToArrayConverter;
 use Netborg\Fediverse\Api\UserModule\Application\QueryBus\Query\GetUserQuery;
+use Netborg\Fediverse\Api\UserModule\Domain\Exception\ValidationException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
@@ -63,7 +64,7 @@ class UserController extends AbstractController
 
         $errors = $this->validator->validate(value: $registerUserDTO);
         if (count($errors)) {
-            throw new ValidationFailedException($registerUserDTO, $errors);
+            throw new ValidationException(ViolationListToArrayConverter::convert($errors));
         }
 
         $user = $this->commandBus->handle(new RegisterUserCommand($registerUserDTO));

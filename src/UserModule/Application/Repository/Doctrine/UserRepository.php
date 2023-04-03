@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\UserModule\Application\Repository\Doctrine;
 
+use Netborg\Fediverse\Api\Shared\Infrastructure\Util\ViolationListToArrayConverter;
 use Netborg\Fediverse\Api\UserModule\Application\Factory\UserFactory;
 use Netborg\Fediverse\Api\UserModule\Application\Repository\UserRepositoryInterface;
+use Netborg\Fediverse\Api\UserModule\Domain\Exception\ValidationException;
 use Netborg\Fediverse\Api\UserModule\Domain\Model\User;
 use Netborg\Fediverse\Api\UserModule\Infrastructure\Repository\UserRepository as DoctrineUserRepository;
 use Symfony\Component\Uid\Uuid;
-use Symfony\Component\Validator\Exception\ValidationFailedException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserRepository implements UserRepositoryInterface
@@ -28,7 +29,7 @@ class UserRepository implements UserRepositoryInterface
         if (!$userEntity->getId()) {
             $errors = $this->validator->validate(value: $userEntity, groups: ['Create']);
             if ($errors->count()) {
-                throw new ValidationFailedException($userEntity, $errors);
+                throw new ValidationException(ViolationListToArrayConverter::convert($errors));
             }
         }
 

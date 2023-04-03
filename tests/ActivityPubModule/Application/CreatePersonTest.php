@@ -184,11 +184,11 @@ TXT;
             uri: '/api/v1/activity_pub/person',
             parameters: $payload,
             server: [
-                        'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken(
-                            $this->createRegularClient(),
-                            $user->getUuid()
-                        )),
-                    ]
+                'HTTP_AUTHORIZATION' => sprintf('Bearer %s', $this->createAccessToken(
+                    $this->createRegularClient(),
+                    $user->getUuid()
+                )),
+            ]
         );
         $output = $client->getResponse()->getContent();
         $dbRecord = $repository->findOneByPreferredUsername('TestPerson');
@@ -225,7 +225,7 @@ TXT;
 
         $normalized = $serializer->normalize(
             data: $person,
-            context: [AbstractNormalizer::GROUPS => ['get']]
+            context: [AbstractNormalizer::GROUPS => ['public', 'owner']]
         );
 
         foreach ($data as $key => $value) {

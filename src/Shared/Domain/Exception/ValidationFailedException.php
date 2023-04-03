@@ -11,7 +11,7 @@ class ValidationFailedException extends JsonableException
 
     public function __construct(
         private readonly array $violations = [],
-        int $httpResponseStatus = 400,
+        int $httpResponseStatus = self::RESPONSE_CODE,
         string $message = 'Invalid data provided!',
         int $code = self::ERROR,
         ?\Throwable $previous = null
