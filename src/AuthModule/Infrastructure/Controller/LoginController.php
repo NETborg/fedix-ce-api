@@ -27,7 +27,7 @@ class LoginController extends AbstractController
             && in_array('application/json', $request->getAcceptableContentTypes())
         ) {
             return new JsonResponse([
-                '_csrf_token' => (string) $csrfTokenManager->getToken('authenticate')
+                '_csrf_token' => (string) $csrfTokenManager->getToken('authenticate'),
             ]);
         }
 

@@ -36,16 +36,17 @@ class AuthorizationCodeRequestResolvingListener
 
         /** @var FirewallMap $firewallMap */
         $firewallMap = $this->firewallMap;
-        $this->firewallName = 'main'; //$firewallMap->getFirewallConfig($request)->getName();
+        $this->firewallName = 'main'; // $firewallMap->getFirewallConfig($request)->getName();
 
         $user = $this->security->getUser();
         $this->saveTargetPath($request->getSession(), $this->firewallName, $request->getUri());
 
         $response = new RedirectResponse($this->urlGenerator->generate('app_login'), 307);
         if ($user instanceof UserInterface) {
-            if ($request->getSession()->get('consent_granted') !== null) {
+            if (null !== $request->getSession()->get('consent_granted')) {
                 $event->resolveAuthorization($request->getSession()->get('consent_granted'));
                 $request->getSession()->remove('consent_granted');
+
                 return;
             }
 

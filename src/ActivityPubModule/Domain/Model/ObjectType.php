@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Netborg\Fediverse\Api\ActivityPubModule\Domain\Model;
 
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Subject\Image;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -24,76 +25,109 @@ abstract class ObjectType
         new Assert\Url(),
         new Assert\Uuid(),
     ])]
+    #[Groups(['public'])]
     protected string|null $id = null;
 
     /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
+    #[Groups(['create', 'update', 'public'])]
     protected string|LinkType|ObjectType|array|null $attachment = null;
 
     /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
+    #[Groups(['create', 'update', 'owner'])]
     protected string|LinkType|ObjectType|array|null $attributedTo = null;
 
     /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
+    #[Groups(['create', 'update', 'owner'])]
     protected string|LinkType|ObjectType|array|null $audience = null;
 
     /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
+    #[Groups(['create', 'update', 'owner'])]
     protected string|LinkType|ObjectType|array|null $to = null;
 
     /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
+    #[Groups(['create', 'update', 'owner'])]
     protected string|LinkType|ObjectType|array|null $bcc = null;
 
     /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
+    #[Groups(['create', 'update', 'owner'])]
     protected string|LinkType|ObjectType|array|null $bto = null;
 
     /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
+    #[Groups(['create', 'update', 'owner'])]
     protected string|LinkType|ObjectType|array|null $cc = null;
+    #[Groups(['create', 'update', 'public'])]
     protected string|null $content = null;
 
     /** @var array<string, string>|null */
+    #[Groups(['create', 'update', 'public'])]
     protected array|null $contentMap = null;
+    #[Groups(['create', 'update', 'owner'])]
     protected SourceProperty|null $source = null;
+    #[Groups(['create', 'update', 'owner'])]
     protected string|LinkType|ObjectType|null $context = null;
+    #[Groups(['create', 'update', 'public'])]
     protected string|\DateTimeInterface|null $duration = null;
+    #[Groups(['create', 'update', 'owner'])]
     protected string|\DateTimeInterface|null $startTime = null;
+    #[Groups(['create', 'update', 'owner'])]
     protected string|\DateTimeInterface|null $endTime = null;
+    #[Groups(['create', 'public'])]
     protected string|LinkType|ObjectType|null $generator = null;
 
     /** @var string|Image|LinkType|array<Image|LinkType|string>|null */
+    #[Groups(['create', 'update', 'public'])]
     protected string|Image|LinkType|array|null $icon = null;
 
     /** @var string|Image|LinkType|array<Image|LinkType|string>|null */
+    #[Groups(['create', 'update', 'public'])]
     protected string|Image|LinkType|array|null $image = null;
 
     /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
+    #[Groups(['create', 'update', 'owner'])]
     protected string|LinkType|ObjectType|array|null $inReplyTo = null;
 
     /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
+    #[Groups(['create', 'update', 'public'])]
     protected string|LinkType|ObjectType|array|null $location;
 
     #[
         Assert\Regex(
             pattern: '/^(text|application|audio|video|image|message|model|multipart)\/[a-z0-9+\-\.]+$/',
-            groups: ['Default', 'Create', 'Update']
+            groups: ['create', 'update']
         )
     ]
+    #[Groups(['create', 'update', 'public'])]
     protected string|null $mediaType = null;
+
+    #[Groups(['create', 'public', 'update'])]
+    #[Assert\NotBlank(groups: ['create', 'update'])]
     protected string|null $name = null;
 
     /** @var array<string,string>|null */
+    #[Groups(['create', 'update', 'public'])]
     protected array|null $nameMap = null;
+    #[Groups(['create', 'update', 'public'])]
     protected string|LinkType|ObjectType|null $preview = null;
+    #[Groups(['create', 'update', 'public'])]
     protected string|\DateTimeInterface|null $published = null;
+    #[Groups(['create', 'update', 'owner'])]
     protected string|Collection|null $replies = null;
+    #[Groups(['create', 'update', 'public'])]
     protected string|null $summary = null;
 
     /** @var array<string,string>|null */
+    #[Groups(['create', 'update', 'public'])]
     protected array|null $summaryMap = null;
 
     /** @var string|LinkType|ObjectType|array<LinkType|ObjectType|string>|null */
+    #[Groups(['create', 'update', 'public'])]
     protected string|LinkType|ObjectType|array|null $tag;
 
+    #[Groups(['create', 'update', 'public'])]
     protected string|\DateTimeInterface|null $updated = null;
 
     /** @var string|LinkType|LinkType[]|null */
+    #[Groups(['create', 'update', 'public'])]
     protected string|LinkType|array|null $url = null;
 
     #[SerializedName('@context')]

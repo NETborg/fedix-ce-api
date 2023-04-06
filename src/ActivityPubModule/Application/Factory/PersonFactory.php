@@ -5,30 +5,16 @@ declare(strict_types=1);
 namespace Netborg\Fediverse\Api\ActivityPubModule\Application\Factory;
 
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Actor\Person;
-use Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Entity\Actor;
-use Netborg\Fediverse\Api\Shared\Domain\Sanitiser\UsernameSanitiserInterface;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Serializer\SerializerInterface;
+use Netborg\Fediverse\Api\ActivityPubModule\Infrastructure\Entity\Person as PersonEntity;
 
-class PersonFactory implements PersonFactoryInterface
+class PersonFactory extends AbstractActorFactory implements PersonFactoryInterface
 {
-    public function __construct(
-        private readonly SerializerInterface $serializer,
-        private readonly RouterInterface $router,
-        private readonly PublicKeyFactoryInterface $publicKeyFactory,
-        private readonly UsernameSanitiserInterface $sanitiser,
-    ) {
-    }
+    protected string $className = Person::class;
 
     public function fromJsonString(string $json, Person $subject = null, array $context = []): Person
     {
-        return $this->serializer->deserialize($json, Person::class, 'json', $context);
-    }
-
-    public function fromArray(array $data, Person $subject = null, array $context = []): Person
-    {
-        /** @var Person $person @phpstan-ignore-next-line */
-        $person = $this->serializer->denormalize(data: $data, type: Person::class, context: $context);
+        /** @var Person $person */
+        $person = $this->deserialize($json, $context);
 
         if ($subject) {
             $this->merge($person, $subject);
@@ -39,34 +25,34 @@ class PersonFactory implements PersonFactoryInterface
         return $person;
     }
 
-    public function fromPersonEntity(Actor $entity, Person $subject = null): Person
+    public function fromArray(array $data, Person $subject = null, array $context = []): Person
+    {
+        /** @var Person $person */
+        $person = $this->denormalize($data, $context);
+
+        if ($subject) {
+            $this->merge($person, $subject);
+
+            return $subject;
+        }
+
+        return $person;
+    }
+
+    public function fromPersonEntity(PersonEntity $entity, Person $subject = null): Person
     {
         $options = [
             'identifier' => $this->sanitiser->prefixise($entity->getPreferredUsername()),
         ];
 
-        $id = $this->router->generate(
-            'api_ap_v1_person_get',
-            $options,
-            RouterInterface::ABSOLUTE_URL
-        );
-        $inbox = $this->router->generate(
-            'api_ap_v1_person_inbox_get',
-            $options,
-            RouterInterface::ABSOLUTE_URL
-        );
-        $outbox = $this->router->generate(
-            'api_ap_v1_person_outbox_get',
-            $options,
-            RouterInterface::ABSOLUTE_URL
-        );
+        $id = $this->generateUrl('api_ap_v1_person_get', $options);
+        $inbox = $this->generateUrl('api_ap_v1_person_inbox_get', $options);
+        $outbox = $this->generateUrl('api_ap_v1_person_outbox_get', $options);
+        $url = sprintf('%s/person/%s', $this->frontendHost, $options['identifier']);
+        $image = sprintf('%s/image/person/%s', $this->frontendHost, $options['identifier']);
         $publicKey = $entity->getPublicKey()
             ? $this->publicKeyFactory->create(
-                $this->router->generate(
-                    'api_ap_v1_person_pub_key_get',
-                    $options,
-                    RouterInterface::ABSOLUTE_URL
-                ),
+                $this->generateUrl('api_ap_v1_person_pub_key_get', $options),
                 $id,
                 $entity->getPublicKey()
             )
@@ -78,36 +64,18 @@ class PersonFactory implements PersonFactoryInterface
         return $person
             ->setId($id)
             ->setName($entity->getName())
+            ->setNameMap($entity->getNameMap())
             ->setPreferredUsername($entity->getPreferredUsername())
+            ->setUrl($url)
+            ->setImage($image)
             ->setInbox($inbox)
             ->setOutbox($outbox)
+            ->setSummary($entity->getSummary())
+            ->setSummaryMap($entity->getSummaryMap())
             ->setPublicKey($publicKey)
+            ->setOwners($entity->getUsers() ?? [])
+            ->setContent($entity->getContent())
+            ->setContentMap($entity->getContentMap())
         ;
-    }
-
-    private function merge(Person $source, Person $target): void
-    {
-        $reflection = new \ReflectionClass(Person::class);
-        $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
-        $setters = array_filter($methods, fn (\ReflectionMethod $reflectionMethod) => str_starts_with($reflectionMethod->getName(), 'set'));
-
-        foreach ($setters as $reflectionMethod) {
-            $getter = str_replace('set', 'get', $reflectionMethod->getName());
-            if ($reflection->hasMethod($getter)) {
-                $target->{$reflectionMethod->getName()}($source->{$getter}());
-                continue;
-            }
-
-            $iser = str_replace('set', 'is', $reflectionMethod->getName());
-            if ($reflection->hasMethod($iser)) {
-                $target->{$reflectionMethod->getName()}($source->{$iser}());
-                continue;
-            }
-
-            $haser = str_replace('set', 'has', $reflectionMethod->getName());
-            if ($reflection->hasMethod($haser)) {
-                $target->{$reflectionMethod->getName()}($source->{$haser}());
-            }
-        }
     }
 }

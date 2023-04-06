@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\UserModule\Application\Exception;
 
+use Netborg\Fediverse\Api\Shared\Domain\Exception\JsonableException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class ModelNotFoundException extends HttpException
+class ModelNotFoundException extends JsonableException
 {
     public static function create(string $model): self
     {

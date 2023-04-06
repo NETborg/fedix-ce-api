@@ -32,5 +32,4 @@ final class AccessToken implements AccessTokenEntityInterface
             ->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey())
         ;
     }
-
 }

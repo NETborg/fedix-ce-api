@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Netborg\Fediverse\Api\Shared\Infrastructure\Controller;
 
+use Netborg\Fediverse\Api\Shared\Domain\Exception\ForbiddenException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,10 @@ class MainController extends AbstractController
 
     public function previewEmail(string $email, Environment $twig): Response
     {
+        if (!$this->isGranted('ROLE_USER')) {
+            throw new ForbiddenException(message: 'Access denied!');
+        }
+
         $template = match ($email) {
             'activation' => $twig->render('email/activation_link.html.twig', ['activationLinkUuid' => Uuid::v7()->toRfc4122()]),
             default => ''

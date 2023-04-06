@@ -120,7 +120,7 @@ class Client
 
     public function removeRedirectUri(string $redirectUri): self
     {
-        $this->redirectUris = array_filter($this->redirectUris, static fn(string $entry) => $entry !== $redirectUri);
+        $this->redirectUris = array_filter($this->redirectUris, static fn (string $entry) => $entry !== $redirectUri);
 
         return $this;
     }
@@ -151,9 +151,10 @@ class Client
 
         return $this;
     }
+
     public function removeGrant(string $grant): self
     {
-        $this->grants = array_filter($this->grants, static fn(string $entry) => $entry !== $grant);
+        $this->grants = array_filter($this->grants, static fn (string $entry) => $entry !== $grant);
 
         return $this;
     }
@@ -187,7 +188,7 @@ class Client
 
     public function removeScope(string $scope): self
     {
-        $this->scopes = array_filter($this->scopes, static fn(string $entry) => $entry !== $scope);
+        $this->scopes = array_filter($this->scopes, static fn (string $entry) => $entry !== $scope);
 
         return $this;
     }

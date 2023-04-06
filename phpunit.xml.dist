@@ -49,6 +49,13 @@
             <directory>tests/UserModule/Integration</directory>
             <directory>tests/WebFingerModule/Integration</directory>
         </testsuite>
+        <testsuite name="application">
+            <directory>tests/ActivityPubModule/Application</directory>
+            <directory>tests/AuthModule/Application</directory>
+            <directory>tests/Shared/Application</directory>
+            <directory>tests/UserModule/Application</directory>
+            <directory>tests/WebFingerModule/Application</directory>
+        </testsuite>
     </testsuites>
 
     <coverage processUncoveredFiles="true">

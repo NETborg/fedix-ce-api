@@ -8,27 +8,43 @@ use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Collection;
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\ObjectType;
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\OrderedCollection;
 use Netborg\Fediverse\Api\ActivityPubModule\Domain\Model\Subject\PublicKey;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 abstract class AbstractActor extends ObjectType
 {
     public const TYPE = 'Actor';
 
-    protected static string $type = self::TYPE;
-
     protected array $schemaContext = [
         'https://w3id.org/security/v1',
     ];
 
+    #[Groups(['public'])]
+    protected static string $type = self::TYPE;
+
+    #[Groups(['create', 'public', 'update'])]
+    #[Assert\NotBlank(groups: ['create', 'update'])]
     protected string|null $preferredUsername = null;
+    #[Groups(['public'])]
     protected string|OrderedCollection|null $inbox = null;
+    #[Groups(['public'])]
     protected string|OrderedCollection|null $outbox = null;
 
+    #[Groups(['public'])]
     protected string|Collection|null $following = null;
+    #[Groups(['public'])]
     protected string|Collection|null $followers = null;
+    #[Groups(['public'])]
     protected string|Collection|null $liked = null;
+    #[Groups(['public'])]
     protected string|Collection|null $streams = null;
 
+    #[Groups(['public'])]
     protected PublicKey|null $publicKey = null;
+
+    /** @var string[] */
+    #[Groups(['owner'])]
+    protected array $owners = [];
 
     public function getPreferredUsername(): ?string
     {
@@ -124,5 +140,52 @@ abstract class AbstractActor extends ObjectType
         $this->publicKey = $publicKey;
 
         return $this;
+    }
+
+    public function setOwners(array $owners): self
+    {
+        $this->owners = $owners;
+
+        return $this;
+    }
+
+    public function getOwners(): array
+    {
+        return $this->owners;
+    }
+
+    public function addOwner(string $owner): self
+    {
+        if (!in_array($owner, $this->owners)) {
+            $this->owners[] = $owner;
+        }
+
+        return $this;
+    }
+
+    public function addOwners(array $owners): self
+    {
+        $this->owners = array_unique(array_merge($this->owners, $owners));
+
+        return $this;
+    }
+
+    public function removeOwner(string $owner): self
+    {
+        $this->owners = array_filter($this->owners, static fn (string $ownerId) => $ownerId !== $owner);
+
+        return $this;
+    }
+
+    public function removeOwners(array $owners): self
+    {
+        $this->owners = array_filter($this->owners, static fn (string $ownerId) => !in_array($ownerId, $owners));
+
+        return $this;
+    }
+
+    public function hasOwner(string $owner): bool
+    {
+        return in_array($owner, $this->owners);
     }
 }
